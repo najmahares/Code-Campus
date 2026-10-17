@@ -1,3 +1,4 @@
+import Image from "next/image";
 "use client";
 
 import { useState, useEffect } from "react";
@@ -329,11 +330,7 @@ export default function LandingPage() {
                 here. I can actually just focus on coding."
               </p>
               <div className={styles.quoteAuthor}>
-                <img
-                  src="https://api.dicebear.com/9.x/micah/svg?seed=amina&backgroundColor=f5c5cb&skinColor=ae5d29,8d5524,614335,d08b5b&hairColor=2c1b18,4a312c,724133&radius=50"
-                  alt="Amina"
-                  className={styles.quoteAvatarImg}
-                />
+                <Image src="https://api.dicebear.com/9.x/micah/svg?seed=amina&backgroundColor=f5c5cb&skinColor=ae5d29,8d5524,614335,d08b5b&hairColor=2c1b18,4a312c,724133&radius=50" alt="Amina" width={128} height={128} className={styles.quoteAvatarImg} />
                 <div>
                   <div className={styles.quoteName}>Amina W.</div>
                   <div className={styles.quoteRole}>CS Senior</div>

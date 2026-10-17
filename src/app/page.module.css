@@ -22,10 +22,11 @@
   width: 60vw;
   height: 60vw;
   background: radial-gradient(circle, rgba(232, 160, 168, 0.25) 0%, transparent 60%);
-  filter: blur(100px);
+  filter: blur(60px);
   z-index: 0;
   pointer-events: none;
   animation: morph 12s infinite alternate;
+  will-change: transform, opacity;
 }
 .bgGlow2 {
   position: absolute;
@@ -34,10 +35,11 @@
   width: 50vw;
   height: 50vw;
   background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 60%);
-  filter: blur(100px);
+  filter: blur(60px);
   z-index: 0;
   pointer-events: none;
   animation: morph 16s infinite alternate-reverse;
+  will-change: transform, opacity;
 }
 .bgGlow3 {
   position: absolute;
@@ -46,10 +48,11 @@
   width: 40vw;
   height: 40vw;
   background: radial-gradient(circle, rgba(168, 140, 232, 0.1) 0%, transparent 60%);
-  filter: blur(100px);
+  filter: blur(60px);
   z-index: 0;
   pointer-events: none;
   animation: morph 20s infinite alternate;
+  will-change: transform, opacity;
 }
 @keyframes morph {
   0% {
@@ -505,7 +508,7 @@
   width: 1000px;
   height: 600px;
   background: radial-gradient(circle, rgba(232, 160, 168, 0.2) 0%, transparent 60%);
-  filter: blur(80px);
+  filter: blur(50px);
   pointer-events: none;
   animation: morph 6s infinite alternate;
 }
