@@ -44,25 +44,37 @@ export default function VersionHistory({ noteId, isOpen, onClose, onRestore }: P
       <div className={styles.versionPanel} onClick={(e) => e.stopPropagation()}>
         <div className={styles.versionHeader}>
           <div>
-            <div className={styles.versionTitle}><History size={18} /> Version history</div>
-            <div className={styles.versionSub}>{versions.length} saved version{versions.length !== 1 ? "s" : ""}</div>
+            <div className={styles.versionTitle}>
+              <History size={18} /> Version history
+            </div>
+            <div className={styles.versionSub}>
+              {versions.length} saved version{versions.length !== 1 ? "s" : ""}
+            </div>
           </div>
-          <button className={styles.captureClose} onClick={onClose}><X size={18} /></button>
+          <button className={styles.captureClose} onClick={onClose}>
+            <X size={18} />
+          </button>
         </div>
 
         <div className={styles.versionBody}>
           {loading ? (
-            <div className={styles.tabLoadingState}><Loader2 size={24} className="animate-spin" /></div>
+            <div className={styles.tabLoadingState}>
+              <Loader2 size={24} className="animate-spin" />
+            </div>
           ) : versions.length === 0 ? (
             <div className={styles.tabEmptyState}>
-              <p className={styles.tabEmptyText}>No saved versions yet. Versions are saved automatically when you refine or edit.</p>
+              <p className={styles.tabEmptyText}>
+                No saved versions yet. Versions are saved automatically when you refine or edit.
+              </p>
             </div>
           ) : (
             versions.map((v) => (
               <div key={v.id} className={styles.versionItem}>
                 <div className={styles.versionMeta}>
                   <span className={styles.versionType}>{v.version_type}</span>
-                  <span className={styles.versionDate}>{new Date(v.created_at).toLocaleString()}</span>
+                  <span className={styles.versionDate}>
+                    {new Date(v.created_at).toLocaleString()}
+                  </span>
                 </div>
                 <div className={styles.versionPreview}>
                   {v.body.replace(/<[^>]*>/g, "").slice(0, 160)}
@@ -73,7 +85,11 @@ export default function VersionHistory({ noteId, isOpen, onClose, onRestore }: P
                   onClick={() => handleRestore(v.body, v.id)}
                   disabled={restoring !== null}
                 >
-                  {restoring === v.id ? <Loader2 size={12} className="animate-spin" /> : <RotateCcw size={12} />}
+                  {restoring === v.id ? (
+                    <Loader2 size={12} className="animate-spin" />
+                  ) : (
+                    <RotateCcw size={12} />
+                  )}
                   Restore this version
                 </button>
               </div>

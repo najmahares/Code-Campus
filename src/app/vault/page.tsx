@@ -5,9 +5,28 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home as HomeIcon, FileText, Calendar, Code2, Lock, Heart,
-  Search, Plus, Loader2, X, Copy, Check, Eye, EyeOff, Trash2,
-  KeyRound, Terminal, Braces, FileCode, Star, Pencil, Shield,
+  Home as HomeIcon,
+  FileText,
+  Calendar,
+  Code2,
+  Lock,
+  Heart,
+  Search,
+  Plus,
+  Loader2,
+  X,
+  Copy,
+  Check,
+  Eye,
+  EyeOff,
+  Trash2,
+  KeyRound,
+  Terminal,
+  Braces,
+  FileCode,
+  Star,
+  Pencil,
+  Shield,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
@@ -15,8 +34,14 @@ import ConfirmModal from "@/components/ConfirmModal";
 import EmptyState from "@/components/EmptyState";
 import VaultModal from "./VaultModal";
 import {
-  listVaultItems, deleteVaultItem, toggleVaultPin, recordCopy,
-  maskValue, type VaultItem, type VaultType, TYPE_LABELS,
+  listVaultItems,
+  deleteVaultItem,
+  toggleVaultPin,
+  recordCopy,
+  maskValue,
+  type VaultItem,
+  type VaultType,
+  TYPE_LABELS,
 } from "@/lib/vault/store";
 import styles from "./vault.module.css";
 
@@ -54,9 +79,20 @@ export default function VaultPage() {
   const [editing, setEditing] = useState<VaultItem | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [confirmState, setConfirmState] = useState<{
-    isOpen: boolean; title: string; message: string; confirmLabel: string;
-    destructive: boolean; onConfirm: () => void | Promise<void>;
-  }>({ isOpen: false, title: "", message: "", confirmLabel: "Confirm", destructive: false, onConfirm: () => {} });
+    isOpen: boolean;
+    title: string;
+    message: string;
+    confirmLabel: string;
+    destructive: boolean;
+    onConfirm: () => void | Promise<void>;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmLabel: "Confirm",
+    destructive: false,
+    onConfirm: () => {},
+  });
 
   const router = useRouter();
   const pathname = usePathname();
@@ -69,18 +105,24 @@ export default function VaultPage() {
     try {
       const data = await listVaultItems();
       setItems(data);
-    } catch (err: any) { setError(err.message); }
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   useEffect(() => {
     async function init() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/login"); return; }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
       await load();
       setLoading(false);
     }
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCopy = async (item: VaultItem) => {
@@ -94,9 +136,7 @@ export default function VaultPage() {
   };
 
   const toggleReveal = (id: string) => {
-    setRevealedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    setRevealedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
   const handleDelete = (item: VaultItem) => {
@@ -105,7 +145,10 @@ export default function VaultPage() {
       message: `"${item.title}" will be permanently removed from your vault.`,
       confirmLabel: "Delete",
       destructive: true,
-      onConfirm: async () => { await deleteVaultItem(item.id); await load(); },
+      onConfirm: async () => {
+        await deleteVaultItem(item.id);
+        await load();
+      },
     });
   };
 
@@ -138,10 +181,16 @@ export default function VaultPage() {
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarLogo}><LogoLockup size={40} /></div>
+        <div className={styles.sidebarLogo}>
+          <LogoLockup size={40} />
+        </div>
         <nav className={styles.sidebarNav}>
           {navItems.map((item) => (
-            <Link key={item.id} href={item.href} className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}>
+            <Link
+              key={item.id}
+              href={item.href}
+              className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}
+            >
               <item.Icon size={20} strokeWidth={2} aria-hidden="true" />
               <span>{item.label}</span>
             </Link>
@@ -150,7 +199,9 @@ export default function VaultPage() {
         <div className={styles.sidebarDecor}>
           <div className={styles.decorQuote}>
             <span className={styles.decorQuoteLine}>What you save</span>
-            <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>today, saves</span>
+            <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>
+              today, saves
+            </span>
             <span className={styles.decorQuoteLine}>you tomorrow.</span>
           </div>
         </div>
@@ -239,22 +290,28 @@ export default function VaultPage() {
                     transition={{ duration: 0.3, delay: i * 0.03 }}
                     className={styles.item}
                   >
-                    <div className={styles.itemIcon} style={{ color, borderColor: `${color}33`, background: `${color}15` }}>
+                    <div
+                      className={styles.itemIcon}
+                      style={{ color, borderColor: `${color}33`, background: `${color}15` }}
+                    >
                       <Icon size={18} />
                     </div>
 
                     <div className={styles.itemBody}>
                       <div className={styles.itemHeader}>
                         <div className={styles.itemTitleRow}>
-                          {item.pinned && <Star size={12} className={styles.pinIcon} fill="#E8A0A8" />}
+                          {item.pinned && (
+                            <Star size={12} className={styles.pinIcon} fill="#E8A0A8" />
+                          )}
                           <h3 className={styles.itemTitle}>{item.title}</h3>
-                          <span className={styles.itemTypeBadge} style={{ color, borderColor: `${color}33` }}>
+                          <span
+                            className={styles.itemTypeBadge}
+                            style={{ color, borderColor: `${color}33` }}
+                          >
                             {TYPE_LABELS[item.type]}
                           </span>
                         </div>
-                        {item.description && (
-                          <p className={styles.itemDesc}>{item.description}</p>
-                        )}
+                        {item.description && <p className={styles.itemDesc}>{item.description}</p>}
                       </div>
 
                       <div className={styles.itemValueRow}>
@@ -275,7 +332,9 @@ export default function VaultPage() {
                       {item.tags.length > 0 && (
                         <div className={styles.itemTags}>
                           {item.tags.map((t) => (
-                            <span key={t} className={styles.itemTag}>{t}</span>
+                            <span key={t} className={styles.itemTag}>
+                              {t}
+                            </span>
                           ))}
                         </div>
                       )}
@@ -287,15 +346,42 @@ export default function VaultPage() {
                         onClick={() => handleCopy(item)}
                         title="Copy value"
                       >
-                        {copiedId === item.id ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
+                        {copiedId === item.id ? (
+                          <>
+                            <Check size={14} /> Copied
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={14} /> Copy
+                          </>
+                        )}
                       </button>
-                      <button className={styles.iconBtn} onClick={() => handlePin(item)} title={item.pinned ? "Unpin" : "Pin"}>
-                        <Star size={14} fill={item.pinned ? "#E8A0A8" : "none"} color={item.pinned ? "#E8A0A8" : "currentColor"} />
+                      <button
+                        className={styles.iconBtn}
+                        onClick={() => handlePin(item)}
+                        title={item.pinned ? "Unpin" : "Pin"}
+                      >
+                        <Star
+                          size={14}
+                          fill={item.pinned ? "#E8A0A8" : "none"}
+                          color={item.pinned ? "#E8A0A8" : "currentColor"}
+                        />
                       </button>
-                      <button className={styles.iconBtn} onClick={() => { setEditing(item); setShowModal(true); }} title="Edit">
+                      <button
+                        className={styles.iconBtn}
+                        onClick={() => {
+                          setEditing(item);
+                          setShowModal(true);
+                        }}
+                        title="Edit"
+                      >
                         <Pencil size={14} />
                       </button>
-                      <button className={styles.iconBtn} onClick={() => handleDelete(item)} title="Delete">
+                      <button
+                        className={styles.iconBtn}
+                        onClick={() => handleDelete(item)}
+                        title="Delete"
+                      >
                         <Trash2 size={14} />
                       </button>
                     </div>
@@ -309,7 +395,10 @@ export default function VaultPage() {
 
       <VaultModal
         isOpen={showModal}
-        onClose={() => { setShowModal(false); setEditing(null); }}
+        onClose={() => {
+          setShowModal(false);
+          setEditing(null);
+        }}
         onSaved={load}
         editing={editing}
       />

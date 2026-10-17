@@ -1,11 +1,93 @@
-.page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #050505; padding: 1.5rem; }
-.card { width: 100%; max-width: 420px; padding: 3rem 2rem; border-radius: 1.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); text-align: center; box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.8); }
-.iconWrap { width: 64px; height: 64px; border-radius: 50%; background: rgba(232, 160, 168, 0.1); border: 1px solid rgba(232, 160, 168, 0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
-.icon { color: #E8A0A8; font-size: 2rem; line-height: 1; font-family: 'Caveat', cursive; }
-.title { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 1.5rem; color: #FFFFFF; margin-bottom: 0.75rem; }
-.desc { font-size: 0.95rem; color: rgba(255, 255, 255, 0.5); line-height: 1.6; margin-bottom: 2rem; }
-.actions { display: flex; flex-direction: column; gap: 0.75rem; }
-.primaryBtn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.9rem 1.5rem; border-radius: 999px; background: #E8A0A8; color: #050505; border: none; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; }
-.primaryBtn:hover { background: #FFFFFF; transform: translateY(-2px); }
-.secondaryBtn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.9rem 1.5rem; border-radius: 999px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.1); color: #FFFFFF; font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.2s ease; }
-.secondaryBtn:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.2); }
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #050505;
+  padding: 1.5rem;
+}
+.card {
+  width: 100%;
+  max-width: 420px;
+  padding: 3rem 2rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
+  box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.8);
+}
+.iconWrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(232, 160, 168, 0.1);
+  border: 1px solid rgba(232, 160, 168, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+.icon {
+  color: #e8a0a8;
+  font-size: 2rem;
+  line-height: 1;
+  font-family: "Caveat", cursive;
+}
+.title {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+.desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  background: #e8a0a8;
+  color: #050505;
+  border: none;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.primaryBtn:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+}
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.secondaryBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}

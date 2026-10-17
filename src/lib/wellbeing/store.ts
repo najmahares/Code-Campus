@@ -76,7 +76,9 @@ export async function listMoodEntries(limit = 90): Promise<MoodEntry[]> {
 
 export async function createMoodEntry(score: number, note?: string): Promise<MoodEntry> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
   const { data, error } = await supabase
     .from("mood_entries")
@@ -113,9 +115,14 @@ export async function listGratitudeEntries(limit = 30): Promise<GratitudeEntry[]
   return (data || []) as GratitudeEntry[];
 }
 
-export async function createGratitudeEntry(prompt: string, content: string): Promise<GratitudeEntry> {
+export async function createGratitudeEntry(
+  prompt: string,
+  content: string
+): Promise<GratitudeEntry> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
   const { data, error } = await supabase
     .from("gratitude_entries")
@@ -139,7 +146,9 @@ export async function listRantEntries(limit = 30): Promise<RantEntry[]> {
 
 export async function createRantEntry(content: string, aiResponse?: string): Promise<RantEntry> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
   const { data, error } = await supabase
     .from("rant_entries")
@@ -152,7 +161,9 @@ export async function createRantEntry(content: string, aiResponse?: string): Pro
 
 export async function logBreathingSession(pattern: string, seconds: number): Promise<void> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return;
   await supabase.from("breathing_sessions").insert({
     user_id: user.id,
@@ -222,7 +233,10 @@ export async function fetchBurnout(): Promise<BurnoutResult | null> {
   }
 }
 
-export async function fetchSemesterReport(): Promise<{ report: SemesterReport | null; message?: string }> {
+export async function fetchSemesterReport(): Promise<{
+  report: SemesterReport | null;
+  message?: string;
+}> {
   try {
     const res = await fetch("/api/wellbeing/report", { method: "POST" });
     if (!res.ok) return { report: null };

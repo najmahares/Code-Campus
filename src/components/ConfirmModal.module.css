@@ -30,17 +30,17 @@
   border-radius: 50%;
   background: rgba(232, 160, 168, 0.1);
   border: 1px solid rgba(232, 160, 168, 0.25);
-  color: #E8A0A8;
+  color: #e8a0a8;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.25rem;
 }
 .title {
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 1.35rem;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
 }
@@ -62,8 +62,8 @@
   border-radius: 0.85rem;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #FFFFFF;
-  font-family: 'Quicksand', sans-serif;
+  color: #ffffff;
+  font-family: "Quicksand", sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
@@ -77,27 +77,31 @@
   flex: 1;
   padding: 0.85rem 1.25rem;
   border-radius: 0.85rem;
-  background: #E8A0A8;
+  background: #e8a0a8;
   color: #050505;
   border: none;
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.confirmBtn:hover { background: #FFFFFF; }
+.confirmBtn:hover {
+  background: #ffffff;
+}
 .destructiveBtn {
   flex: 1;
   padding: 0.85rem 1.25rem;
   border-radius: 0.85rem;
   background: rgba(232, 100, 100, 0.9);
-  color: #FFFFFF;
+  color: #ffffff;
   border: none;
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.destructiveBtn:hover { background: #E86464; }
+.destructiveBtn:hover {
+  background: #e86464;
+}

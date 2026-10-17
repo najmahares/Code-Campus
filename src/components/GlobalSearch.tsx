@@ -3,9 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search, FileText, Code2, Calendar, Lock, ArrowRight, Loader2,
-} from "lucide-react";
+import { Search, FileText, Code2, Calendar, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { globalSearch, type SearchResult } from "@/lib/search/store";
 import styles from "./GlobalSearch.module.css";
 
@@ -84,7 +82,7 @@ export default function GlobalSearch() {
           ref={inputRef}
           className={styles.searchInput}
           placeholder="Search anything..."
-              aria-label="Search anything"
+          aria-label="Search anything"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);

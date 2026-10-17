@@ -51,16 +51,30 @@ export default function LoginPage() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-      <Link href="/" className={styles.backLink}>← Back home</Link>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Link href="/" className={styles.backLink}>
+        ← Back home
+      </Link>
 
       <div className={styles.formHeader}>
-        <h1 className={styles.formTitle}>Welcome <span className={styles.formTitleAccent}>back.</span></h1>
-        <p className={styles.formSubtitle}>Your notes are exactly where you left them. Pick up right where you stopped.</p>
+        <h1 className={styles.formTitle}>
+          Welcome <span className={styles.formTitleAccent}>back.</span>
+        </h1>
+        <p className={styles.formSubtitle}>
+          Your notes are exactly where you left them. Pick up right where you stopped.
+        </p>
       </div>
 
       {error && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={styles.formError}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={styles.formError}
+        >
           <AlertCircle size={16} /> {error}
         </motion.div>
       )}
@@ -70,7 +84,14 @@ export default function LoginPage() {
           <label className={styles.inputLabel}>Email</label>
           <div className={styles.inputWrapper}>
             <Mail size={18} className={styles.inputIcon} />
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className={styles.input} required />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className={styles.input}
+              required
+            />
           </div>
         </div>
 
@@ -78,20 +99,42 @@ export default function LoginPage() {
           <label className={styles.inputLabel}>Password</label>
           <div className={styles.inputWrapper}>
             <Lock size={18} className={styles.inputIcon} />
-            <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" className={styles.input} required />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className={styles.togglePassword} aria-label="Toggle password visibility">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className={styles.input}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className={styles.togglePassword}
+              aria-label="Toggle password visibility"
+            >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
         </div>
 
         <div className={styles.formRow}>
-          <label className={styles.checkbox}><input type="checkbox" /> Keep me signed in</label>
-          <Link href="/forgot-password" className={styles.textLink}>Forgot password?</Link>
+          <label className={styles.checkbox}>
+            <input type="checkbox" /> Keep me signed in
+          </label>
+          <Link href="/forgot-password" className={styles.textLink}>
+            Forgot password?
+          </Link>
         </div>
 
         <button type="submit" disabled={isLoading} className={styles.primaryButton}>
-          {isLoading ? <Loader2 size={18} className="animate-spin" /> : <>Continue <ArrowRight size={18} /></>}
+          {isLoading ? (
+            <Loader2 size={18} className="animate-spin" />
+          ) : (
+            <>
+              Continue <ArrowRight size={18} />
+            </>
+          )}
         </button>
       </form>
 

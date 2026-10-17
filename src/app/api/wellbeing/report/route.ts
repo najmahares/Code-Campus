@@ -14,16 +14,25 @@ export async function POST() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const since = new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString();
 
     const [moodRes, gratitudeRes, rantRes, breathingRes] = await Promise.all([
-      supabase.from("mood_entries").select("mood_score, note, created_at").gte("created_at", since).order("created_at", { ascending: false }),
+      supabase
+        .from("mood_entries")
+        .select("mood_score, note, created_at")
+        .gte("created_at", since)
+        .order("created_at", { ascending: false }),
       supabase.from("gratitude_entries").select("content, created_at").gte("created_at", since),
       supabase.from("rant_entries").select("content, created_at").gte("created_at", since),
-      supabase.from("breathing_sessions").select("duration_seconds, created_at").gte("created_at", since),
+      supabase
+        .from("breathing_sessions")
+        .select("duration_seconds, created_at")
+        .gte("created_at", since),
     ]);
 
     const moods = moodRes.data || [];
@@ -44,7 +53,13 @@ export async function POST() {
     const lowDays = moods.filter((m) => m.mood_score <= 2).length;
     const totalBreathSeconds = breathing.reduce((a, b) => a + (b.duration_seconds || 0), 0);
 
-    const moodSample = moods.slice(0, 20).map((m) => `${new Date(m.created_at).toLocaleDateString()}: ${m.mood_score}/5${m.note ? " — " + m.note : ""}`).join("\n");
+    const moodSample = moods
+      .slice(0, 20)
+      .map(
+        (m) =>
+          `${new Date(m.created_at).toLocaleDateString()}: ${m.mood_score}/5${m.note ? " — " + m.note : ""}`
+      )
+      .join("\n");
 
     const systemPrompt = [
       "You are a warm, grounded wellbeing companion writing a short semester reflection for a software engineering student.",
@@ -85,7 +100,8 @@ export async function POST() {
       });
       reflection = text;
     } catch {
-      reflection = "You have been showing up for yourself. That matters more than any score. Keep checking in, keep breathing, and give yourself permission to rest.";
+      reflection =
+        "You have been showing up for yourself. That matters more than any score. Keep checking in, keep breathing, and give yourself permission to rest.";
     }
 
     return NextResponse.json({

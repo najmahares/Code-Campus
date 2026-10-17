@@ -17,13 +17,15 @@ export function LogoLockup({ size = 56, color = "#FFFFFF" }: { size?: number; co
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "0.15rem" }}>
       <LogoMark size={size} />
-      <span style={{
-        fontFamily: "'Quicksand', sans-serif",
-        fontWeight: 700,
-        fontSize: "1.75rem",
-        letterSpacing: "-0.05em",
-        lineHeight: 1,
-      }}>
+      <span
+        style={{
+          fontFamily: "'Quicksand', sans-serif",
+          fontWeight: 700,
+          fontSize: "1.75rem",
+          letterSpacing: "-0.05em",
+          lineHeight: 1,
+        }}
+      >
         <span style={{ color }}>Code</span>
         <span style={{ color: "#E8A0A8" }}> Campus</span>
       </span>

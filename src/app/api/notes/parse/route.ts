@@ -17,7 +17,6 @@ const RefineSchema = z.object({
 
 const MODEL_IDS = ["gemini-2.5-flash", "gemini-2.0-flash-exp"];
 
-// User-friendly error messages
 function friendly(message: string): string {
   return message;
 }
@@ -64,7 +63,9 @@ export async function POST(req: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: "Please sign in to import content" }, { status: 401 });
     }
@@ -81,8 +82,11 @@ export async function POST(req: Request) {
         source = `url: ${parsed.url}`;
       } catch (err: any) {
         console.error("[parse] URL parse failed:", err?.message);
-        // These errors are already user-friendly
-        return NextResponse.json({ error: err.message || "We couldn't read that URL" }, { status: 400 });
+
+        return NextResponse.json(
+          { error: err.message || "We couldn't read that URL" },
+          { status: 400 }
+        );
       }
     } else if (type === "pdf" || type === "docx" || type === "markdown") {
       if (!signedUrl) {
@@ -94,12 +98,18 @@ export async function POST(req: Request) {
         res = await fetch(signedUrl);
       } catch (err: any) {
         console.error("[parse] download failed:", err?.message);
-        return NextResponse.json({ error: "We couldn't download your file. Please try again." }, { status: 500 });
+        return NextResponse.json(
+          { error: "We couldn't download your file. Please try again." },
+          { status: 500 }
+        );
       }
 
       if (!res.ok) {
         console.error("[parse] download status:", res.status);
-        return NextResponse.json({ error: "We couldn't download your file. Please try again." }, { status: 500 });
+        return NextResponse.json(
+          { error: "We couldn't download your file. Please try again." },
+          { status: 500 }
+        );
       }
 
       const arrayBuffer = await res.arrayBuffer();
@@ -115,9 +125,12 @@ export async function POST(req: Request) {
         }
       } catch (err: any) {
         console.error("[parse] file extraction failed:", err?.message);
-        return NextResponse.json({
-          error: err.message || "We couldn't read this file. Try a different format."
-        }, { status: 400 });
+        return NextResponse.json(
+          {
+            error: err.message || "We couldn't read this file. Try a different format.",
+          },
+          { status: 400 }
+        );
       }
 
       source = `${type}: ${fileName || "file"}`;
@@ -126,9 +139,13 @@ export async function POST(req: Request) {
     }
 
     if (!extractedText || extractedText.length < 10) {
-      return NextResponse.json({
-        error: "This file has almost no readable content. It may be an image-based PDF or an empty document."
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error:
+            "This file has almost no readable content. It may be an image-based PDF or an empty document.",
+        },
+        { status: 400 }
+      );
     }
 
     const refined = await refineWithAI(extractedText, source);
@@ -139,10 +156,12 @@ export async function POST(req: Request) {
       refined,
     });
   } catch (err: any) {
-    // Log the real error but never send it to the user
     console.error("[parse] unexpected:", err);
-    return NextResponse.json({
-      error: "Something went wrong. Please try again in a moment."
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Something went wrong. Please try again in a moment.",
+      },
+      { status: 500 }
+    );
   }
 }

@@ -50,9 +50,11 @@ export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
   const { success } = rateLimit(ip, 10, 60000);
   if (!success) {
-    return NextResponse.json({ error: "Whoa there! You've hit the limit. Wait a minute and try again." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Whoa there! You've hit the limit. Wait a minute and try again." },
+      { status: 429 }
+    );
   }
-
 
   try {
     const cookieStore = await cookies();
@@ -61,7 +63,9 @@ export async function POST(req: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { rawBody, currentTitle } = await req.json();
@@ -69,7 +73,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Note is too short to refine" }, { status: 400 });
     }
 
-    const plainBody = rawBody.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    const plainBody = rawBody
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
     const prompt = currentTitle
       ? `Current title: "${currentTitle}"\n\nStudent's rough notes:\n\n${plainBody}`
       : `Student's rough notes:\n\n${plainBody}`;
@@ -91,7 +98,10 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json({ error: `All models failed:\n${errors.join("\n")}` }, { status: 500 });
+    return NextResponse.json(
+      { error: `All models failed:\n${errors.join("\n")}` },
+      { status: 500 }
+    );
   } catch (error: any) {
     return NextResponse.json({ error: error?.message || "Failed to refine" }, { status: 500 });
   }

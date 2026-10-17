@@ -5,7 +5,17 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 import { useEffect } from "react";
-import { Bold, Italic, List, ListOrdered, Code2, Heading2, Link as LinkIcon, Undo2, Redo2 } from "lucide-react";
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Code2,
+  Heading2,
+  Link as LinkIcon,
+  Undo2,
+  Redo2,
+} from "lucide-react";
 import editorStyles from "./RichTextEditor.module.css";
 
 type Props = {
@@ -15,7 +25,12 @@ type Props = {
   minHeight?: number;
 };
 
-export default function RichTextEditor({ content, onChange, placeholder = "Start typing...", minHeight = 240 }: Props) {
+export default function RichTextEditor({
+  content,
+  onChange,
+  placeholder = "Start typing...",
+  minHeight = 240,
+}: Props) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -41,7 +56,6 @@ export default function RichTextEditor({ content, onChange, placeholder = "Start
     if (editor && content !== editor.getHTML()) {
       editor.commands.setContent(content, { emitUpdate: false });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!editor) return null;

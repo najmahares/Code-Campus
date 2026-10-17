@@ -2,17 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Bell,
-  X,
-  FileText,
-  Calendar,
-  Code2,
-  Lock,
-  Heart,
-  Sparkles,
-  Check,
-} from "lucide-react";
+import { Bell, X, FileText, Calendar, Code2, Lock, Heart, Sparkles, Check } from "lucide-react";
 import { listRecentActivity, timeAgo, type ActivityItem } from "@/lib/activity/store";
 import styles from "./NotificationsPanel.module.css";
 
@@ -20,13 +10,20 @@ const SEEN_KEY = "codecampus_notifications_seen";
 
 function iconFor(kind: string) {
   switch (kind) {
-    case "note": return { Icon: FileText, gold: false };
-    case "task": return { Icon: Calendar, gold: false };
-    case "project": return { Icon: Code2, gold: false };
-    case "vault": return { Icon: Lock, gold: true };
-    case "mood": return { Icon: Heart, gold: false };
-    case "gratitude": return { Icon: Heart, gold: false };
-    default: return { Icon: Sparkles, gold: false };
+    case "note":
+      return { Icon: FileText, gold: false };
+    case "task":
+      return { Icon: Calendar, gold: false };
+    case "project":
+      return { Icon: Code2, gold: false };
+    case "vault":
+      return { Icon: Lock, gold: true };
+    case "mood":
+      return { Icon: Heart, gold: false };
+    case "gratitude":
+      return { Icon: Heart, gold: false };
+    default:
+      return { Icon: Sparkles, gold: false };
   }
 }
 
@@ -47,10 +44,12 @@ export default function NotificationsPanel() {
   useEffect(() => {
     if (!open) return;
     setLoading(true);
-    listRecentActivity(8).then((data) => {
-      setItems(data);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    listRecentActivity(8)
+      .then((data) => {
+        setItems(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [open]);
 
   useEffect(() => {
@@ -103,7 +102,11 @@ export default function NotificationsPanel() {
               </div>
               <div className={styles.panelHeaderActions}>
                 {unreadCount > 0 && (
-                  <button className={styles.markReadBtn} onClick={markAllRead} title="Mark all read">
+                  <button
+                    className={styles.markReadBtn}
+                    onClick={markAllRead}
+                    title="Mark all read"
+                  >
                     <Check size={14} />
                   </button>
                 )}
@@ -127,7 +130,10 @@ export default function NotificationsPanel() {
                   const { Icon, gold } = iconFor(item.kind);
                   const unread = lastSeen ? new Date(item.created_at) > new Date(lastSeen) : true;
                   return (
-                    <div key={item.id} className={`${styles.item} ${unread ? styles.itemUnread : ""}`}>
+                    <div
+                      key={item.id}
+                      className={`${styles.item} ${unread ? styles.itemUnread : ""}`}
+                    >
                       <div className={`${styles.itemIcon} ${gold ? styles.itemIconGold : ""}`}>
                         <Icon size={16} strokeWidth={2} />
                       </div>

@@ -5,8 +5,20 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home as HomeIcon, FileText, Calendar, Code2, Lock, Heart,
-  Plus, Check, Loader2, X, Sparkles, Sun, Clock, AlertCircle,
+  Home as HomeIcon,
+  FileText,
+  Calendar,
+  Code2,
+  Lock,
+  Heart,
+  Plus,
+  Check,
+  Loader2,
+  X,
+  Sparkles,
+  Sun,
+  Clock,
+  AlertCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
@@ -15,8 +27,17 @@ import EmptyState from "@/components/EmptyState";
 import TaskModal from "./TaskModal";
 import TaskCard from "./TaskCard";
 import {
-  listTasks, createTask, updateTask, deleteTask, toggleTaskComplete, snoozeTask,
-  getTodayString, isOverdue, isDueToday, isUpcoming, formatDueDate,
+  listTasks,
+  createTask,
+  updateTask,
+  deleteTask,
+  toggleTaskComplete,
+  snoozeTask,
+  getTodayString,
+  isOverdue,
+  isDueToday,
+  isUpcoming,
+  formatDueDate,
   type Task,
 } from "@/lib/tasks/store";
 import styles from "./today.module.css";
@@ -47,9 +68,20 @@ export default function TodayPage() {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [confirmState, setConfirmState] = useState<{
-    isOpen: boolean; title: string; message: string; confirmLabel: string;
-    destructive: boolean; onConfirm: () => void | Promise<void>;
-  }>({ isOpen: false, title: "", message: "", confirmLabel: "Confirm", destructive: false, onConfirm: () => {} });
+    isOpen: boolean;
+    title: string;
+    message: string;
+    confirmLabel: string;
+    destructive: boolean;
+    onConfirm: () => void | Promise<void>;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmLabel: "Confirm",
+    destructive: false,
+    onConfirm: () => {},
+  });
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
@@ -70,43 +102,61 @@ export default function TodayPage() {
 
   useEffect(() => {
     async function init() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/login"); return; }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
       await loadTasks();
       setLoading(false);
     }
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Auto-generate briefing for today's tasks
   useEffect(() => {
     if (loading) return;
     const todayTasks = tasks.filter((t) => !t.completed && (isDueToday(t) || isOverdue(t)));
-    if (todayTasks.length === 0) { setBriefing(null); return; }
+    if (todayTasks.length === 0) {
+      setBriefing(null);
+      return;
+    }
     setBriefingLoading(true);
     fetch("/api/tasks/briefing", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tasks: todayTasks.map((t) => ({
-        id: t.id, title: t.title, priority: t.priority, due_date: t.due_date, description: t.description,
-      })) }),
+      body: JSON.stringify({
+        tasks: todayTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          priority: t.priority,
+          due_date: t.due_date,
+          description: t.description,
+        })),
+      }),
     })
       .then((r) => r.json())
-      .then((data) => { if (data.success) setBriefing(data); })
+      .then((data) => {
+        if (data.success) setBriefing(data);
+      })
       .catch(() => {})
       .finally(() => setBriefingLoading(false));
   }, [tasks, loading]);
 
   const handleCreate = async (params: {
-    title: string; description?: string; due_date?: string | null;
+    title: string;
+    description?: string;
+    due_date?: string | null;
     priority: "low" | "medium" | "high";
   }) => {
     try {
       await createTask(params);
       await loadTasks();
       setShowTaskModal(false);
-    } catch (err: any) { setError(err.message); }
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   const handleUpdate = async (id: string, updates: Partial<Task>) => {
@@ -114,14 +164,18 @@ export default function TodayPage() {
       await updateTask(id, updates);
       await loadTasks();
       setEditingTask(null);
-    } catch (err: any) { setError(err.message); }
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   const handleToggle = async (id: string, completed: boolean) => {
     try {
       await toggleTaskComplete(id, completed);
       await loadTasks();
-    } catch (err: any) { setError(err.message); }
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   const handleSnooze = async (id: string, days: number) => {
@@ -129,7 +183,9 @@ export default function TodayPage() {
     try {
       await snoozeTask(id, until);
       await loadTasks();
-    } catch (err: any) { setError(err.message); }
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   const handleDelete = (id: string, title: string) => {
@@ -138,11 +194,18 @@ export default function TodayPage() {
       message: `"${title}" will be removed permanently.`,
       confirmLabel: "Delete",
       destructive: true,
-      onConfirm: async () => { await deleteTask(id); await loadTasks(); },
+      onConfirm: async () => {
+        await deleteTask(id);
+        await loadTasks();
+      },
     });
   };
 
-  const todayString = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const todayString = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
   const timeOfDay = (() => {
     const h = new Date().getHours();
     if (h < 5) return "Late night";
@@ -164,24 +227,30 @@ export default function TodayPage() {
     return tasks;
   })();
 
-  // Apply AI ordering if we have a briefing
-  const ordered = briefing && (view === "today" || view === "all")
-    ? [...filtered].sort((a, b) => {
-        const ai = briefing.focus_order.indexOf(a.id) - briefing.focus_order.indexOf(b.id);
-        if (ai !== 0) return ai;
-        return 0;
-      })
-    : filtered;
+  const ordered =
+    briefing && (view === "today" || view === "all")
+      ? [...filtered].sort((a, b) => {
+          const ai = briefing.focus_order.indexOf(a.id) - briefing.focus_order.indexOf(b.id);
+          if (ai !== 0) return ai;
+          return 0;
+        })
+      : filtered;
 
   if (loading) return <div className={styles.loading}>Loading today...</div>;
 
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarLogo}><LogoLockup size={40} /></div>
+        <div className={styles.sidebarLogo}>
+          <LogoLockup size={40} />
+        </div>
         <nav className={styles.sidebarNav}>
           {navItems.map((item) => (
-            <Link key={item.id} href={item.href} className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}>
+            <Link
+              key={item.id}
+              href={item.href}
+              className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}
+            >
               <item.Icon size={20} strokeWidth={2} aria-hidden="true" />
               <span>{item.label}</span>
             </Link>
@@ -201,7 +270,9 @@ export default function TodayPage() {
           <div className={styles.header}>
             <div className={styles.headerLeft}>
               <h1 className={styles.title}>Today</h1>
-              <p className={styles.subtitle}>{timeOfDay} · {todayString}</p>
+              <p className={styles.subtitle}>
+                {timeOfDay} · {todayString}
+              </p>
             </div>
             <button className={styles.addBtn} onClick={() => setShowTaskModal(true)}>
               <Plus size={18} strokeWidth={3} /> Add task
@@ -220,9 +291,13 @@ export default function TodayPage() {
               <div className={styles.briefingGlow} />
               <div className={styles.briefingHeader}>
                 <div className={styles.briefingGreeting}>
-                  <span className={styles.briefingGreetingText}>{timeOfDay}, let&apos;s focus.</span>
+                  <span className={styles.briefingGreetingText}>
+                    {timeOfDay}, let&apos;s focus.
+                  </span>
                 </div>
-                {briefingLoading && <Loader2 size={14} className="animate-spin" style={{ color: "#E8A0A8" }} />}
+                {briefingLoading && (
+                  <Loader2 size={14} className="animate-spin" style={{ color: "#E8A0A8" }} />
+                )}
               </div>
               <div className={styles.briefingMessage}>{briefing.message}</div>
               {briefing.top_focus.length > 0 && (
@@ -235,7 +310,9 @@ export default function TodayPage() {
                         <span className={styles.briefingFocusNum}>{i + 1}</span>
                         <span className={styles.briefingFocusTitle}>{t.title}</span>
                         {t.due_date && (
-                          <span className={styles.briefingFocusDue}>{formatDueDate(t.due_date)}</span>
+                          <span className={styles.briefingFocusDue}>
+                            {formatDueDate(t.due_date)}
+                          </span>
                         )}
                       </div>
                     );
@@ -246,12 +323,14 @@ export default function TodayPage() {
           )}
 
           <div className={styles.tabs}>
-            {([
-              { id: "today", label: "Today", count: todaysTasks.length + noDateTasks.length },
-              { id: "upcoming", label: "Upcoming", count: upcomingTasks.length },
-              { id: "completed", label: "Completed", count: completedTasks.length },
-              { id: "all", label: "All", count: tasks.length },
-            ] as const).map((t) => (
+            {(
+              [
+                { id: "today", label: "Today", count: todaysTasks.length + noDateTasks.length },
+                { id: "upcoming", label: "Upcoming", count: upcomingTasks.length },
+                { id: "completed", label: "Completed", count: completedTasks.length },
+                { id: "all", label: "All", count: tasks.length },
+              ] as const
+            ).map((t) => (
               <button
                 key={t.id}
                 className={`${styles.tab} ${view === t.id ? styles.tabActive : ""}`}
@@ -276,10 +355,7 @@ export default function TodayPage() {
                   }
                   actionLabel="Add a task"
                   onAction={() => {
-                    // Look for whichever modal setter exists in your code
-                    if (typeof setShowTaskModal === "function") setShowTaskModal(true);
-                    else if (typeof setShowModal === "function") setShowModal(true);
-                    else if (typeof setShowNew === "function") setShowNew(true);
+                    setShowTaskModal(true);
                   }}
                 />
               </div>

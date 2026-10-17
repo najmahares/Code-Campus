@@ -1,15 +1,117 @@
-.backdrop { position: fixed; inset: 0; background: rgba(5,5,5,0.85); backdrop-filter: blur(12px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
-.modal { width: 100%; max-width: 480px; background: linear-gradient(180deg, #1a0e12 0%, #0f0708 100%); border: 1px solid rgba(232,160,168,0.25); border-radius: 1.5rem; padding: 2rem; box-shadow: 0 40px 100px -20px rgba(232,160,168,0.15); display: flex; flex-direction: column; gap: 2rem; }
-.progress { display: flex; justify-content: center; gap: 0.5rem; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: all 0.3s ease; }
-.dotActive { background: #E8A0A8; box-shadow: 0 0 10px rgba(232,160,168,0.5); }
-.content { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 200px; justify-content: center; }
-.iconWrap { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid; margin-bottom: 1.5rem; }
-.title { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 1.5rem; color: #FFFFFF; margin-bottom: 0.75rem; }
-.desc { font-size: 0.95rem; color: rgba(255,255,255,0.6); line-height: 1.6; max-width: 22rem; }
-.actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; }
-.skipBtn { padding: 0.8rem 1.25rem; border-radius: 0.85rem; background: transparent; border: none; color: rgba(255,255,255,0.4); font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: color 0.2s ease; }
-.skipBtn:hover { color: #FFFFFF; }
-.nextBtn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.85rem 1.5rem; border-radius: 0.85rem; background: #E8A0A8; color: #050505; border: none; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; flex: 1; }
-.nextBtn:hover { background: #FFFFFF; transform: translateY(-2px); }
-@media (max-width: 640px) { .modal { padding: 1.5rem; } }
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.modal {
+  width: 100%;
+  max-width: 480px;
+  background: linear-gradient(180deg, #1a0e12 0%, #0f0708 100%);
+  border: 1px solid rgba(232, 160, 168, 0.25);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 40px 100px -20px rgba(232, 160, 168, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+.dotActive {
+  background: #e8a0a8;
+  box-shadow: 0 0 10px rgba(232, 160, 168, 0.5);
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 200px;
+  justify-content: center;
+}
+.iconWrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  margin-bottom: 1.5rem;
+}
+.title {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+.desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  max-width: 22rem;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+.skipBtn {
+  padding: 0.8rem 1.25rem;
+  border-radius: 0.85rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.skipBtn:hover {
+  color: #ffffff;
+}
+.nextBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 0.85rem;
+  background: #e8a0a8;
+  color: #050505;
+  border: none;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+.nextBtn:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+}
+@media (max-width: 640px) {
+  .modal {
+    padding: 1.5rem;
+  }
+}

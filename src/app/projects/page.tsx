@@ -5,8 +5,16 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Home as HomeIcon, FileText, Calendar, Code2, Lock, Heart,
-  Plus, Loader2, X, FolderKanban,
+  Home as HomeIcon,
+  FileText,
+  Calendar,
+  Code2,
+  Lock,
+  Heart,
+  Plus,
+  Loader2,
+  X,
+  FolderKanban,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
@@ -42,26 +50,35 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     async function init() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/login"); return; }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
       await load();
       setLoading(false);
     }
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCreate = async () => {
     if (!newName.trim()) return;
     setSaving(true);
     try {
-      const p = await createProject({ name: newName.trim(), description: newDesc.trim() || undefined });
+      const p = await createProject({
+        name: newName.trim(),
+        description: newDesc.trim() || undefined,
+      });
       setShowNew(false);
       setNewName("");
       setNewDesc("");
       router.push(`/projects/${p.id}`);
-    } catch {}
-    finally { setSaving(false); }
+    } catch {
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) return <div className={styles.loading}>Loading projects...</div>;
@@ -69,10 +86,16 @@ export default function ProjectsPage() {
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarLogo}><LogoLockup size={40} /></div>
+        <div className={styles.sidebarLogo}>
+          <LogoLockup size={40} />
+        </div>
         <nav className={styles.sidebarNav}>
           {navItems.map((item) => (
-            <Link key={item.id} href={item.href} className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}>
+            <Link
+              key={item.id}
+              href={item.href}
+              className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}
+            >
               <item.Icon size={20} strokeWidth={2} />
               <span>{item.label}</span>
             </Link>
@@ -101,9 +124,13 @@ export default function ProjectsPage() {
 
           {projects.length === 0 ? (
             <div className={styles.empty}>
-              <div className={styles.emptyIcon}><FolderKanban size={40} /></div>
+              <div className={styles.emptyIcon}>
+                <FolderKanban size={40} />
+              </div>
               <h2 className={styles.emptyTitle}>No projects yet.</h2>
-              <p className={styles.emptyText}>Start one to organize your specs, tasks, and AI copilot in one place.</p>
+              <p className={styles.emptyText}>
+                Start one to organize your specs, tasks, and AI copilot in one place.
+              </p>
               <button className={styles.emptyBtn} onClick={() => setShowNew(true)}>
                 <Plus size={16} strokeWidth={3} /> Create your first project
               </button>
@@ -118,8 +145,12 @@ export default function ProjectsPage() {
                   prefetch={false}
                 >
                   <div className={styles.cardTop}>
-                    <div className={styles.cardIcon}><FolderKanban size={20} /></div>
-                    <span className={`${styles.status} ${styles[`status${p.status.charAt(0).toUpperCase() + p.status.slice(1)}`]}`}>
+                    <div className={styles.cardIcon}>
+                      <FolderKanban size={20} />
+                    </div>
+                    <span
+                      className={`${styles.status} ${styles[`status${p.status.charAt(0).toUpperCase() + p.status.slice(1)}`]}`}
+                    >
                       {p.status}
                     </span>
                   </div>
@@ -156,7 +187,9 @@ export default function ProjectsPage() {
                 <div className={styles.modalTitle}>New project</div>
                 <div className={styles.modalSub}>Give it a name and a short description.</div>
               </div>
-              <button className={styles.modalClose} onClick={() => setShowNew(false)}><X size={18} /></button>
+              <button className={styles.modalClose} onClick={() => setShowNew(false)}>
+                <X size={18} />
+              </button>
             </div>
             <div className={styles.modalBody}>
               <div className={styles.fieldGroup}>
@@ -171,7 +204,9 @@ export default function ProjectsPage() {
                 />
               </div>
               <div className={styles.fieldGroup}>
-                <label className={styles.fieldLabel}>Description <span className={styles.optional}>(optional)</span></label>
+                <label className={styles.fieldLabel}>
+                  Description <span className={styles.optional}>(optional)</span>
+                </label>
                 <textarea
                   className={styles.fieldTextarea}
                   value={newDesc}
@@ -181,8 +216,14 @@ export default function ProjectsPage() {
                 />
               </div>
               <div className={styles.modalFooter}>
-                <button className={styles.btnSecondary} onClick={() => setShowNew(false)}>Cancel</button>
-                <button className={styles.btnPrimary} onClick={handleCreate} disabled={saving || !newName.trim()}>
+                <button className={styles.btnSecondary} onClick={() => setShowNew(false)}>
+                  Cancel
+                </button>
+                <button
+                  className={styles.btnPrimary}
+                  onClick={handleCreate}
+                  disabled={saving || !newName.trim()}
+                >
                   {saving ? <Loader2 size={16} className="animate-spin" /> : "Create project"}
                 </button>
               </div>

@@ -34,9 +34,7 @@ export default function EmptyState({
       animate={{ opacity: 1, y: 0 }}
       className={styles.wrap}
     >
-      <div className={styles.iconWrap}>
-        {icon}
-      </div>
+      <div className={styles.iconWrap}>{icon}</div>
       <h2 className={styles.title}>{title}</h2>
       <p className={styles.desc}>{description}</p>
 

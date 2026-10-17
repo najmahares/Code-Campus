@@ -1,52 +1,78 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;700&family=Quicksand:wght@400;600;700&family=Caveat:wght@400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;700&family=Quicksand:wght@400;600;700&family=Caveat:wght@400;600;700&display=swap");
 
 :root {
   --dark-bg: #050505;
-  --burgundy: #8B1C24;
-  --burgundy-dark: #4A0E13;
-  --blush: #E8A0A8;
-  --gold: #D4AF37;
-  --white: #FFFFFF;
+  --burgundy: #8b1c24;
+  --burgundy-dark: #4a0e13;
+  --blush: #e8a0a8;
+  --gold: #d4af37;
+  --white: #ffffff;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   background-color: var(--dark-bg);
   color: var(--white);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   overflow-x: hidden;
 }
 
-h1, h2, h3, .bubbly { font-family: 'Quicksand', sans-serif; }
-a { text-decoration: none; color: inherit; }
-
-/* --- GLOBAL A11Y & MOBILE FIXES --- */
-html, body { overflow-x: hidden; }
-
-button, a, input, textarea { 
-  -webkit-tap-highlight-color: transparent; 
+h1,
+h2,
+h3,
+.bubbly {
+  font-family: "Quicksand", sans-serif;
+}
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-:focus-visible { 
-  outline: 2px solid #E8A0A8 !important; 
-  outline-offset: 3px !important; 
-  border-radius: 0.25rem; 
+html,
+body {
+  overflow-x: hidden;
+}
+
+button,
+a,
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid #e8a0a8 !important;
+  outline-offset: 3px !important;
+  border-radius: 0.25rem;
 }
 
 @media (max-width: 1024px) {
-  .page, .mainArea, .main, .contentGrid { 
-    padding-bottom: 80px !important; 
+  .page,
+  .mainArea,
+  .main,
+  .contentGrid {
+    padding-bottom: 80px !important;
   }
-  
-  button, a { 
-    min-height: 44px; 
+
+  button,
+  a {
+    min-height: 44px;
   }
-  
-  input, textarea { 
-    font-size: 16px !important; 
+
+  input,
+  textarea {
+    font-size: 16px !important;
   }
-  
-  h1 { font-size: 1.85rem !important; }
-  h2 { font-size: 1.35rem !important; }
+
+  h1 {
+    font-size: 1.85rem !important;
+  }
+  h2 {
+    font-size: 1.35rem !important;
+  }
 }

@@ -12,29 +12,17 @@ export async function POST(req: Request) {
     const validation = loginSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(
-        { message: "Invalid input data" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Invalid input data" }, { status: 400 });
     }
 
     const { email, password } = validation.data;
 
     if (!email || !password) {
-      return NextResponse.json(
-        { message: "Invalid credentials" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
     }
 
-    return NextResponse.json(
-      { message: "Login successful", user: { email } },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "Login successful", user: { email } }, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

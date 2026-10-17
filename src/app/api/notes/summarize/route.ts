@@ -30,7 +30,9 @@ export async function POST(req: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { noteBody } = await req.json();
@@ -38,7 +40,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Note is too short to summarize" }, { status: 400 });
     }
 
-    const plainBody = noteBody.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    const plainBody = noteBody
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
     const errors: string[] = [];
 
     for (const modelId of MODEL_IDS) {
@@ -56,7 +61,10 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json({ error: `All models failed:\n${errors.join("\n")}` }, { status: 500 });
+    return NextResponse.json(
+      { error: `All models failed:\n${errors.join("\n")}` },
+      { status: 500 }
+    );
   } catch (error: any) {
     return NextResponse.json({ error: error?.message || "Failed to summarize" }, { status: 500 });
   }

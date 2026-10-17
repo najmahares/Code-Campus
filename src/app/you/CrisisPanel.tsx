@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Heart, X, Phone, Globe, MessageCircle, Pencil, Check, Trash2, Copy,
-} from "lucide-react";
+import { Heart, X, Phone, Globe, MessageCircle, Pencil, Check, Trash2, Copy } from "lucide-react";
 import styles from "./wellbeing.module.css";
 
 type Contact = { name: string; phone: string };
@@ -58,7 +56,10 @@ export default function CrisisPanel() {
   const saveContact = () => {
     const name = draftName.trim();
     const phone = draftPhone.trim().replace(/\s+/g, "");
-    if (!name) { setError("Enter a name"); return; }
+    if (!name) {
+      setError("Enter a name");
+      return;
+    }
     if (!phone || !/^[+\d][\d\s\-()]{4,}$/.test(draftPhone.trim())) {
       setError("Enter a valid phone number");
       return;
@@ -135,7 +136,9 @@ export default function CrisisPanel() {
                     rel="noopener noreferrer"
                     className={styles.crisisItem + " " + styles.crisisItemBtn}
                   >
-                    <div className={styles.crisisIcon}><MessageCircle size={16} /></div>
+                    <div className={styles.crisisIcon}>
+                      <MessageCircle size={16} />
+                    </div>
                     <div className={styles.crisisInfo}>
                       <div className={styles.crisisName}>Befrienders Kenya</div>
                       <div className={styles.crisisDetail}>WhatsApp +254 722 178 177 · 24/7</div>
@@ -151,8 +154,13 @@ export default function CrisisPanel() {
                 </div>
 
                 <div className={styles.crisisRow}>
-                  <button className={styles.crisisItem + " " + styles.crisisItemBtn} onClick={() => callNumber("999")}>
-                    <div className={styles.crisisIcon}><Phone size={16} /></div>
+                  <button
+                    className={styles.crisisItem + " " + styles.crisisItemBtn}
+                    onClick={() => callNumber("999")}
+                  >
+                    <div className={styles.crisisIcon}>
+                      <Phone size={16} />
+                    </div>
                     <div className={styles.crisisInfo}>
                       <div className={styles.crisisName}>Kenya Emergency</div>
                       <div className={styles.crisisDetail}>999 or 112 · immediate danger</div>
@@ -167,16 +175,30 @@ export default function CrisisPanel() {
                   </button>
                 </div>
 
-                <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer" className={styles.crisisItem}>
-                  <div className={styles.crisisIcon}><Globe size={16} /></div>
+                <a
+                  href="https://findahelpline.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.crisisItem}
+                >
+                  <div className={styles.crisisIcon}>
+                    <Globe size={16} />
+                  </div>
                   <div className={styles.crisisInfo}>
                     <div className={styles.crisisName}>Find A Helpline</div>
                     <div className={styles.crisisDetail}>findahelpline.com · any country</div>
                   </div>
                 </a>
 
-                <a href="https://www.iasp.info/resources/Crisis_Centres/" target="_blank" rel="noopener noreferrer" className={styles.crisisItem}>
-                  <div className={styles.crisisIcon}><Globe size={16} /></div>
+                <a
+                  href="https://www.iasp.info/resources/Crisis_Centres/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.crisisItem}
+                >
+                  <div className={styles.crisisIcon}>
+                    <Globe size={16} />
+                  </div>
                   <div className={styles.crisisInfo}>
                     <div className={styles.crisisName}>IASP Crisis Centres</div>
                     <div className={styles.crisisDetail}>iasp.info · worldwide</div>
@@ -191,7 +213,9 @@ export default function CrisisPanel() {
                       rel="noopener noreferrer"
                       className={styles.crisisItem + " " + styles.crisisItemBtn}
                     >
-                      <div className={styles.crisisIcon}><MessageCircle size={16} /></div>
+                      <div className={styles.crisisIcon}>
+                        <MessageCircle size={16} />
+                      </div>
                       <div className={styles.crisisInfo}>
                         <div className={styles.crisisName}>{contact.name}</div>
                         <div className={styles.crisisDetail}>{contact.phone} · WhatsApp</div>
@@ -211,8 +235,13 @@ export default function CrisisPanel() {
                 )}
 
                 {!editing && !contact && (
-                  <button className={styles.crisisItem + " " + styles.crisisAddItem} onClick={startEdit}>
-                    <div className={styles.crisisIcon}><MessageCircle size={16} /></div>
+                  <button
+                    className={styles.crisisItem + " " + styles.crisisAddItem}
+                    onClick={startEdit}
+                  >
+                    <div className={styles.crisisIcon}>
+                      <MessageCircle size={16} />
+                    </div>
                     <div className={styles.crisisInfo}>
                       <div className={styles.crisisName}>Add someone you trust</div>
                       <div className={styles.crisisDetail}>A friend, a lecturer, or family</div>
@@ -227,21 +256,33 @@ export default function CrisisPanel() {
                       className={styles.crisisInput}
                       placeholder="Name (e.g. Mum, Brian)"
                       value={draftName}
-                      onChange={(e) => { setDraftName(e.target.value); setError(null); }}
+                      onChange={(e) => {
+                        setDraftName(e.target.value);
+                        setError(null);
+                      }}
                       autoFocus
                     />
                     <input
                       className={styles.crisisInput}
                       placeholder="Phone (+254 7XX XXX XXX)"
                       value={draftPhone}
-                      onChange={(e) => { setDraftPhone(e.target.value); setError(null); }}
+                      onChange={(e) => {
+                        setDraftPhone(e.target.value);
+                        setError(null);
+                      }}
                       inputMode="tel"
                     />
                     {error && <div className={styles.crisisError}>{error}</div>}
                     <div className={styles.crisisFormActions}>
-                      <button className={styles.crisisBtnGhost} onClick={cancelEdit}>Cancel</button>
+                      <button className={styles.crisisBtnGhost} onClick={cancelEdit}>
+                        Cancel
+                      </button>
                       {contact && (
-                        <button className={styles.crisisBtnDanger} onClick={removeContact} title="Remove">
+                        <button
+                          className={styles.crisisBtnDanger}
+                          onClick={removeContact}
+                          title="Remove"
+                        >
                           <Trash2 size={13} />
                         </button>
                       )}
@@ -254,7 +295,8 @@ export default function CrisisPanel() {
               </div>
 
               <div className={styles.crisisFooter}>
-                WhatsApp opens with the number ready. On mobile, the phone icon dials. On desktop, it copies.
+                WhatsApp opens with the number ready. On mobile, the phone icon dials. On desktop,
+                it copies.
               </div>
             </motion.div>
           </>

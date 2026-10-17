@@ -31,7 +31,8 @@ function computeBurnout(moods: { mood_score: number; created_at: string }[]) {
   }
 
   const avgNow = last7.reduce((a, m) => a + m.mood_score, 0) / last7.length;
-  const avgPrev = prev7.length > 0 ? prev7.reduce((a, m) => a + m.mood_score, 0) / prev7.length : avgNow;
+  const avgPrev =
+    prev7.length > 0 ? prev7.reduce((a, m) => a + m.mood_score, 0) / prev7.length : avgNow;
 
   let score = ((5 - avgNow) / 4) * 60;
 
@@ -42,7 +43,8 @@ function computeBurnout(moods: { mood_score: number; created_at: string }[]) {
   score += (1 - consistency) * 20;
 
   if (last7.length > 2) {
-    const variance = last7.reduce((a, m) => a + Math.pow(m.mood_score - avgNow, 2), 0) / last7.length;
+    const variance =
+      last7.reduce((a, m) => a + Math.pow(m.mood_score - avgNow, 2), 0) / last7.length;
     score += Math.min(variance * 5, 10);
   }
 
@@ -66,8 +68,8 @@ function computeBurnout(moods: { mood_score: number; created_at: string }[]) {
       level === "high"
         ? "Your signals suggest high burnout risk. Please slow down and reach out to someone."
         : level === "moderate"
-        ? "You are showing some strain. Take a real break today."
-        : "You are doing okay. Keep the check-ins going.",
+          ? "You are showing some strain. Take a real break today."
+          : "You are doing okay. Keep the check-ins going.",
     avg_mood_7d: Math.round(avgNow * 10) / 10,
     avg_mood_prev_7d: Math.round(avgPrev * 10) / 10,
     check_ins_7d: last7.length,
@@ -82,7 +84,9 @@ export async function GET() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { data: moods } = await supabase

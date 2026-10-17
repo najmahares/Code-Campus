@@ -11,9 +11,11 @@ export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
   const { success } = rateLimit(ip, 10, 60000);
   if (!success) {
-    return NextResponse.json({ error: "Whoa there! You've hit the limit. Wait a minute and try again." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Whoa there! You've hit the limit. Wait a minute and try again." },
+      { status: 429 }
+    );
   }
-
 
   try {
     const cookieStore = await cookies();
@@ -22,7 +24,9 @@ export async function POST(req: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { projectId, message, history } = await req.json();

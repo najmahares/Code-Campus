@@ -109,7 +109,13 @@ export default function ContactModal({ isOpen, onClose }: Props) {
                   </div>
 
                   <button type="submit" className={modalStyles.submitBtn} disabled={sending}>
-                    {sending ? "Sending..." : <><Send size={16} /> Send message</>}
+                    {sending ? (
+                      "Sending..."
+                    ) : (
+                      <>
+                        <Send size={16} /> Send message
+                      </>
+                    )}
                   </button>
                 </form>
 

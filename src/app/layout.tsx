@@ -9,22 +9,25 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 const quicksand = Quicksand({ subsets: ["latin"], variable: "--font-quicksand" });
 
-export const viewport = { width: "device-width", initialScale: 1, maximumScale: 1, userScalable: false };
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "Code Campus",
   description: "Your AI-powered sanctuary for software engineering.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} ${quicksand.variable}`}>
         <ToastProvider>
           {children}
-        <Analytics />
+          <Analytics />
           <MobileNav />
         </ToastProvider>
       </body>

@@ -9,15 +9,21 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import styles from "../auth.module.css";
 
-const registerSchema = z.object({
-  name: z.string().min(2, "Please enter your name").max(80),
-  email: z.string().email("Please enter a valid email"),
-  password: z.string().min(8, "Password must be at least 8 characters").regex(/[A-Z]/, "Password needs an uppercase letter").regex(/[0-9]/, "Password needs a number"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, "Please enter your name").max(80),
+    email: z.string().email("Please enter a valid email"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(/[A-Z]/, "Password needs an uppercase letter")
+      .regex(/[0-9]/, "Password needs a number"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 function getFirstError(error: any): string {
   if (!error) return "Validation failed";
@@ -62,8 +68,13 @@ export default function RegisterPage() {
     { id: "number", label: "Number", met: /[0-9]/.test(password) },
     { id: "special", label: "Special character", met: /[^A-Za-z0-9]/.test(password) },
   ];
-  const metCount = requirements.filter(r => r.met).length;
-  const strengthClass = metCount <= 2 ? styles.passwordStrengthBarWeak : metCount <= 4 ? styles.passwordStrengthBarMedium : styles.passwordStrengthBarStrong;
+  const metCount = requirements.filter((r) => r.met).length;
+  const strengthClass =
+    metCount <= 2
+      ? styles.passwordStrengthBarWeak
+      : metCount <= 4
+        ? styles.passwordStrengthBarMedium
+        : styles.passwordStrengthBarStrong;
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,16 +102,30 @@ export default function RegisterPage() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-      <Link href="/" className={styles.backLink}>← Back home</Link>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Link href="/" className={styles.backLink}>
+        ← Back home
+      </Link>
 
       <div className={styles.formHeader}>
-        <h1 className={styles.formTitle}>Let us get you <span className={styles.formTitleAccent}>started.</span></h1>
-        <p className={styles.formSubtitle}>One account. Ten tech stacks. A much calmer quarter ahead.</p>
+        <h1 className={styles.formTitle}>
+          Let us get you <span className={styles.formTitleAccent}>started.</span>
+        </h1>
+        <p className={styles.formSubtitle}>
+          One account. Ten tech stacks. A much calmer quarter ahead.
+        </p>
       </div>
 
       {error && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={styles.formError}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={styles.formError}
+        >
           <AlertCircle size={16} /> {error}
         </motion.div>
       )}
@@ -110,7 +135,14 @@ export default function RegisterPage() {
           <label className={styles.inputLabel}>Full Name</label>
           <div className={styles.inputWrapper}>
             <User size={18} className={styles.inputIcon} />
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className={styles.input} required />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              className={styles.input}
+              required
+            />
           </div>
         </div>
 
@@ -118,7 +150,14 @@ export default function RegisterPage() {
           <label className={styles.inputLabel}>Email</label>
           <div className={styles.inputWrapper}>
             <Mail size={18} className={styles.inputIcon} />
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className={styles.input} required />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className={styles.input}
+              required
+            />
           </div>
         </div>
 
@@ -136,25 +175,45 @@ export default function RegisterPage() {
               className={styles.input}
               required
             />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className={styles.togglePassword} aria-label="Toggle password visibility">
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className={styles.togglePassword}
+              aria-label="Toggle password visibility"
+            >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
           {passwordFocused && (
             <>
               <div className={styles.passwordStrength}>
-                <div className={`${styles.passwordStrengthBar} ${metCount >= 1 ? strengthClass : ""}`} />
-                <div className={`${styles.passwordStrengthBar} ${metCount >= 2 ? strengthClass : ""}`} />
-                <div className={`${styles.passwordStrengthBar} ${metCount >= 3 ? strengthClass : ""}`} />
-                <div className={`${styles.passwordStrengthBar} ${metCount >= 4 ? strengthClass : ""}`} />
-                <div className={`${styles.passwordStrengthBar} ${metCount >= 5 ? strengthClass : ""}`} />
+                <div
+                  className={`${styles.passwordStrengthBar} ${metCount >= 1 ? strengthClass : ""}`}
+                />
+                <div
+                  className={`${styles.passwordStrengthBar} ${metCount >= 2 ? strengthClass : ""}`}
+                />
+                <div
+                  className={`${styles.passwordStrengthBar} ${metCount >= 3 ? strengthClass : ""}`}
+                />
+                <div
+                  className={`${styles.passwordStrengthBar} ${metCount >= 4 ? strengthClass : ""}`}
+                />
+                <div
+                  className={`${styles.passwordStrengthBar} ${metCount >= 5 ? strengthClass : ""}`}
+                />
               </div>
               <div className={styles.passwordStrengthText}>
-                {password.length === 0 ? "Enter a password" : `${getStrengthLabel(metCount)} (${metCount}/5)`}
+                {password.length === 0
+                  ? "Enter a password"
+                  : `${getStrengthLabel(metCount)} (${metCount}/5)`}
               </div>
               <div className={styles.requirementsList}>
                 {requirements.map((req) => (
-                  <div key={req.id} className={`${styles.requirementItem} ${req.met ? styles.requirementMet : ""}`}>
+                  <div
+                    key={req.id}
+                    className={`${styles.requirementItem} ${req.met ? styles.requirementMet : ""}`}
+                  >
                     <span className={styles.requirementDot} />
                     <span>{req.label}</span>
                   </div>
@@ -168,15 +227,33 @@ export default function RegisterPage() {
           <label className={styles.inputLabel}>Confirm Password</label>
           <div className={styles.inputWrapper}>
             <Lock size={18} className={styles.inputIcon} />
-            <input type={showConfirm ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Re-enter your password" className={styles.input} required />
-            <button type="button" onClick={() => setShowConfirm(!showConfirm)} className={styles.togglePassword} aria-label="Toggle confirm password visibility">
+            <input
+              type={showConfirm ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Re-enter your password"
+              className={styles.input}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirm(!showConfirm)}
+              className={styles.togglePassword}
+              aria-label="Toggle confirm password visibility"
+            >
               {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
         </div>
 
         <button type="submit" disabled={isLoading} className={styles.primaryButton}>
-          {isLoading ? <Loader2 size={18} className="animate-spin" /> : <>Create Account <ArrowRight size={18} /></>}
+          {isLoading ? (
+            <Loader2 size={18} className="animate-spin" />
+          ) : (
+            <>
+              Create Account <ArrowRight size={18} />
+            </>
+          )}
         </button>
       </form>
 

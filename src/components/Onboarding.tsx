@@ -70,10 +70,7 @@ export default function Onboarding() {
           >
             <div className={styles.progress}>
               {STEPS.map((_, i) => (
-                <div
-                  key={i}
-                  className={`${styles.dot} ${i <= step ? styles.dotActive : ""}`}
-                />
+                <div key={i} className={`${styles.dot} ${i <= step ? styles.dotActive : ""}`} />
               ))}
             </div>
 
@@ -86,7 +83,14 @@ export default function Onboarding() {
                 transition={{ duration: 0.25 }}
                 className={styles.content}
               >
-                <div className={styles.iconWrap} style={{ color: STEPS[step].color, background: `${STEPS[step].color}15`, borderColor: `${STEPS[step].color}30` }}>
+                <div
+                  className={styles.iconWrap}
+                  style={{
+                    color: STEPS[step].color,
+                    background: `${STEPS[step].color}15`,
+                    borderColor: `${STEPS[step].color}30`,
+                  }}
+                >
                   {STEPS[step].icon}
                 </div>
                 <h2 className={styles.title}>{STEPS[step].title}</h2>
@@ -97,7 +101,9 @@ export default function Onboarding() {
             <div className={styles.actions}>
               {step < STEPS.length - 1 ? (
                 <>
-                  <button className={styles.skipBtn} onClick={complete}>Skip</button>
+                  <button className={styles.skipBtn} onClick={complete}>
+                    Skip
+                  </button>
                   <button className={styles.nextBtn} onClick={handleNext}>
                     Continue <ArrowRight size={16} />
                   </button>

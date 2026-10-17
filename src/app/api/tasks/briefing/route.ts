@@ -39,17 +39,27 @@ export async function POST(req: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { tasks } = await req.json();
     if (!tasks || tasks.length === 0) {
-      return NextResponse.json({ success: true, focus_order: [], top_focus: [], message: "Nothing on your plate today. Enjoy the calm." });
+      return NextResponse.json({
+        success: true,
+        focus_order: [],
+        top_focus: [],
+        message: "Nothing on your plate today. Enjoy the calm.",
+      });
     }
 
-    const summary = tasks.map((t: any) =>
-      `ID: ${t.id}\nTitle: ${t.title}\nPriority: ${t.priority}\nDue: ${t.due_date || "no date"}\nDescription: ${t.description || "none"}`
-    ).join("\n\n---\n\n");
+    const summary = tasks
+      .map(
+        (t: any) =>
+          `ID: ${t.id}\nTitle: ${t.title}\nPriority: ${t.priority}\nDue: ${t.due_date || "no date"}\nDescription: ${t.description || "none"}`
+      )
+      .join("\n\n---\n\n");
 
     const errors: string[] = [];
     for (const modelId of MODEL_IDS) {
@@ -69,6 +79,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ error: errors.join("\n") }, { status: 500 });
   } catch (error: any) {
-    return NextResponse.json({ error: error?.message || "Failed to generate briefing" }, { status: 500 });
+    return NextResponse.json(
+      { error: error?.message || "Failed to generate briefing" },
+      { status: 500 }
+    );
   }
 }

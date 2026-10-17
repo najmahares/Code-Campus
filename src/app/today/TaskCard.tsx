@@ -14,7 +14,14 @@ type Props = {
   onSnooze: (id: string, days: number) => void;
 };
 
-export default function TaskCard({ task, isTopFocus, onToggle, onEdit, onDelete, onSnooze }: Props) {
+export default function TaskCard({
+  task,
+  isTopFocus,
+  onToggle,
+  onEdit,
+  onDelete,
+  onSnooze,
+}: Props) {
   const overdue = isOverdue(task);
 
   return (
@@ -47,14 +54,14 @@ export default function TaskCard({ task, isTopFocus, onToggle, onEdit, onDelete,
             {isTopFocus && <Star size={12} className={styles.taskFocusStar} fill="#E8A0A8" />}
             {task.title}
           </h3>
-          <span className={`${styles.taskPriority} ${styles[`taskPriority${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}`]}`}>
+          <span
+            className={`${styles.taskPriority} ${styles[`taskPriority${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}`]}`}
+          >
             {task.priority}
           </span>
         </div>
 
-        {task.description && (
-          <p className={styles.taskDescription}>{task.description}</p>
-        )}
+        {task.description && <p className={styles.taskDescription}>{task.description}</p>}
 
         <div className={styles.taskMeta}>
           {task.due_date && (
@@ -63,25 +70,35 @@ export default function TaskCard({ task, isTopFocus, onToggle, onEdit, onDelete,
               {overdue ? `Overdue · ${formatDueDate(task.due_date)}` : formatDueDate(task.due_date)}
             </span>
           )}
-          {task.snoozed_until && (
-            <span className={styles.taskSnoozed}>Snoozed</span>
-          )}
+          {task.snoozed_until && <span className={styles.taskSnoozed}>Snoozed</span>}
         </div>
       </div>
 
       <div className={styles.taskActions}>
         {!task.completed && task.due_date && (
           <div className={styles.snoozeRow}>
-            <button className={styles.snoozeBtn} onClick={() => onSnooze(task.id, 1)} title="Snooze 1 day">
+            <button
+              className={styles.snoozeBtn}
+              onClick={() => onSnooze(task.id, 1)}
+              title="Snooze 1 day"
+            >
               +1d
             </button>
-            <button className={styles.snoozeBtn} onClick={() => onSnooze(task.id, 7)} title="Snooze 1 week">
+            <button
+              className={styles.snoozeBtn}
+              onClick={() => onSnooze(task.id, 7)}
+              title="Snooze 1 week"
+            >
               +7d
             </button>
           </div>
         )}
-        <button className={styles.taskActionBtn} onClick={onEdit} title="Edit"><Pencil size={14} /></button>
-        <button className={styles.taskActionBtn} onClick={onDelete} title="Delete"><Trash2 size={14} /></button>
+        <button className={styles.taskActionBtn} onClick={onEdit} title="Edit">
+          <Pencil size={14} />
+        </button>
+        <button className={styles.taskActionBtn} onClick={onDelete} title="Delete">
+          <Trash2 size={14} />
+        </button>
       </div>
     </motion.div>
   );

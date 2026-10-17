@@ -52,7 +52,10 @@ export default function ConfirmModal({
               </button>
               <button
                 className={destructive ? styles.destructiveBtn : styles.confirmBtn}
-                onClick={() => { onConfirm(); onCancel(); }}
+                onClick={() => {
+                  onConfirm();
+                  onCancel();
+                }}
               >
                 {confirmLabel}
               </button>

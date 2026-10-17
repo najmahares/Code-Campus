@@ -4,18 +4,48 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter, useParams, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home as HomeIcon, FileText, Calendar, Code2, Lock, Heart,
-  ArrowLeft, Plus, Loader2, Trash2, Upload, X, FileText as FileIcon, Copy, RotateCcw, Check, ThumbsUp, ThumbsDown,
-  Image as ImageIcon, Link2, Sparkles, MessageSquare, Send, Eraser,
+  Home as HomeIcon,
+  FileText,
+  Calendar,
+  Code2,
+  Lock,
+  Heart,
+  ArrowLeft,
+  Plus,
+  Loader2,
+  Trash2,
+  Upload,
+  X,
+  FileText as FileIcon,
+  Copy,
+  RotateCcw,
+  Check,
+  ThumbsUp,
+  ThumbsDown,
+  Image as ImageIcon,
+  Link2,
+  Sparkles,
+  MessageSquare,
+  Send,
+  Eraser,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
 import ConfirmModal from "@/components/ConfirmModal";
 import DeerLoader from "@/components/DeerLoader";
 import {
-  getProject, updateProject, listProjectSpecs, deleteProjectSpec,
-  uploadProjectFile, listProjectChats, saveProjectChat, clearProjectChats,
-  SUPPORTED_SPEC_TYPES, type Project, type ProjectSpec, type ProjectChat,
+  getProject,
+  updateProject,
+  listProjectSpecs,
+  deleteProjectSpec,
+  uploadProjectFile,
+  listProjectChats,
+  saveProjectChat,
+  clearProjectChats,
+  SUPPORTED_SPEC_TYPES,
+  type Project,
+  type ProjectSpec,
+  type ProjectChat,
 } from "@/lib/projects/store";
 import styles from "./project.module.css";
 
@@ -47,11 +77,21 @@ export default function ProjectDetailPage() {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<Partial<Project>>({});
   const [confirmState, setConfirmState] = useState<{
-    isOpen: boolean; title: string; message: string; confirmLabel: string;
-    destructive: boolean; onConfirm: () => void | Promise<void>;
-  }>({ isOpen: false, title: "", message: "", confirmLabel: "Confirm", destructive: false, onConfirm: () => {} });
+    isOpen: boolean;
+    title: string;
+    message: string;
+    confirmLabel: string;
+    destructive: boolean;
+    onConfirm: () => void | Promise<void>;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmLabel: "Confirm",
+    destructive: false,
+    onConfirm: () => {},
+  });
 
-  // Chat state
   const [chatOpen, setChatOpen] = useState(false);
   const [chats, setChats] = useState<ProjectChat[]>([]);
   const [input, setInput] = useState("");
@@ -72,7 +112,10 @@ export default function ProjectDetailPage() {
         listProjectSpecs(projectId),
         listProjectChats(projectId),
       ]);
-      if (!p) { router.push("/projects"); return; }
+      if (!p) {
+        router.push("/projects");
+        return;
+      }
       setProject(p);
       setSpecs(s);
       setChats(c);
@@ -84,13 +127,17 @@ export default function ProjectDetailPage() {
 
   useEffect(() => {
     async function init() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/login"); return; }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
       await loadAll();
       setLoading(false);
     }
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
   useEffect(() => {
@@ -99,7 +146,6 @@ export default function ProjectDetailPage() {
     }
   }, [chats, chatOpen]);
 
-  // --- UPLOAD ---
   const uploadOne = async (file: File) => {
     if (file.size > 15 * 1024 * 1024) throw new Error(`${file.name} is too large (max 15MB)`);
     if (!SUPPORTED_SPEC_TYPES.includes(file.type) && !file.name.endsWith(".md")) {
@@ -108,7 +154,6 @@ export default function ProjectDetailPage() {
 
     const { signedUrl } = await uploadProjectFile(file, projectId);
 
-    // Parse for extracted text
     const parseRes = await fetch("/api/projects/specs/parse", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -167,17 +212,17 @@ export default function ProjectDetailPage() {
     });
   };
 
-  // --- SAVE METADATA ---
   const handleSave = async () => {
     if (!project) return;
     try {
       await updateProject(project.id, draft);
       await loadAll();
       setEditing(false);
-    } catch (err: any) { setError(err.message); }
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
-  // --- CHAT ---
   const sendMessage = async () => {
     if (!input.trim() || sending) return;
     const userMsg = input.trim();
@@ -190,8 +235,22 @@ export default function ProjectDetailPage() {
 
     setChats((prev) => [
       ...prev,
-      { id: tempUserId, project_id: projectId, user_id: "", role: "user", content: userMsg, created_at: new Date().toISOString() },
-      { id: tempAssistantId, project_id: projectId, user_id: "", role: "assistant", content: "", created_at: new Date().toISOString() },
+      {
+        id: tempUserId,
+        project_id: projectId,
+        user_id: "",
+        role: "user",
+        content: userMsg,
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: tempAssistantId,
+        project_id: projectId,
+        user_id: "",
+        role: "assistant",
+        content: "",
+        created_at: new Date().toISOString(),
+      },
     ]);
 
     try {
@@ -217,7 +276,9 @@ export default function ProjectDetailPage() {
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
         fullText += chunk;
-        setChats((prev) => prev.map((c) => c.id === tempAssistantId ? { ...c, content: fullText } : c));
+        setChats((prev) =>
+          prev.map((c) => (c.id === tempAssistantId ? { ...c, content: fullText } : c))
+        );
       }
 
       await saveProjectChat(projectId, "user", userMsg);
@@ -244,7 +305,6 @@ export default function ProjectDetailPage() {
     });
   };
 
-
   const handleCopy = async (content: string, id: string) => {
     try {
       await navigator.clipboard.writeText(content);
@@ -254,11 +314,9 @@ export default function ProjectDetailPage() {
   };
 
   const handleRetry = async () => {
-    // Find the last user message and resend it
     const lastUser = [...chats].reverse().find((c) => c.role === "user");
     if (!lastUser) return;
     setChats((prev) => {
-      // Drop the last assistant message
       const idx = prev.findIndex((c) => c.id === prev[prev.length - 1]?.id);
       if (prev[prev.length - 1]?.role === "assistant") {
         return prev.slice(0, -1);
@@ -268,24 +326,28 @@ export default function ProjectDetailPage() {
     setInput(lastUser.content);
   };
 
-
   const handleFeedback = async (messageId: string, kind: "up" | "down") => {
-    // Visual feedback via CSS class toggle — no backend needed for MVP
-    setChats((prev) => prev.map((c) =>
-      c.id === messageId ? { ...c, feedback: kind } as any : c
-    ));
+    setChats((prev) =>
+      prev.map((c) => (c.id === messageId ? ({ ...c, feedback: kind } as any) : c))
+    );
   };
 
-  if (loading) return <div className={styles.loading}>Loading project...</div>
+  if (loading) return <div className={styles.loading}>Loading project...</div>;
   if (!project) return null;
 
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarLogo}><LogoLockup size={40} /></div>
+        <div className={styles.sidebarLogo}>
+          <LogoLockup size={40} />
+        </div>
         <nav className={styles.sidebarNav}>
           {navItems.map((item) => (
-            <a key={item.id} href={item.href} className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}>
+            <a
+              key={item.id}
+              href={item.href}
+              className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}
+            >
               <item.Icon size={20} strokeWidth={2} />
               <span>{item.label}</span>
             </a>
@@ -302,7 +364,9 @@ export default function ProjectDetailPage() {
 
       <div className={styles.main}>
         <div className={styles.topbar}>
-          <a href="/projects" className={styles.backBtn}><ArrowLeft size={16} /> All projects</a>
+          <a href="/projects" className={styles.backBtn}>
+            <ArrowLeft size={16} /> All projects
+          </a>
           <button className={styles.copilotBtn} onClick={() => setChatOpen(true)}>
             <Sparkles size={16} /> Ask Scout
           </button>
@@ -320,7 +384,9 @@ export default function ProjectDetailPage() {
               ) : (
                 <h1 className={styles.projectTitle}>{project.name}</h1>
               )}
-              <span className={`${styles.statusPill} ${styles[`status${project.status.charAt(0).toUpperCase() + project.status.slice(1)}`]}`}>
+              <span
+                className={`${styles.statusPill} ${styles[`status${project.status.charAt(0).toUpperCase() + project.status.slice(1)}`]}`}
+              >
                 {project.status}
               </span>
             </div>
@@ -337,10 +403,16 @@ export default function ProjectDetailPage() {
           </div>
 
           <div className={styles.tabs}>
-            <button className={`${styles.tab} ${tab === "specs" ? styles.tabActive : ""}`} onClick={() => setTab("specs")}>
+            <button
+              className={`${styles.tab} ${tab === "specs" ? styles.tabActive : ""}`}
+              onClick={() => setTab("specs")}
+            >
               Specs <span className={styles.tabCount}>{specs.length}</span>
             </button>
-            <button className={`${styles.tab} ${tab === "overview" ? styles.tabActive : ""}`} onClick={() => setTab("overview")}>
+            <button
+              className={`${styles.tab} ${tab === "overview" ? styles.tabActive : ""}`}
+              onClick={() => setTab("overview")}
+            >
               Overview
             </button>
           </div>
@@ -357,9 +429,7 @@ export default function ProjectDetailPage() {
                       ? `Uploading ${uploadProgress.current} / ${uploadProgress.total}`
                       : "Drop files here or click to choose"}
                   </div>
-                  <div className={styles.uploadSub}>
-                    PDF, PNG, JPG, TXT, MD · up to 15MB each
-                  </div>
+                  <div className={styles.uploadSub}>PDF, PNG, JPG, TXT, MD · up to 15MB each</div>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -376,9 +446,8 @@ export default function ProjectDetailPage() {
                   <input
                     ref={folderInputRef}
                     type="file"
-                    // @ts-ignore
-                    webkitdirectory=""
-                    directory=""
+
+                    {...{ webkitdirectory: "", directory: "" } as any}
                     multiple
                     onChange={(e) => handleFiles(e.target.files)}
                     style={{ display: "none" }}
@@ -388,7 +457,9 @@ export default function ProjectDetailPage() {
               </div>
 
               {specs.length === 0 ? (
-                <div className={styles.emptySpecs}>No specs yet. Upload the files that define this project.</div>
+                <div className={styles.emptySpecs}>
+                  No specs yet. Upload the files that define this project.
+                </div>
               ) : (
                 <div className={styles.specsList}>
                   {specs.map((s) => (
@@ -400,16 +471,26 @@ export default function ProjectDetailPage() {
                       className={styles.specRow}
                     >
                       <div className={styles.specIcon}>
-                        {s.file_type?.startsWith("image/") ? <ImageIcon size={16} /> : <FileIcon size={16} />}
+                        {s.file_type?.startsWith("image/") ? (
+                          <ImageIcon size={16} />
+                        ) : (
+                          <FileIcon size={16} />
+                        )}
                       </div>
                       <div className={styles.specInfo}>
                         <div className={styles.specName}>{s.name}</div>
                         <div className={styles.specMeta}>
-                          {s.file_type} · {s.file_size ? `${Math.round(s.file_size / 1024)} KB` : ""} ·{" "}
-                          {s.extracted_text ? `${s.extracted_text.length} chars extracted` : "not parsed"}
+                          {s.file_type} ·{" "}
+                          {s.file_size ? `${Math.round(s.file_size / 1024)} KB` : ""} ·{" "}
+                          {s.extracted_text
+                            ? `${s.extracted_text.length} chars extracted`
+                            : "not parsed"}
                         </div>
                       </div>
-                      <button className={styles.specDelete} onClick={() => handleDeleteSpec(s.id, s.name)}>
+                      <button
+                        className={styles.specDelete}
+                        onClick={() => handleDeleteSpec(s.id, s.name)}
+                      >
                         <Trash2 size={14} />
                       </button>
                     </motion.div>
@@ -425,7 +506,7 @@ export default function ProjectDetailPage() {
                 <label className={styles.overviewLabel}>GitHub URL</label>
                 <input
                   className={styles.overviewInput}
-                  value={editing ? (draft.github_url || "") : (project.github_url || "")}
+                  value={editing ? draft.github_url || "" : project.github_url || ""}
                   onChange={(e) => setDraft({ ...draft, github_url: e.target.value })}
                   placeholder="https://github.com/..."
                   disabled={!editing}
@@ -435,7 +516,7 @@ export default function ProjectDetailPage() {
                 <label className={styles.overviewLabel}>Local Path</label>
                 <input
                   className={styles.overviewInput}
-                  value={editing ? (draft.local_path || "") : (project.local_path || "")}
+                  value={editing ? draft.local_path || "" : project.local_path || ""}
                   onChange={(e) => setDraft({ ...draft, local_path: e.target.value })}
                   placeholder="/Users/you/Projects/..."
                   disabled={!editing}
@@ -445,7 +526,7 @@ export default function ProjectDetailPage() {
                 <label className={styles.overviewLabel}>Figma URL</label>
                 <input
                   className={styles.overviewInput}
-                  value={editing ? (draft.figma_url || "") : (project.figma_url || "")}
+                  value={editing ? draft.figma_url || "" : project.figma_url || ""}
                   onChange={(e) => setDraft({ ...draft, figma_url: e.target.value })}
                   placeholder="https://figma.com/..."
                   disabled={!editing}
@@ -455,7 +536,7 @@ export default function ProjectDetailPage() {
                 <label className={styles.overviewLabel}>Deployed URL</label>
                 <input
                   className={styles.overviewInput}
-                  value={editing ? (draft.deployed_url || "") : (project.deployed_url || "")}
+                  value={editing ? draft.deployed_url || "" : project.deployed_url || ""}
                   onChange={(e) => setDraft({ ...draft, deployed_url: e.target.value })}
                   placeholder="https://yourapp.vercel.app"
                   disabled={!editing}
@@ -465,7 +546,7 @@ export default function ProjectDetailPage() {
                 <label className={styles.overviewLabel}>Status</label>
                 <select
                   className={styles.overviewInput}
-                  value={editing ? (draft.status || "active") : project.status}
+                  value={editing ? draft.status || "active" : project.status}
                   onChange={(e) => setDraft({ ...draft, status: e.target.value as any })}
                   disabled={!editing}
                 >
@@ -479,11 +560,23 @@ export default function ProjectDetailPage() {
               <div className={styles.overviewActions}>
                 {editing ? (
                   <>
-                    <button className={styles.btnSecondary} onClick={() => { setDraft(project); setEditing(false); }}>Cancel</button>
-                    <button className={styles.btnPrimary} onClick={handleSave}>Save changes</button>
+                    <button
+                      className={styles.btnSecondary}
+                      onClick={() => {
+                        setDraft(project);
+                        setEditing(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button className={styles.btnPrimary} onClick={handleSave}>
+                      Save changes
+                    </button>
                   </>
                 ) : (
-                  <button className={styles.btnPrimary} onClick={() => setEditing(true)}>Edit details</button>
+                  <button className={styles.btnPrimary} onClick={() => setEditing(true)}>
+                    Edit details
+                  </button>
                 )}
               </div>
             </div>
@@ -491,7 +584,6 @@ export default function ProjectDetailPage() {
         </div>
       </div>
 
-      {/* FLOATING CHAT PANEL */}
       <AnimatePresence>
         {chatOpen && (
           <>
@@ -511,12 +603,24 @@ export default function ProjectDetailPage() {
             >
               <div className={styles.chatHeader}>
                 <div>
-                  <div className={styles.chatTitle}><Sparkles size={16} /> Scout</div>
-                  <div className={styles.chatSub}>{project.name} · reading {specs.length} spec{specs.length !== 1 ? "s" : ""}</div>
+                  <div className={styles.chatTitle}>
+                    <Sparkles size={16} /> Scout
+                  </div>
+                  <div className={styles.chatSub}>
+                    {project.name} · reading {specs.length} spec{specs.length !== 1 ? "s" : ""}
+                  </div>
                 </div>
                 <div className={styles.chatHeaderActions}>
-                  <button className={styles.chatIconBtn} onClick={handleClearChat} title="Clear chat"><Eraser size={14} /></button>
-                  <button className={styles.chatIconBtn} onClick={() => setChatOpen(false)}><X size={14} /></button>
+                  <button
+                    className={styles.chatIconBtn}
+                    onClick={handleClearChat}
+                    title="Clear chat"
+                  >
+                    <Eraser size={14} />
+                  </button>
+                  <button className={styles.chatIconBtn} onClick={() => setChatOpen(false)}>
+                    <X size={14} />
+                  </button>
                 </div>
               </div>
 
@@ -526,13 +630,16 @@ export default function ProjectDetailPage() {
                     <Sparkles size={28} />
                     <div className={styles.chatEmptyTitle}>Hey, I&apos;m Scout.</div>
                     <div className={styles.chatEmptyText}>
-                      I&apos;ve read your specs. Ask me anything about this project — what to build first, whether a decision matches the brief, or how to fix something that&apos;s broken.
+                      I&apos;ve read your specs. Ask me anything about this project — what to build
+                      first, whether a decision matches the brief, or how to fix something
+                      that&apos;s broken.
                     </div>
                   </div>
                 )}
                 {chats.map((c, idx) => {
                   const isLast = idx === chats.length - 1;
-                  const isStreaming = sending && isLast && c.role === "assistant" && c.content.length > 0;
+                  const isStreaming =
+                    sending && isLast && c.role === "assistant" && c.content.length > 0;
                   if (c.role === "user") {
                     return (
                       <div key={c.id} className={styles.chatMsgUser}>
@@ -585,7 +692,11 @@ export default function ProjectDetailPage() {
                   placeholder="Ask about this project..."
                   rows={2}
                 />
-                <button className={styles.chatSend} onClick={sendMessage} disabled={sending || !input.trim()}>
+                <button
+                  className={styles.chatSend}
+                  onClick={sendMessage}
+                  disabled={sending || !input.trim()}
+                >
                   <Send size={14} />
                 </button>
               </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useToast } from "@/components/ToastProvider";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { X, Calendar, Flag, FileText } from "lucide-react";
@@ -24,7 +26,9 @@ export default function TaskModal({ isOpen, onClose, onSave, mode, initial }: Pr
   const { toast } = useToast();
   const [description, setDescription] = useState(initial?.description || "");
   const [dueDate, setDueDate] = useState(initial?.due_date || "");
-  const [priority, setPriority] = useState<"low" | "medium" | "high">(initial?.priority || "medium");
+  const [priority, setPriority] = useState<"low" | "medium" | "high">(
+    initial?.priority || "medium"
+  );
   const [saving, setSaving] = useState(false);
 
   if (!isOpen) return null;
@@ -63,14 +67,14 @@ export default function TaskModal({ isOpen, onClose, onSave, mode, initial }: Pr
       >
         <div className={styles.modalHeader}>
           <div>
-            <div className={styles.modalTitle}>
-              {mode === "create" ? "New task" : "Edit task"}
-            </div>
+            <div className={styles.modalTitle}>{mode === "create" ? "New task" : "Edit task"}</div>
             <div className={styles.modalSub}>
               {mode === "create" ? "What needs to get done?" : "Update the details"}
             </div>
           </div>
-          <button className={styles.modalClose} onClick={onClose}><X size={18} /></button>
+          <button className={styles.modalClose} onClick={onClose}>
+            <X size={18} />
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.modalBody}>
@@ -87,7 +91,9 @@ export default function TaskModal({ isOpen, onClose, onSave, mode, initial }: Pr
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Description <span className={styles.fieldOptional}>(optional)</span></label>
+            <label className={styles.fieldLabel}>
+              Description <span className={styles.fieldOptional}>(optional)</span>
+            </label>
             <textarea
               className={styles.fieldTextarea}
               value={description}
@@ -132,9 +138,11 @@ export default function TaskModal({ isOpen, onClose, onSave, mode, initial }: Pr
           </div>
 
           <div className={styles.modalFooter}>
-            <button type="button" className={styles.btnSecondary} onClick={onClose}>Cancel</button>
+            <button type="button" className={styles.btnSecondary} onClick={onClose}>
+              Cancel
+            </button>
             <button type="submit" className={styles.btnPrimary} disabled={saving || !title.trim()}>
-              {saving ? "Saving..." : (mode === "create" ? "Create task" : "Save changes")}
+              {saving ? "Saving..." : mode === "create" ? "Create task" : "Save changes"}
             </button>
           </div>
         </form>

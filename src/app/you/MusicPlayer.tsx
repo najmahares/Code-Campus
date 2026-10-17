@@ -73,7 +73,7 @@ const VIBES = [
 
 export default function MusicPlayer() {
   const [active, setActive] = useState<Playlist | null>(null);
-  const [vibe, setVibe] = useState<typeof VIBES[number]["id"]>("all");
+  const [vibe, setVibe] = useState<(typeof VIBES)[number]["id"]>("all");
 
   const filtered = vibe === "all" ? PLAYLISTS : PLAYLISTS.filter((p) => p.vibe === vibe);
 

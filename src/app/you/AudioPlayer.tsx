@@ -3,8 +3,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Play, Pause, SkipBack, SkipForward, Shuffle, Volume2, VolumeX,
-  Music, ListMusic, Repeat, Repeat1,
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Shuffle,
+  Volume2,
+  VolumeX,
+  Music,
+  ListMusic,
+  Repeat,
+  Repeat1,
 } from "lucide-react";
 import { TRACKS, type Track } from "@/lib/wellbeing/tracks";
 import styles from "./wellbeing.module.css";
@@ -128,12 +137,16 @@ export default function AudioPlayer() {
     setLoopMode((m) => (m === "off" ? "all" : m === "all" ? "one" : "off"));
   };
 
-  const counts = useMemo(() => ({
-    all: TRACKS.length,
-    focus: TRACKS.filter((t) => t.mood === "focus").length,
-    calm: TRACKS.filter((t) => t.mood === "calm").length,
-    sleep: TRACKS.filter((t) => t.mood === "sleep").length,
-  } as Record<Mood, number>), []);
+  const counts = useMemo(
+    () =>
+      ({
+        all: TRACKS.length,
+        focus: TRACKS.filter((t) => t.mood === "focus").length,
+        calm: TRACKS.filter((t) => t.mood === "calm").length,
+        sleep: TRACKS.filter((t) => t.mood === "sleep").length,
+      }) as Record<Mood, number>,
+    []
+  );
 
   if (!track) return <div className={styles.audioEmpty}>No tracks in this category.</div>;
 
@@ -150,7 +163,11 @@ export default function AudioPlayer() {
 
       <div className={styles.audioMoodTabs}>
         {MOODS.map((m) => (
-          <button key={m.id} className={`${styles.categoryBtn} ${mood === m.id ? styles.categoryBtnActive : ""}`} onClick={() => setMood(m.id)}>
+          <button
+            key={m.id}
+            className={`${styles.categoryBtn} ${mood === m.id ? styles.categoryBtnActive : ""}`}
+            onClick={() => setMood(m.id)}
+          >
             {m.label}
             <span className={styles.audioMoodCount}>{counts[m.id]}</span>
           </button>
@@ -159,7 +176,11 @@ export default function AudioPlayer() {
 
       <div className={styles.audioPlayer}>
         <div className={styles.audioArtWrap}>
-          <motion.div className={styles.audioArt} animate={{ rotate: playing ? 360 : 0 }} transition={{ duration: 20, repeat: playing ? Infinity : 0, ease: "linear" }}>
+          <motion.div
+            className={styles.audioArt}
+            animate={{ rotate: playing ? 360 : 0 }}
+            transition={{ duration: 20, repeat: playing ? Infinity : 0, ease: "linear" }}
+          >
             <Music size={42} />
           </motion.div>
         </div>
@@ -171,12 +192,24 @@ export default function AudioPlayer() {
 
         <div className={styles.audioSeekRow}>
           <span className={styles.audioTime}>{fmt(current)}</span>
-          <input type="range" className={styles.audioSeek} min={0} max={duration || 0} value={current} onChange={seek} step={0.1} />
+          <input
+            type="range"
+            className={styles.audioSeek}
+            min={0}
+            max={duration || 0}
+            value={current}
+            onChange={seek}
+            step={0.1}
+          />
           <span className={styles.audioTime}>{fmt(duration)}</span>
         </div>
 
         <div className={styles.audioControls}>
-          <button className={`${styles.audioIconBtn} ${shuffle ? styles.audioIconBtnActive : ""}`} onClick={() => setShuffle((s) => !s)} title="Shuffle">
+          <button
+            className={`${styles.audioIconBtn} ${shuffle ? styles.audioIconBtnActive : ""}`}
+            onClick={() => setShuffle((s) => !s)}
+            title="Shuffle"
+          >
             <Shuffle size={16} />
           </button>
           <button className={styles.audioIconBtn} onClick={prev} title="Previous">
@@ -188,22 +221,46 @@ export default function AudioPlayer() {
           <button className={styles.audioIconBtn} onClick={next} title="Next">
             <SkipForward size={18} />
           </button>
-          <button className={`${styles.audioIconBtn} ${loopMode !== "off" ? styles.audioIconBtnActive : ""}`} onClick={cycleLoop} title={loopMode === "off" ? "Loop off" : loopMode === "all" ? "Loop all" : "Loop one"}>
+          <button
+            className={`${styles.audioIconBtn} ${loopMode !== "off" ? styles.audioIconBtnActive : ""}`}
+            onClick={cycleLoop}
+            title={loopMode === "off" ? "Loop off" : loopMode === "all" ? "Loop all" : "Loop one"}
+          >
             {loopMode === "one" ? <Repeat1 size={16} /> : <Repeat size={16} />}
           </button>
-          <button className={`${styles.audioIconBtn} ${muted ? styles.audioIconBtnActive : ""}`} onClick={() => setMuted((m) => !m)} title="Mute">
+          <button
+            className={`${styles.audioIconBtn} ${muted ? styles.audioIconBtnActive : ""}`}
+            onClick={() => setMuted((m) => !m)}
+            title="Mute"
+          >
             {muted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
           </button>
         </div>
 
         <div className={styles.audioVolumeRow}>
           <Volume2 size={13} className={styles.audioVolumeIcon} />
-          <input type="range" className={styles.audioVolume} min={0} max={1} step={0.01} value={muted ? 0 : volume} onChange={(e) => { setVolume(Number(e.target.value)); setMuted(false); }} />
+          <input
+            type="range"
+            className={styles.audioVolume}
+            min={0}
+            max={1}
+            step={0.01}
+            value={muted ? 0 : volume}
+            onChange={(e) => {
+              setVolume(Number(e.target.value));
+              setMuted(false);
+            }}
+          />
         </div>
 
         <AnimatePresence>
           {error && (
-            <motion.div className={styles.audioError} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <motion.div
+              className={styles.audioError}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+            >
               {error}
             </motion.div>
           )}
@@ -216,7 +273,14 @@ export default function AudioPlayer() {
           <span>Up next</span>
         </div>
         {queue.map((t, i) => (
-          <button key={t.id} className={`${styles.audioQueueItem} ${i === index ? styles.audioQueueItemActive : ""}`} onClick={() => { setIndex(i); setPlaying(true); }}>
+          <button
+            key={t.id}
+            className={`${styles.audioQueueItem} ${i === index ? styles.audioQueueItemActive : ""}`}
+            onClick={() => {
+              setIndex(i);
+              setPlaying(true);
+            }}
+          >
             <div className={styles.audioQueueNum}>{String(i + 1).padStart(2, "0")}</div>
             <div className={styles.audioQueueBody}>
               <div className={styles.audioQueueTitle}>{t.title}</div>

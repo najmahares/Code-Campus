@@ -1,11 +1,16 @@
 "use client";
 
+import { useToast } from "@/components/ToastProvider";
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { X, Loader2, KeyRound, Terminal, Braces, FileCode } from "lucide-react";
 import {
-  createVaultItem, updateVaultItem,
-  type VaultItem, type VaultType, TYPE_LABELS,
+  createVaultItem,
+  updateVaultItem,
+  type VaultItem,
+  type VaultType,
+  TYPE_LABELS,
 } from "@/lib/vault/store";
 import styles from "./vault.module.css";
 
@@ -116,14 +121,14 @@ export default function VaultModal({ isOpen, onClose, onSaved, editing }: Props)
       >
         <div className={styles.modalHeader}>
           <div>
-            <div className={styles.modalTitle}>
-              {editing ? "Edit item" : "New vault item"}
-            </div>
+            <div className={styles.modalTitle}>{editing ? "Edit item" : "New vault item"}</div>
             <div className={styles.modalSub}>
               {editing ? "Update the details" : "What are you saving?"}
             </div>
           </div>
-          <button className={styles.modalClose} onClick={onClose}><X size={18} /></button>
+          <button className={styles.modalClose} onClick={onClose}>
+            <X size={18} />
+          </button>
         </div>
 
         <div className={styles.modalBody}>
@@ -166,17 +171,22 @@ export default function VaultModal({ isOpen, onClose, onSaved, editing }: Props)
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder={
-                type === "secret" ? "sk-..." :
-                type === "command" ? "git rebase -i HEAD~3" :
-                type === "snippet" ? "paste your code" :
-                "DATABASE_URL=postgres://..."
+                type === "secret"
+                  ? "sk-..."
+                  : type === "command"
+                    ? "git rebase -i HEAD~3"
+                    : type === "snippet"
+                      ? "paste your code"
+                      : "DATABASE_URL=postgres://..."
               }
               rows={5}
             />
           </div>
 
           <div className={styles.fieldGroup}>
-            <label className={styles.fieldLabel}>Description <span className={styles.optional}>(optional)</span></label>
+            <label className={styles.fieldLabel}>
+              Description <span className={styles.optional}>(optional)</span>
+            </label>
             <input
               type="text"
               className={styles.fieldInput}
@@ -188,7 +198,9 @@ export default function VaultModal({ isOpen, onClose, onSaved, editing }: Props)
 
           <div className={styles.fieldRow}>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Language <span className={styles.optional}>(optional)</span></label>
+              <label className={styles.fieldLabel}>
+                Language <span className={styles.optional}>(optional)</span>
+              </label>
               <input
                 type="text"
                 className={styles.fieldInput}
@@ -198,7 +210,9 @@ export default function VaultModal({ isOpen, onClose, onSaved, editing }: Props)
               />
             </div>
             <div className={styles.fieldGroup}>
-              <label className={styles.fieldLabel}>Tags <span className={styles.optional}>(comma-separated)</span></label>
+              <label className={styles.fieldLabel}>
+                Tags <span className={styles.optional}>(comma-separated)</span>
+              </label>
               <input
                 type="text"
                 className={styles.fieldInput}
@@ -212,9 +226,21 @@ export default function VaultModal({ isOpen, onClose, onSaved, editing }: Props)
           {error && <div className={styles.modalError}>{error}</div>}
 
           <div className={styles.modalFooter}>
-            <button className={styles.btnSecondary} onClick={onClose}>Cancel</button>
-            <button className={styles.btnPrimary} onClick={handleSave} disabled={saving || !title.trim() || !value.trim()}>
-              {saving ? <Loader2 size={16} className="animate-spin" /> : (editing ? "Save changes" : "Add to vault")}
+            <button className={styles.btnSecondary} onClick={onClose}>
+              Cancel
+            </button>
+            <button
+              className={styles.btnPrimary}
+              onClick={handleSave}
+              disabled={saving || !title.trim() || !value.trim()}
+            >
+              {saving ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : editing ? (
+                "Save changes"
+              ) : (
+                "Add to vault"
+              )}
             </button>
           </div>
         </div>

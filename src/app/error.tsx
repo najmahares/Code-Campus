@@ -29,7 +29,8 @@ export default function GlobalError({
         </div>
         <h1 className={styles.title}>Something went wrong.</h1>
         <p className={styles.desc}>
-          We hit a small snag loading this page. Your data is safe. Try refreshing, or head back home.
+          We hit a small snag loading this page. Your data is safe. Try refreshing, or head back
+          home.
         </p>
         <div className={styles.actions}>
           <button className={styles.primaryBtn} onClick={() => reset()}>

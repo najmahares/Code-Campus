@@ -46,7 +46,9 @@ export async function POST(req: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { imageUrl } = await req.json();
@@ -77,7 +79,10 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json({ error: `All models failed:\n${errors.join("\n")}` }, { status: 500 });
+    return NextResponse.json(
+      { error: `All models failed:\n${errors.join("\n")}` },
+      { status: 500 }
+    );
   } catch (error: any) {
     return NextResponse.json({ error: error?.message || "Vision failed" }, { status: 500 });
   }

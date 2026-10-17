@@ -14,7 +14,12 @@ export async function globalSearch(query: string): Promise<SearchResult[]> {
   const q = `%${query}%`;
 
   const [notes, projects, tasks, vault] = await Promise.all([
-    supabase.from("notes").select("id, title, raw_body").is("deleted_at", null).ilike("title", q).limit(4),
+    supabase
+      .from("notes")
+      .select("id, title, raw_body")
+      .is("deleted_at", null)
+      .ilike("title", q)
+      .limit(4),
     supabase.from("projects").select("id, name, description").ilike("name", q).limit(4),
     supabase.from("tasks").select("id, title, completed").ilike("title", q).limit(4),
     supabase.from("vault_items").select("id, title, description").ilike("title", q).limit(4),

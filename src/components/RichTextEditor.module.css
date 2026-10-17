@@ -37,7 +37,7 @@
   transition: all 0.15s ease;
 }
 .toolbarBtn:hover:not(:disabled) {
-  color: #E8A0A8;
+  color: #e8a0a8;
   background: rgba(232, 160, 168, 0.1);
 }
 .toolbarBtn:disabled {
@@ -46,7 +46,7 @@
 }
 .toolbarBtnActive {
   background: rgba(232, 160, 168, 0.15);
-  color: #E8A0A8;
+  color: #e8a0a8;
 }
 
 .toolbarDivider {
@@ -58,8 +58,8 @@
 
 .prose {
   padding: 1.15rem 1.35rem;
-  color: #FFFFFF;
-  font-family: 'Inter', sans-serif;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
   font-size: 0.95rem;
   line-height: 1.65;
   outline: none;
@@ -73,26 +73,26 @@
   margin-bottom: 0;
 }
 .prose strong {
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 700;
 }
 .prose em {
-  color: #E8A0A8;
+  color: #e8a0a8;
   font-style: italic;
 }
 .prose h2 {
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 1.35rem;
-  color: #FFFFFF;
+  color: #ffffff;
   letter-spacing: -0.02em;
   margin: 1.25rem 0 0.6rem 0;
 }
 .prose h3 {
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 1.1rem;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: 1rem 0 0.5rem 0;
 }
 .prose ul {
@@ -107,14 +107,14 @@
   margin-bottom: 0.3rem;
 }
 .prose li::marker {
-  color: #E8A0A8;
+  color: #e8a0a8;
 }
 .prose code {
   background: rgba(232, 160, 168, 0.12);
-  color: #E8A0A8;
+  color: #e8a0a8;
   padding: 0.15rem 0.4rem;
   border-radius: 0.35rem;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.88em;
 }
 .prose pre {
@@ -133,16 +133,16 @@
   line-height: 1.7;
 }
 .prose a {
-  color: #E8A0A8;
+  color: #e8a0a8;
   text-decoration: underline;
   text-decoration-color: rgba(232, 160, 168, 0.4);
   text-underline-offset: 3px;
 }
 .prose a:hover {
-  text-decoration-color: #E8A0A8;
+  text-decoration-color: #e8a0a8;
 }
 .prose blockquote {
-  border-left: 3px solid #E8A0A8;
+  border-left: 3px solid #e8a0a8;
   padding-left: 1rem;
   margin: 0.85rem 0;
   color: rgba(255, 255, 255, 0.6);
@@ -154,7 +154,6 @@
   margin: 1.25rem 0;
 }
 
-/* Placeholder */
 .prose p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   float: left;

@@ -2,7 +2,7 @@
   min-height: 100vh;
   height: 100vh;
   background-color: #050505;
-  color: #FFFFFF;
+  color: #ffffff;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -48,8 +48,6 @@
   overflow: hidden;
 }
 
-/* --- FORM SIDE (LEFT) --- */
-
 .formSide {
   position: relative;
   display: flex;
@@ -61,7 +59,7 @@
 }
 
 .formSide::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 20%;
   left: -10%;
@@ -85,7 +83,7 @@
 }
 
 .formTitle {
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 2rem;
   letter-spacing: -0.04em;
@@ -93,7 +91,7 @@
   line-height: 1.05;
 }
 .formTitleAccent {
-  background: linear-gradient(135deg, #FFC2D1 0%, #FFE57F 100%);
+  background: linear-gradient(135deg, #ffc2d1 0%, #ffe57f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -106,7 +104,7 @@
 .formError {
   background-color: rgba(232, 100, 100, 0.08);
   border: 1px solid rgba(232, 100, 100, 0.25);
-  color: #FF9C9C;
+  color: #ff9c9c;
   padding: 0.85rem 1.05rem;
   border-radius: 0.85rem;
   font-size: 0.85rem;
@@ -118,7 +116,7 @@
 .formSuccess {
   background-color: rgba(100, 200, 130, 0.08);
   border: 1px solid rgba(100, 200, 130, 0.25);
-  color: #8CE0A8;
+  color: #8ce0a8;
   padding: 0.85rem 1.05rem;
   border-radius: 0.85rem;
   font-size: 0.85rem;
@@ -138,7 +136,7 @@
   gap: 0.5rem;
 }
 .inputLabel {
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -165,11 +163,11 @@
   background-color: rgba(20, 12, 14, 0.7);
   border: 1px solid rgba(232, 160, 168, 0.12);
   border-radius: 0.85rem;
-  color: #FFFFFF;
-  font-family: 'Inter', sans-serif;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
   font-size: 0.92rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  caret-color: #FFB8C6;
+  caret-color: #ffb8c6;
 }
 .input::placeholder {
   color: rgba(255, 255, 255, 0.3);
@@ -202,20 +200,20 @@
   z-index: 2;
 }
 .togglePassword:hover {
-  color: #FFB8C6;
+  color: #ffb8c6;
   background-color: rgba(232, 160, 168, 0.18);
 }
 
 .primaryButton {
   width: 100%;
   padding: 0.95rem 1.5rem;
-  background-color: #FFB8C6;
+  background-color: #ffb8c6;
   color: #050505;
   border: none;
   border-radius: 0.85rem;
   font-size: 0.95rem;
   font-weight: 700;
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -226,7 +224,7 @@
   margin-top: 0.5rem;
 }
 .primaryButton:hover {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 0 50px rgba(232, 160, 168, 0.6);
 }
@@ -252,19 +250,19 @@
   user-select: none;
 }
 .checkbox input {
-  accent-color: #FFB8C6;
+  accent-color: #ffb8c6;
   width: 15px;
   height: 15px;
   cursor: pointer;
 }
 .textLink {
-  color: #FFB8C6;
+  color: #ffb8c6;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 .textLink:hover {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .divider {
   display: flex;
@@ -279,7 +277,7 @@
 }
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
@@ -294,7 +292,7 @@
   background-color: rgba(20, 12, 14, 0.6);
   border: 1px solid rgba(232, 160, 168, 0.12);
   border-radius: 0.85rem;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -303,7 +301,7 @@
   justify-content: center;
   gap: 0.5rem;
   transition: all 0.25s ease;
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
 }
 .oauthButton:hover {
   background-color: rgba(35, 18, 22, 0.8);
@@ -317,12 +315,12 @@
   color: rgba(255, 255, 255, 0.5);
 }
 .formFooter a {
-  color: #FFB8C6;
+  color: #ffb8c6;
   font-weight: 600;
   margin-left: 0.25rem;
 }
 .formFooter a:hover {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .backLink {
   display: inline-flex;
@@ -335,7 +333,7 @@
   transition: all 0.2s ease;
 }
 .backLink:hover {
-  color: #FFB8C6;
+  color: #ffb8c6;
   transform: translateX(-4px);
 }
 .passwordStrength {
@@ -350,10 +348,14 @@
   background-color: rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
 }
-.passwordStrengthBarWeak { background-color: #E86464; }
-.passwordStrengthBarMedium { background-color: #FFB8C6; }
+.passwordStrengthBarWeak {
+  background-color: #e86464;
+}
+.passwordStrengthBarMedium {
+  background-color: #ffb8c6;
+}
 .passwordStrengthBarStrong {
-  background-color: #FFD700;
+  background-color: #ffd700;
   box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
 }
 .passwordStrengthText {
@@ -363,8 +365,6 @@
   font-weight: 500;
   letter-spacing: 0.02em;
 }
-
-/* --- SCENE SIDE (RIGHT) --- */
 
 .sceneSide {
   position: relative;
@@ -377,7 +377,6 @@
   object-position: center;
 }
 
-/* Dark gradient overlay so text stays readable */
 .sceneOverlay {
   position: absolute;
   inset: 0;
@@ -388,7 +387,6 @@
     radial-gradient(ellipse 60% 40% at 50% 0%, rgba(5, 5, 5, 0.65) 0%, transparent 70%);
 }
 
-/* Text on top of image */
 .sceneTextBlock {
   position: absolute;
   top: 4rem;
@@ -404,12 +402,12 @@
 }
 
 .sceneTitle {
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: clamp(2.5rem, 4.5vw, 4rem);
   line-height: 0.95;
   letter-spacing: -0.055em;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-bottom: 0;
   text-shadow: 0 4px 30px rgba(0, 0, 0, 0.75);
   text-align: center;
@@ -420,7 +418,7 @@
 }
 
 .sceneTitleAccent {
-  background: linear-gradient(135deg, #FFC2D1 0%, #FFE57F 100%);
+  background: linear-gradient(135deg, #ffc2d1 0%, #ffe57f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 4px 30px rgba(0, 0, 0, 0.5));
@@ -434,8 +432,6 @@
   max-width: 30rem;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
 }
-
-/* --- RESPONSIVE --- */
 
 @media (max-width: 1024px) {
   .authContainer {
@@ -457,73 +453,96 @@
     min-height: 320px;
   }
   .sceneTextBlock {
-  position: absolute;
-  top: 4rem;
-  left: 50%;
-  right: auto;
-  transform: translateX(-50%);
-  z-index: 3;
-  max-width: 32rem;
-  width: 100%;
-  text-align: center;
-  padding: 0 2rem;
-  pointer-events: none;
-}
+    position: absolute;
+    top: 4rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    z-index: 3;
+    max-width: 32rem;
+    width: 100%;
+    text-align: center;
+    padding: 0 2rem;
+    pointer-events: none;
+  }
   .sceneTitle {
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 700;
-  font-size: clamp(2.5rem, 4.5vw, 4rem);
-  line-height: 0.95;
-  letter-spacing: -0.055em;
-  color: #FFFFFF;
-  margin-bottom: 0;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.75);
-  text-align: center;
-}
+    font-family: "Quicksand", sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 4.5vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+    color: #ffffff;
+    margin-bottom: 0;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.75);
+    text-align: center;
+  }
   .sceneSubtitle {
     font-size: 0.95rem;
   }
 }
 
 @media (max-width: 640px) {
-  .nav { padding: 1.25rem 1.5rem; }
-  .formSide { padding: 1.5rem 1.5rem 2.5rem; }
-  .sceneSide { height: 38vh; min-height: 260px; }
+  .nav {
+    padding: 1.25rem 1.5rem;
+  }
+  .formSide {
+    padding: 1.5rem 1.5rem 2.5rem;
+  }
+  .sceneSide {
+    height: 38vh;
+    min-height: 260px;
+  }
   .sceneTextBlock {
-  position: absolute;
-  top: 4rem;
-  left: 50%;
-  right: auto;
-  transform: translateX(-50%);
-  z-index: 3;
-  max-width: 32rem;
-  width: 100%;
-  text-align: center;
-  padding: 0 2rem;
-  pointer-events: none;
-}
+    position: absolute;
+    top: 4rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    z-index: 3;
+    max-width: 32rem;
+    width: 100%;
+    text-align: center;
+    padding: 0 2rem;
+    pointer-events: none;
+  }
   .sceneTitle {
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 700;
-  font-size: clamp(2.5rem, 4.5vw, 4rem);
-  line-height: 0.95;
-  letter-spacing: -0.055em;
-  color: #FFFFFF;
-  margin-bottom: 0;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.75);
-  text-align: center;
-}
-  .sceneSubtitle { font-size: 0.88rem; }
-  .formTitle { font-size: 1.65rem; }
-  .oauthButtons { grid-template-columns: 1fr; }
+    font-family: "Quicksand", sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 4.5vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+    color: #ffffff;
+    margin-bottom: 0;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.75);
+    text-align: center;
+  }
+  .sceneSubtitle {
+    font-size: 0.88rem;
+  }
+  .formTitle {
+    font-size: 1.65rem;
+  }
+  .oauthButtons {
+    grid-template-columns: 1fr;
+  }
 }
 
 @keyframes steamRise {
-  0% { transform: translateY(0); opacity: 0.55; }
-  100% { transform: translateY(-18px); opacity: 0; }
+  0% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(-18px);
+    opacity: 0;
+  }
 }
-.steam1 { animation: steamRise 3s ease-out infinite; }
-.steam2 { animation: steamRise 3.5s ease-out infinite 0.6s; }
+.steam1 {
+  animation: steamRise 3s ease-out infinite;
+}
+.steam2 {
+  animation: steamRise 3.5s ease-out infinite 0.6s;
+}
 
 .requirementsList {
   display: flex;
@@ -560,6 +579,6 @@
 }
 
 .requirementMet .requirementDot {
-  background-color: #7BC89A;
+  background-color: #7bc89a;
   box-shadow: 0 0 6px rgba(123, 200, 154, 0.6);
 }

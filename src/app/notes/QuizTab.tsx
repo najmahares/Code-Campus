@@ -3,8 +3,17 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  HelpCircle, Loader2, ArrowRight, Check, X, RotateCcw, Trophy,
-  History, ChevronRight, Lightbulb, ArrowLeft,
+  HelpCircle,
+  Loader2,
+  ArrowRight,
+  Check,
+  X,
+  RotateCcw,
+  Trophy,
+  History,
+  ChevronRight,
+  Lightbulb,
+  ArrowLeft,
 } from "lucide-react";
 import { saveQuizAttempt, listQuizAttempts, type QuizAttempt } from "@/lib/notes/store";
 import styles from "./notes.module.css";
@@ -29,7 +38,9 @@ type Stage = "setup" | "generating" | "taking" | "results" | "history" | "viewin
 export default function QuizTab({ noteBody, noteId }: Props) {
   const [stage, setStage] = useState<Stage>("setup");
   const [length, setLength] = useState(5);
-  const [type, setType] = useState<"mixed" | "multiple_choice" | "true_false" | "short_answer">("mixed");
+  const [type, setType] = useState<"mixed" | "multiple_choice" | "true_false" | "short_answer">(
+    "mixed"
+  );
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("medium");
   const [topic, setTopic] = useState("");
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -147,11 +158,12 @@ export default function QuizTab({ noteBody, noteId }: Props) {
     setStage("viewing_attempt");
   };
 
-  // --- SETUP ---
   if (!hasBody) {
     return (
       <div className={styles.tabEmptyState}>
-        <p className={styles.tabEmptyText}>This note is empty. Add some content before generating a quiz.</p>
+        <p className={styles.tabEmptyText}>
+          This note is empty. Add some content before generating a quiz.
+        </p>
       </div>
     );
   }
@@ -239,7 +251,6 @@ export default function QuizTab({ noteBody, noteId }: Props) {
     );
   }
 
-  // --- GENERATING ---
   if (stage === "generating") {
     return (
       <div className={styles.tabLoadingState}>
@@ -249,7 +260,6 @@ export default function QuizTab({ noteBody, noteId }: Props) {
     );
   }
 
-  // --- TAKING ---
   if (stage === "taking" && questions[currentIndex]) {
     const q = questions[currentIndex];
     const progress = (currentIndex / questions.length) * 100;
@@ -259,7 +269,9 @@ export default function QuizTab({ noteBody, noteId }: Props) {
           <div className={styles.quizProgressFill} style={{ width: `${progress}%` }} />
         </div>
         <div className={styles.quizTakeHeader}>
-          <span className={styles.quizTakeCounter}>Question {currentIndex + 1} of {questions.length}</span>
+          <span className={styles.quizTakeCounter}>
+            Question {currentIndex + 1} of {questions.length}
+          </span>
           <span className={styles.quizTakeTag}>{q.type.replace("_", " ")}</span>
         </div>
 
@@ -290,8 +302,14 @@ export default function QuizTab({ noteBody, noteId }: Props) {
         )}
 
         <div className={styles.quizTakeFooter}>
-          <button className={styles.tabSecondaryBtn} onClick={skipQuestion}>Skip</button>
-          <button className={styles.tabPrimaryBtn} onClick={submitAnswer} disabled={!currentInput.trim()}>
+          <button className={styles.tabSecondaryBtn} onClick={skipQuestion}>
+            Skip
+          </button>
+          <button
+            className={styles.tabPrimaryBtn}
+            onClick={submitAnswer}
+            disabled={!currentInput.trim()}
+          >
             {currentIndex === questions.length - 1 ? "Finish" : "Next"} <ArrowRight size={16} />
           </button>
         </div>
@@ -299,7 +317,6 @@ export default function QuizTab({ noteBody, noteId }: Props) {
     );
   }
 
-  // --- RESULTS ---
   if (stage === "results") {
     const score = questions.reduce((acc, q, i) => {
       const ua = (userAnswers[i] || "").trim().toLowerCase();
@@ -307,14 +324,19 @@ export default function QuizTab({ noteBody, noteId }: Props) {
       return acc + (ua === ca ? 1 : 0);
     }, 0);
     const pct = Math.round((score / questions.length) * 100);
-    const wrong = questions.filter((q, i) => (userAnswers[i] || "").trim().toLowerCase() !== q.correct_answer.trim().toLowerCase());
+    const wrong = questions.filter(
+      (q, i) =>
+        (userAnswers[i] || "").trim().toLowerCase() !== q.correct_answer.trim().toLowerCase()
+    );
 
     return (
       <div className={styles.quizResults}>
         <div className={styles.quizScoreCard}>
           <div className={styles.quizScoreCircle}>
             <span className={styles.quizScoreValue}>{pct}%</span>
-            <span className={styles.quizScoreLabel}>{score} / {questions.length}</span>
+            <span className={styles.quizScoreLabel}>
+              {score} / {questions.length}
+            </span>
           </div>
           <div className={styles.quizScoreText}>
             <h3>{pct >= 80 ? "Great work." : pct >= 50 ? "Solid effort." : "Keep going."}</h3>
@@ -336,7 +358,9 @@ export default function QuizTab({ noteBody, noteId }: Props) {
                   <div className={styles.quizReviewQ}>{q.question}</div>
                   <div className={styles.quizReviewRow}>
                     <span className={styles.quizReviewLabelWrong}>Your answer</span>
-                    <span className={styles.quizReviewWrong}>{userAnswers[originalIndex] || "— skipped —"}</span>
+                    <span className={styles.quizReviewWrong}>
+                      {userAnswers[originalIndex] || "— skipped —"}
+                    </span>
                   </div>
                   <div className={styles.quizReviewRow}>
                     <span className={styles.quizReviewLabelRight}>Correct answer</span>
@@ -347,7 +371,9 @@ export default function QuizTab({ noteBody, noteId }: Props) {
                   </div>
                   <div className={styles.quizReviewMemory}>
                     <Lightbulb size={14} />
-                    <span><strong>Remember it:</strong> {q.memory_tip}</span>
+                    <span>
+                      <strong>Remember it:</strong> {q.memory_tip}
+                    </span>
                   </div>
                 </div>
               );
@@ -359,8 +385,12 @@ export default function QuizTab({ noteBody, noteId }: Props) {
           <button className={styles.tabSecondaryBtn} onClick={retakeSameQuiz}>
             <RotateCcw size={14} /> Retake same quiz
           </button>
-          <button className={styles.tabPrimaryBtn} onClick={() => generate(difficulty === "hard" ? "medium" : "hard")}>
-            {difficulty === "hard" ? "Try medium instead" : "Try harder questions"} <ArrowRight size={16} />
+          <button
+            className={styles.tabPrimaryBtn}
+            onClick={() => generate(difficulty === "hard" ? "medium" : "hard")}
+          >
+            {difficulty === "hard" ? "Try medium instead" : "Try harder questions"}{" "}
+            <ArrowRight size={16} />
           </button>
           <button className={styles.tabSecondaryBtn} onClick={reset}>
             New quiz
@@ -370,7 +400,6 @@ export default function QuizTab({ noteBody, noteId }: Props) {
     );
   }
 
-  // --- HISTORY (list of attempts) ---
   if (stage === "history") {
     return (
       <div className={styles.quizHistory}>
@@ -387,11 +416,7 @@ export default function QuizTab({ noteBody, noteId }: Props) {
         ) : (
           <div className={styles.quizHistoryList}>
             {history.map((a) => (
-              <button
-                key={a.id}
-                className={styles.quizHistoryItem}
-                onClick={() => openAttempt(a)}
-              >
+              <button key={a.id} className={styles.quizHistoryItem} onClick={() => openAttempt(a)}>
                 <div className={styles.quizHistoryLeft}>
                   <Trophy size={18} className={styles.quizHistoryIcon} />
                   <div>
@@ -399,7 +424,8 @@ export default function QuizTab({ noteBody, noteId }: Props) {
                       {a.score} / {a.total} ({Math.round((a.score / a.total) * 100)}%)
                     </div>
                     <div className={styles.quizHistoryMeta}>
-                      {a.difficulty} · {a.topic || "General"} · {new Date(a.created_at).toLocaleString()}
+                      {a.difficulty} · {a.topic || "General"} ·{" "}
+                      {new Date(a.created_at).toLocaleString()}
                     </div>
                   </div>
                 </div>
@@ -412,7 +438,6 @@ export default function QuizTab({ noteBody, noteId }: Props) {
     );
   }
 
-  // --- VIEWING A HISTORIC ATTEMPT ---
   if (stage === "viewing_attempt" && viewingAttempt) {
     const attempt = viewingAttempt;
     const pct = Math.round((attempt.score / attempt.total) * 100);
@@ -423,7 +448,13 @@ export default function QuizTab({ noteBody, noteId }: Props) {
       <div className={styles.quizResults}>
         <div className={styles.quizHistoryHeader}>
           <h3 className={styles.quizHistoryTitle}>Attempt review</h3>
-          <button className={styles.tabSecondaryBtn} onClick={() => { setViewingAttempt(null); setStage("history"); }}>
+          <button
+            className={styles.tabSecondaryBtn}
+            onClick={() => {
+              setViewingAttempt(null);
+              setStage("history");
+            }}
+          >
             <ArrowLeft size={14} /> Back to history
           </button>
         </div>
@@ -431,13 +462,21 @@ export default function QuizTab({ noteBody, noteId }: Props) {
         <div className={styles.quizScoreCard}>
           <div className={styles.quizScoreCircle}>
             <span className={styles.quizScoreValue}>{pct}%</span>
-            <span className={styles.quizScoreLabel}>{attempt.score} / {attempt.total}</span>
+            <span className={styles.quizScoreLabel}>
+              {attempt.score} / {attempt.total}
+            </span>
           </div>
           <div className={styles.quizScoreText}>
-            <h3>{new Date(attempt.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</h3>
+            <h3>
+              {new Date(attempt.created_at).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </h3>
             <p>
-              {attempt.difficulty} difficulty · {attempt.topic || "General"} ·{" "}
-              {questions.length} question{questions.length !== 1 ? "s" : ""}
+              {attempt.difficulty} difficulty · {attempt.topic || "General"} · {questions.length}{" "}
+              question{questions.length !== 1 ? "s" : ""}
             </p>
           </div>
         </div>
@@ -446,12 +485,17 @@ export default function QuizTab({ noteBody, noteId }: Props) {
           <h4 className={styles.quizReviewTitle}>All questions</h4>
           {questions.map((q, i) => {
             const userAnswer = answers[i] || "";
-            const isCorrect = userAnswer.trim().toLowerCase() === q.correct_answer.trim().toLowerCase();
+            const isCorrect =
+              userAnswer.trim().toLowerCase() === q.correct_answer.trim().toLowerCase();
             return (
               <div key={i} className={styles.quizReviewCard}>
                 <div className={styles.quizReviewHeaderRow}>
                   <span className={styles.quizReviewQNumber}>Q{i + 1}</span>
-                  <span className={isCorrect ? styles.quizReviewBadgeRight : styles.quizReviewBadgeWrong}>
+                  <span
+                    className={
+                      isCorrect ? styles.quizReviewBadgeRight : styles.quizReviewBadgeWrong
+                    }
+                  >
                     {isCorrect ? "Correct" : "Wrong"}
                   </span>
                 </div>
@@ -473,7 +517,9 @@ export default function QuizTab({ noteBody, noteId }: Props) {
                 </div>
                 <div className={styles.quizReviewMemory}>
                   <Lightbulb size={14} />
-                  <span><strong>Remember it:</strong> {q.memory_tip}</span>
+                  <span>
+                    <strong>Remember it:</strong> {q.memory_tip}
+                  </span>
                 </div>
               </div>
             );
@@ -481,10 +527,22 @@ export default function QuizTab({ noteBody, noteId }: Props) {
         </div>
 
         <div className={styles.quizResultActions}>
-          <button className={styles.tabSecondaryBtn} onClick={() => { setViewingAttempt(null); setStage("history"); }}>
+          <button
+            className={styles.tabSecondaryBtn}
+            onClick={() => {
+              setViewingAttempt(null);
+              setStage("history");
+            }}
+          >
             <ArrowLeft size={14} /> Back to history
           </button>
-          <button className={styles.tabPrimaryBtn} onClick={() => { setViewingAttempt(null); reset(); }}>
+          <button
+            className={styles.tabPrimaryBtn}
+            onClick={() => {
+              setViewingAttempt(null);
+              reset();
+            }}
+          >
             New quiz
           </button>
         </div>

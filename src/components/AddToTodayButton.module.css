@@ -1,4 +1,7 @@
-.wrap { position: relative; display: inline-block; }
+.wrap {
+  position: relative;
+  display: inline-block;
+}
 
 .trigger {
   display: inline-flex;
@@ -8,8 +11,8 @@
   border-radius: 0.75rem;
   background: transparent;
   border: 1px solid rgba(232, 160, 168, 0.3);
-  color: #E8A0A8;
-  font-family: 'Quicksand', sans-serif;
+  color: #e8a0a8;
+  font-family: "Quicksand", sans-serif;
   font-weight: 600;
   font-size: 0.82rem;
   cursor: pointer;
@@ -18,7 +21,7 @@
 .trigger:hover {
   background: rgba(232, 160, 168, 0.08);
   border-color: rgba(232, 160, 168, 0.5);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .popover {
@@ -47,7 +50,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 0.72rem;
   letter-spacing: 0.1em;
@@ -60,8 +63,8 @@
   border-radius: 0.65rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
-  font-family: 'Inter', sans-serif;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
   font-size: 0.85rem;
   outline: none;
   width: 100%;
@@ -82,37 +85,39 @@
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.6);
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 600;
   font-size: 0.75rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: capitalize;
 }
-.priBtn:hover { border-color: rgba(255, 255, 255, 0.2); }
+.priBtn:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
 .priActive[data-priority="low"] {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.3);
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .priActive[data-priority="medium"] {
   background: rgba(232, 160, 168, 0.15);
   border-color: rgba(232, 160, 168, 0.5);
-  color: #E8A0A8;
+  color: #e8a0a8;
 }
 .priActive[data-priority="high"] {
   background: rgba(232, 100, 100, 0.15);
   border-color: rgba(232, 100, 100, 0.5);
-  color: #FF9C9C;
+  color: #ff9c9c;
 }
 
 .saveBtn {
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  background: #E8A0A8;
+  background: #e8a0a8;
   color: #050505;
   border: none;
-  font-family: 'Quicksand', sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
@@ -123,8 +128,13 @@
   gap: 0.5rem;
   min-height: 40px;
 }
-.saveBtn:hover:not(:disabled) { background: #FFFFFF; }
-.saveBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.saveBtn:hover:not(:disabled) {
+  background: #ffffff;
+}
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 .doneState {
   display: flex;
@@ -132,8 +142,8 @@
   justify-content: center;
   gap: 0.55rem;
   padding: 1.5rem 1rem;
-  color: #7BC89A;
-  font-family: 'Quicksand', sans-serif;
+  color: #7bc89a;
+  font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
 }

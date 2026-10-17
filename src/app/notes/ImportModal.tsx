@@ -1,12 +1,27 @@
 "use client";
 
+import { useToast } from "@/components/ToastProvider";
+
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, FileText, FileType, FileCode, Globe, Loader2, ArrowRight,
-  Check, Camera, Upload,
+  X,
+  FileText,
+  FileType,
+  FileCode,
+  Globe,
+  Loader2,
+  ArrowRight,
+  Check,
+  Camera,
+  Upload,
 } from "lucide-react";
-import { uploadNoteFile, ALLOWED_IMAGE_TYPES, ALLOWED_DOC_TYPES, MAX_FILE_SIZE } from "@/lib/notes/upload";
+import {
+  uploadNoteFile,
+  ALLOWED_IMAGE_TYPES,
+  ALLOWED_DOC_TYPES,
+  MAX_FILE_SIZE,
+} from "@/lib/notes/upload";
 import styles from "./notes.module.css";
 
 type Props = {
@@ -28,11 +43,15 @@ const SOURCES: { id: SourceId; label: string; sub: string; Icon: any }[] = [
 
 function cleanError(raw: string | undefined | null): string {
   if (!raw) return "Something went wrong. Please try again.";
-  // Cut off anything after a newline or over 200 chars
+
   const firstLine = raw.split("\n")[0].trim();
   if (firstLine.length > 200) return firstLine.slice(0, 197) + "...";
-  // If it looks like a stack trace or code error, replace with a generic message
-  if (firstLine.includes("TURBOPACK") || firstLine.includes("is not a function") || firstLine.match(/^\(0,/)) {
+
+  if (
+    firstLine.includes("TURBOPACK") ||
+    firstLine.includes("is not a function") ||
+    firstLine.match(/^\(0,/)
+  ) {
     return "We couldn't process that file. Please try a different format or upload a screenshot.";
   }
   return firstLine;
@@ -114,12 +133,26 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
 
   const handleContinue = () => {
     setError(null);
-    if (source === "paste" && !rawText.trim()) { setError("Paste some text to continue"); return; }
-    if (source === "url") {
-      if (!urlValue.trim()) { setError("Paste a URL to continue"); return; }
-      try { new URL(urlValue); } catch { setError("That doesn't look like a valid URL"); return; }
+    if (source === "paste" && !rawText.trim()) {
+      setError("Paste some text to continue");
+      return;
     }
-    if ((source === "screenshot" || source === "pdf" || source === "docx" || source === "markdown") && !uploadedUrl) {
+    if (source === "url") {
+      if (!urlValue.trim()) {
+        setError("Paste a URL to continue");
+        return;
+      }
+      try {
+        new URL(urlValue);
+      } catch {
+        setError("That doesn't look like a valid URL");
+        return;
+      }
+    }
+    if (
+      (source === "screenshot" || source === "pdf" || source === "docx" || source === "markdown") &&
+      !uploadedUrl
+    ) {
       setError("Upload a file to continue");
       return;
     }
@@ -150,7 +183,6 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
           body = `<p>Screenshot uploaded</p><p><img src="${uploadedUrl}" alt="${uploadedName}" style="max-width:100%; border-radius:0.75rem;" /></p><p><em>AI analysis failed: ${visionData.error || "unknown"}</em></p>`;
         }
       } else {
-        // URL, PDF, DOCX, Markdown — call the parse endpoint
         const parseRes = await fetch("/api/notes/parse", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -193,12 +225,18 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
 
   if (!isOpen) return null;
 
-  const isFileSource = source === "screenshot" || source === "pdf" || source === "markdown" || source === "docx";
+  const isFileSource =
+    source === "screenshot" || source === "pdf" || source === "markdown" || source === "docx";
   const acceptAttr =
-    source === "screenshot" ? "image/*" :
-    source === "pdf" ? "application/pdf" :
-    source === "markdown" ? ".md,.txt" :
-    source === "docx" ? ".doc,.docx" : "";
+    source === "screenshot"
+      ? "image/*"
+      : source === "pdf"
+        ? "application/pdf"
+        : source === "markdown"
+          ? ".md,.txt"
+          : source === "docx"
+            ? ".doc,.docx"
+            : "";
 
   return (
     <AnimatePresence>
@@ -229,7 +267,9 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
                   : "Two quick questions before I process this."}
               </div>
             </div>
-            <button className={styles.captureClose} onClick={onClose}><X size={18} /></button>
+            <button className={styles.captureClose} onClick={onClose}>
+              <X size={18} />
+            </button>
           </div>
 
           <div className={styles.captureBody}>
@@ -242,7 +282,9 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
                       className={`${styles.importSourceCard} ${source === s.id ? styles.importSourceCardActive : ""}`}
                       onClick={() => setSource(s.id)}
                     >
-                      <div className={styles.importSourceIcon}><s.Icon size={18} /></div>
+                      <div className={styles.importSourceIcon}>
+                        <s.Icon size={18} />
+                      </div>
                       <div className={styles.importSourceBody}>
                         <div className={styles.importSourceLabel}>{s.label}</div>
                         <div className={styles.importSourceSub}>{s.sub}</div>
@@ -280,10 +322,17 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
                       <label
                         htmlFor="import-file-input"
                         className={styles.importUploadZone}
-                        style={{ pointerEvents: uploading ? "none" : "auto", opacity: uploading ? 0.6 : 1 }}
+                        style={{
+                          pointerEvents: uploading ? "none" : "auto",
+                          opacity: uploading ? 0.6 : 1,
+                        }}
                       >
                         {uploading ? (
-                          <Loader2 size={32} className="animate-spin" style={{ color: "#E8A0A8" }} />
+                          <Loader2
+                            size={32}
+                            className="animate-spin"
+                            style={{ color: "#E8A0A8" }}
+                          />
                         ) : (
                           <Upload size={32} style={{ color: "#E8A0A8" }} />
                         )}
@@ -306,7 +355,11 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
                     ) : (
                       <div className={styles.importUploadedCard}>
                         {source === "screenshot" && (
-                          <img src={uploadedUrl} alt="uploaded" className={styles.importUploadedPreview} />
+                          <img
+                            src={uploadedUrl}
+                            alt="uploaded"
+                            className={styles.importUploadedPreview}
+                          />
                         )}
                         {source !== "screenshot" && (
                           <div className={styles.importUploadedIconWrap}>
@@ -321,7 +374,11 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
                         </div>
                         <button
                           className={styles.importUploadedRemove}
-                          onClick={() => { setUploadedUrl(null); setUploadedName(null); setRawText(""); }}
+                          onClick={() => {
+                            setUploadedUrl(null);
+                            setUploadedName(null);
+                            setRawText("");
+                          }}
                         >
                           <X size={14} />
                         </button>
@@ -330,7 +387,11 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
                   </div>
                 )}
 
-                {error && <div key={source} className={styles.captureError}>{cleanError(error)}</div>}
+                {error && (
+                  <div key={source} className={styles.captureError}>
+                    {cleanError(error)}
+                  </div>
+                )}
               </>
             )}
 
@@ -351,7 +412,9 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
                         className={`${styles.radioItem} ${refineMode === o.id ? styles.radioItemActive : ""}`}
                         onClick={() => setRefineMode(o.id as any)}
                       >
-                        <span className={styles.radioCircle}><span className={styles.radioDot} /></span>
+                        <span className={styles.radioCircle}>
+                          <span className={styles.radioDot} />
+                        </span>
                         <span className={styles.radioLabel}>{o.label}</span>
                       </button>
                     ))}
@@ -372,7 +435,9 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
                         className={`${styles.radioItem} ${freshness === o.id ? styles.radioItemActive : ""}`}
                         onClick={() => setFreshness(o.id as any)}
                       >
-                        <span className={styles.radioCircle}><span className={styles.radioDot} /></span>
+                        <span className={styles.radioCircle}>
+                          <span className={styles.radioDot} />
+                        </span>
                         <span className={styles.radioLabel}>{o.label}</span>
                       </button>
                     ))}
@@ -387,20 +452,34 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
           <div className={styles.captureFooter}>
             {step === 2 ? (
               <>
-                <button className={styles.captureBtnSecondary} onClick={() => setStep(1)} disabled={processing}>
+                <button
+                  className={styles.captureBtnSecondary}
+                  onClick={() => setStep(1)}
+                  disabled={processing}
+                >
                   Back
                 </button>
-                <button className={styles.captureBtnPrimary} onClick={handleImport} disabled={processing}>
+                <button
+                  className={styles.captureBtnPrimary}
+                  onClick={handleImport}
+                  disabled={processing}
+                >
                   {processing ? (
-                    <><Loader2 size={16} className="animate-spin" /> Importing...</>
+                    <>
+                      <Loader2 size={16} className="animate-spin" /> Importing...
+                    </>
                   ) : (
-                    <>Import <ArrowRight size={16} /></>
+                    <>
+                      Import <ArrowRight size={16} />
+                    </>
                   )}
                 </button>
               </>
             ) : (
               <>
-                <button className={styles.captureBtnSecondary} onClick={onClose}>Cancel</button>
+                <button className={styles.captureBtnSecondary} onClick={onClose}>
+                  Cancel
+                </button>
                 <button
                   className={styles.captureBtnPrimary}
                   onClick={handleContinue}

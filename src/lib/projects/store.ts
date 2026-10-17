@@ -47,11 +47,7 @@ export async function listProjects(): Promise<Project[]> {
 
 export async function getProject(id: string): Promise<Project | null> {
   const supabase = createClient();
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
+  const { data, error } = await supabase.from("projects").select("*").eq("id", id).maybeSingle();
   if (error) throw error;
   return data as Project | null;
 }
@@ -62,7 +58,9 @@ export async function createProject(params: {
   status?: "planning" | "active" | "paused" | "done";
 }): Promise<Project> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
   const { data, error } = await supabase
     .from("projects")
@@ -115,7 +113,7 @@ export async function deleteProjectSpec(id: string): Promise<void> {
 
 export async function listProjectChats(projectId: string): Promise<ProjectChat[]> {
   const supabase = createClient();
-  // Only return messages from the last 30 days
+
   const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const { data, error } = await supabase
     .from("project_chats")
@@ -133,7 +131,9 @@ export async function saveProjectChat(
   content: string
 ): Promise<void> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return;
   await supabase.from("project_chats").insert({
     project_id: projectId,
@@ -153,19 +153,19 @@ export async function uploadProjectFile(
   projectId: string
 ): Promise<{ path: string; signedUrl: string }> {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
   if (!session?.user) throw new Error("Not authenticated");
 
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(-80);
   const path = `${session.user.id}/${projectId}/${Date.now()}-${safeName}`;
 
-  const { error: upErr } = await supabase.storage
-    .from("project-specs")
-    .upload(path, file, {
-      cacheControl: "31536000",
-      upsert: false,
-      contentType: file.type,
-    });
+  const { error: upErr } = await supabase.storage.from("project-specs").upload(path, file, {
+    cacheControl: "31536000",
+    upsert: false,
+    contentType: file.type,
+  });
   if (upErr) throw upErr;
 
   const { data: signed, error: signErr } = await supabase.storage

@@ -1,4 +1,6 @@
-.nav { display: none; }
+.nav {
+  display: none;
+}
 @media (max-width: 1024px) {
   .nav {
     display: flex;
@@ -28,10 +30,14 @@
     height: 100%;
     transition: all 0.2s ease;
   }
-  .item:active { background: rgba(255, 255, 255, 0.03); }
-  .active { color: #E8A0A8; }
+  .item:active {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .active {
+    color: #e8a0a8;
+  }
   .label {
-    font-family: 'Quicksand', sans-serif;
+    font-family: "Quicksand", sans-serif;
     font-weight: 700;
     font-size: 0.65rem;
     letter-spacing: 0.02em;

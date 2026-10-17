@@ -48,24 +48,44 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-      <Link href="/login" className={styles.backLink}><ArrowLeft size={16} /> Back to sign in</Link>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <Link href="/login" className={styles.backLink}>
+        <ArrowLeft size={16} /> Back to sign in
+      </Link>
 
       <div className={styles.formHeader}>
-        <h1 className={styles.formTitle}>Let us help you <span className={styles.formTitleAccent}>back in.</span></h1>
-        <p className={styles.formSubtitle}>Pop your email below and we will send a link to reset your password.</p>
+        <h1 className={styles.formTitle}>
+          Let us help you <span className={styles.formTitleAccent}>back in.</span>
+        </h1>
+        <p className={styles.formSubtitle}>
+          Pop your email below and we will send a link to reset your password.
+        </p>
       </div>
 
       {error && (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={styles.formError}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={styles.formError}
+        >
           <AlertCircle size={16} /> {error}
         </motion.div>
       )}
 
       {success ? (
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={styles.formSuccess}>
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={styles.formSuccess}
+        >
           <CheckCircle2 size={16} />
-          <span>Check your inbox. We sent a reset link to <strong>{email}</strong>.</span>
+          <span>
+            Check your inbox. We sent a reset link to <strong>{email}</strong>.
+          </span>
         </motion.div>
       ) : (
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -73,12 +93,25 @@ export default function ForgotPasswordPage() {
             <label className={styles.inputLabel}>Email</label>
             <div className={styles.inputWrapper}>
               <Mail size={18} className={styles.inputIcon} />
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className={styles.input} required />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className={styles.input}
+                required
+              />
             </div>
           </div>
 
           <button type="submit" disabled={isLoading} className={styles.primaryButton}>
-            {isLoading ? <Loader2 size={18} className="animate-spin" /> : <>Send Reset Link <ArrowRight size={18} /></>}
+            {isLoading ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : (
+              <>
+                Send Reset Link <ArrowRight size={18} />
+              </>
+            )}
           </button>
         </form>
       )}

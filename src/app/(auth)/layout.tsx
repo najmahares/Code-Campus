@@ -3,11 +3,7 @@ import Image from "next/image";
 import { LogoLockup } from "@/components/Logo";
 import styles from "./auth.module.css";
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className={styles.authContainer}>
       <div className={styles.bgGrid} />
@@ -20,9 +16,7 @@ export default function AuthLayout({
 
       <div className={styles.mainContent}>
         <div className={styles.formSide}>
-          <div className={styles.formCard}>
-            {children}
-          </div>
+          <div className={styles.formCard}>{children}</div>
         </div>
 
         <div className={styles.sceneSide}>
@@ -37,7 +31,9 @@ export default function AuthLayout({
           <div className={styles.sceneTextBlock}>
             <h1 className={styles.sceneTitle}>
               <span className={styles.sceneTitleLine}>Study smarter.</span>
-              <span className={`${styles.sceneTitleLine} ${styles.sceneTitleAccent}`}>Not harder.</span>
+              <span className={`${styles.sceneTitleLine} ${styles.sceneTitleAccent}`}>
+                Not harder.
+              </span>
             </h1>
           </div>
         </div>

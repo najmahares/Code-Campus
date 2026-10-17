@@ -34,19 +34,10 @@ import {
   type Task,
 } from "@/lib/tasks/store";
 import { listProjects, type Project } from "@/lib/projects/store";
-import {
-  getTodaysMood,
-  createMoodEntry,
-  MOOD_LABELS,
-  type MoodEntry,
-} from "@/lib/wellbeing/store";
+import { getTodaysMood, createMoodEntry, MOOD_LABELS, type MoodEntry } from "@/lib/wellbeing/store";
 import { createNote } from "@/lib/notes/store";
 import { createVaultItem } from "@/lib/vault/store";
-import {
-  listRecentActivity,
-  timeAgo,
-  type ActivityItem,
-} from "@/lib/activity/store";
+import { listRecentActivity, timeAgo, type ActivityItem } from "@/lib/activity/store";
 import styles from "./home.module.css";
 
 type CaptureStatus = "idle" | "saving" | "done" | "error";
@@ -57,7 +48,20 @@ function classifyCapture(input: string): "task" | "vault" | "note" {
 
   if (/^(todo|task|remind|reminder)\s*[:\-]/i.test(s)) return "task";
 
-  const taskVerbs = ["buy", "call", "email", "submit", "finish", "fix", "review", "prepare", "ship", "deploy", "send", "draft"];
+  const taskVerbs = [
+    "buy",
+    "call",
+    "email",
+    "submit",
+    "finish",
+    "fix",
+    "review",
+    "prepare",
+    "ship",
+    "deploy",
+    "send",
+    "draft",
+  ];
   if (taskVerbs.some((v) => lower.startsWith(v + " "))) return "task";
 
   const secretPatterns = [
@@ -78,13 +82,20 @@ function classifyCapture(input: string): "task" | "vault" | "note" {
 
 function activityIconFor(kind: string): { Icon: any; gold: boolean } {
   switch (kind) {
-    case "note": return { Icon: FileText, gold: false };
-    case "task": return { Icon: Calendar, gold: false };
-    case "project": return { Icon: Code2, gold: false };
-    case "vault": return { Icon: Lock, gold: true };
-    case "mood": return { Icon: Heart, gold: false };
-    case "gratitude": return { Icon: Heart, gold: false };
-    default: return { Icon: Sparkles, gold: false };
+    case "note":
+      return { Icon: FileText, gold: false };
+    case "task":
+      return { Icon: Calendar, gold: false };
+    case "project":
+      return { Icon: Code2, gold: false };
+    case "vault":
+      return { Icon: Lock, gold: true };
+    case "mood":
+      return { Icon: Heart, gold: false };
+    case "gratitude":
+      return { Icon: Heart, gold: false };
+    default:
+      return { Icon: Sparkles, gold: false };
   }
 }
 
@@ -120,32 +131,29 @@ export default function HomePage() {
 
   useEffect(() => {
     async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.push("/login"); return; }
-      const fullName = (user.user_metadata?.full_name as string) || user.email?.split("@")[0] || "friend";
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+      const fullName =
+        (user.user_metadata?.full_name as string) || user.email?.split("@")[0] || "friend";
       setUserName(fullName.split(" ")[0]);
       try {
         const p = await getProfile();
         if (p?.display_name) setUserName(p.display_name.split(" ")[0]);
         if (p?.avatar_seed) setProfileAvatar(p.avatar_seed);
       } catch {}
-      try { await loadAll(); } catch (err) { console.error(err); }
+      try {
+        await loadAll();
+      } catch (err) {
+        console.error(err);
+      }
       setLoading(false);
     }
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setSearchOpen(true);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const openTasks = useMemo(() => {
@@ -161,7 +169,8 @@ export default function HomePage() {
   }, [tasks]);
 
   const priorityPool = openTasks.slice(0, 4);
-  const priority = priorityPool.length > 0 ? priorityPool[priorityIndex % priorityPool.length] : null;
+  const priority =
+    priorityPool.length > 0 ? priorityPool[priorityIndex % priorityPool.length] : null;
   const linkedProject = priority?.linked_project_id
     ? projects.find((p) => p.id === priority.linked_project_id) || null
     : null;
@@ -172,9 +181,21 @@ export default function HomePage() {
 
   const navItems = useMemo(
     () => [
-      { id: "home", label: "Home", href: "/home", Icon: HomeIcon, badge: undefined as number | undefined },
+      {
+        id: "home",
+        label: "Home",
+        href: "/home",
+        Icon: HomeIcon,
+        badge: undefined as number | undefined,
+      },
       { id: "notes", label: "Notes", href: "/notes", Icon: FileText, badge: undefined },
-      { id: "today", label: "Today", href: "/today", Icon: Calendar, badge: todayCount > 0 ? todayCount : undefined },
+      {
+        id: "today",
+        label: "Today",
+        href: "/today",
+        Icon: Calendar,
+        badge: todayCount > 0 ? todayCount : undefined,
+      },
       { id: "projects", label: "Projects", href: "/projects", Icon: Code2, badge: undefined },
       { id: "vault", label: "Vault", href: "/vault", Icon: Lock, badge: undefined },
       { id: "wellbeing", label: "Wellbeing", href: "/you", Icon: Heart, badge: undefined },
@@ -209,7 +230,8 @@ export default function HomePage() {
 
     try {
       if (kind === "task") {
-        const cleanTitle = text.replace(/^(todo|task|remind|reminder)\s*[:\-]\s*/i, "").trim() || text;
+        const cleanTitle =
+          text.replace(/^(todo|task|remind|reminder)\s*[:\-]\s*/i, "").trim() || text;
         await createTask({ title: cleanTitle.slice(0, 200) });
         setCaptureFeedback("Added to Today");
       } else if (kind === "vault") {
@@ -265,7 +287,9 @@ export default function HomePage() {
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
-              <Link key={item.id} href={item.href}
+              <Link
+                key={item.id}
+                href={item.href}
                 className={`${styles.navItem} ${isActive ? styles.navItemActive : ""}`}
               >
                 <item.Icon size={20} strokeWidth={2} aria-hidden="true" />
@@ -277,8 +301,12 @@ export default function HomePage() {
         </nav>
         <div className={styles.sidebarQuote}>
           <span className={styles.sidebarQuoteLine}>You&apos;re doing</span>
-          <span className={`${styles.sidebarQuoteLine} ${styles.sidebarQuoteLineWhite}`}>hard things.</span>
-          <span className={`${styles.sidebarQuoteLine} ${styles.sidebarQuoteLineGold}`}>And it shows.</span>
+          <span className={`${styles.sidebarQuoteLine} ${styles.sidebarQuoteLineWhite}`}>
+            hard things.
+          </span>
+          <span className={`${styles.sidebarQuoteLine} ${styles.sidebarQuoteLineGold}`}>
+            And it shows.
+          </span>
         </div>
       </aside>
 
@@ -321,7 +349,11 @@ export default function HomePage() {
                 </span>
 
                 {priorityPool.length > 1 && (
-                  <button className={styles.priorityRefresh} aria-label="Refresh priority" onClick={cyclePriority}>
+                  <button
+                    className={styles.priorityRefresh}
+                    aria-label="Refresh priority"
+                    onClick={cyclePriority}
+                  >
                     <RefreshCw size={17} />
                   </button>
                 )}
@@ -333,8 +365,8 @@ export default function HomePage() {
                       {priority.description
                         ? priority.description
                         : priority.due_date
-                        ? "Due " + formatDueDate(priority.due_date) + ". Keep the momentum going."
-                        : "No deadline set. Pick a moment and knock it out."}
+                          ? "Due " + formatDueDate(priority.due_date) + ". Keep the momentum going."
+                          : "No deadline set. Pick a moment and knock it out."}
                     </p>
                     <div className={styles.priorityMeta}>
                       <span className={styles.metaTag}>
@@ -399,7 +431,9 @@ export default function HomePage() {
                       </div>
                       <div className={styles.recentContent}>
                         <span className={styles.recentItemTitle}>Nothing yet today</span>
-                        <span className={styles.recentItemSub}>Add a note or a task to get started</span>
+                        <span className={styles.recentItemSub}>
+                          Add a note or a task to get started
+                        </span>
                       </div>
                       <span className={styles.recentTime}>now</span>
                     </div>
@@ -408,7 +442,9 @@ export default function HomePage() {
                       const { Icon, gold } = activityIconFor(item.kind);
                       return (
                         <div key={item.id} className={styles.recentItem}>
-                          <div className={`${styles.recentIcon} ${gold ? styles.recentIconGold : ""}`}>
+                          <div
+                            className={`${styles.recentIcon} ${gold ? styles.recentIconGold : ""}`}
+                          >
                             <Icon size={19} strokeWidth={2} />
                           </div>
                           <div className={styles.recentContent}>
@@ -424,15 +460,34 @@ export default function HomePage() {
 
                 <div className={styles.recentQuote}>
                   <div className={styles.recentQuoteSun} />
-                  <svg viewBox="0 0 260 260" className={styles.recentQuoteMountainPeak} preserveAspectRatio="none">
-                    <path d="M0 210 L70 130 L120 175 L180 105 L260 210 L260 260 L0 260 Z" fill="#1a0e1a" opacity="0.6" />
-                    <path d="M0 235 L85 165 L140 210 L200 155 L260 235 L260 260 L0 260 Z" fill="#0a0510" opacity="0.8" />
+                  <svg
+                    viewBox="0 0 260 260"
+                    className={styles.recentQuoteMountainPeak}
+                    preserveAspectRatio="none"
+                  >
+                    <path
+                      d="M0 210 L70 130 L120 175 L180 105 L260 210 L260 260 L0 260 Z"
+                      fill="#1a0e1a"
+                      opacity="0.6"
+                    />
+                    <path
+                      d="M0 235 L85 165 L140 210 L200 155 L260 235 L260 260 L0 260 Z"
+                      fill="#0a0510"
+                      opacity="0.8"
+                    />
                   </svg>
                   <span className={styles.recentQuoteText}>
-                    Same you,<br />
-                    just <span className={styles.recentQuoteTextPink}>closer</span> to<br />
+                    Same you,
+                    <br />
+                    just <span className={styles.recentQuoteTextPink}>closer</span> to
+                    <br />
                     your goals
-                    <Heart size={16} fill="#E8A0A8" stroke="none" style={{ display: "inline", marginLeft: "0.3rem", verticalAlign: "middle" }} />
+                    <Heart
+                      size={16}
+                      fill="#E8A0A8"
+                      stroke="none"
+                      style={{ display: "inline", marginLeft: "0.3rem", verticalAlign: "middle" }}
+                    />
                   </span>
                 </div>
               </div>
@@ -501,7 +556,9 @@ export default function HomePage() {
                 </button>
               </form>
               {captureFeedback && (
-                <span className={`${styles.captureFeedback} ${captureStatus === "error" ? styles.captureFeedbackError : ""}`}>
+                <span
+                  className={`${styles.captureFeedback} ${captureStatus === "error" ? styles.captureFeedbackError : ""}`}
+                >
                   {captureFeedback}
                 </span>
               )}

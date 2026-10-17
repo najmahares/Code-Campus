@@ -5,8 +5,6 @@ export async function parsePdf(buffer: Buffer): Promise<string> {
     throw new Error("PDF is too large (max 15MB)");
   }
 
-  // Load pdf-parse at runtime so it never gets bundled
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const pdfParse = require("pdf-parse") as (b: Buffer) => Promise<{ text: string }>;
 
   try {
@@ -21,15 +19,10 @@ export async function parsePdf(buffer: Buffer): Promise<string> {
 
     return text;
   } catch (err: any) {
-    if (
-      err.message?.includes("no readable text") ||
-      err.message?.includes("too large")
-    ) {
+    if (err.message?.includes("no readable text") || err.message?.includes("too large")) {
       throw err;
     }
     console.error("[pdf] parse failed:", err?.message);
-    throw new Error(
-      "We couldn't read this PDF. Try re-saving it, or upload a screenshot instead."
-    );
+    throw new Error("We couldn't read this PDF. Try re-saving it, or upload a screenshot instead.");
   }
 }

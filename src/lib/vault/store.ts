@@ -45,7 +45,9 @@ export async function createVaultItem(params: {
   tags?: string[];
 }): Promise<VaultItem> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
   const { data, error } = await supabase
     .from("vault_items")

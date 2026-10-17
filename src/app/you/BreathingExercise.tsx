@@ -60,7 +60,9 @@ export default function BreathingExercise({ onComplete }: Props) {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, []);
 
   const start = () => {
@@ -107,13 +109,23 @@ export default function BreathingExercise({ onComplete }: Props) {
   const total = picked.steps[phaseIndex]?.seconds || 4;
   const progress = (total - countdown) / total;
 
-  const scale = phase === "in" ? 0.6 + progress * 0.6 :
-                phase === "out" ? 1.2 - progress * 0.6 :
-                phase === "hold" ? 1.2 : 0.6;
+  const scale =
+    phase === "in"
+      ? 0.6 + progress * 0.6
+      : phase === "out"
+        ? 1.2 - progress * 0.6
+        : phase === "hold"
+          ? 1.2
+          : 0.6;
 
-  const phaseLabel = phase === "in" ? "Breathe in" :
-                     phase === "out" ? "Breathe out" :
-                     phase === "hold" ? "Hold" : "Hold";
+  const phaseLabel =
+    phase === "in"
+      ? "Breathe in"
+      : phase === "out"
+        ? "Breathe out"
+        : phase === "hold"
+          ? "Hold"
+          : "Hold";
 
   return (
     <div className={styles.breathingWrap}>
@@ -122,7 +134,10 @@ export default function BreathingExercise({ onComplete }: Props) {
           <button
             key={p.id}
             className={`${styles.patternBtn} ${picked.id === p.id ? styles.patternBtnActive : ""}`}
-            onClick={() => { reset(); setPicked(p); }}
+            onClick={() => {
+              reset();
+              setPicked(p);
+            }}
             disabled={running}
           >
             {p.name}
@@ -134,7 +149,10 @@ export default function BreathingExercise({ onComplete }: Props) {
         <motion.div
           className={styles.breathingOrb}
           animate={{ scale, opacity: running ? 0.9 : 0.6 }}
-          transition={{ duration: phase === "hold" || phase === "holdOut" ? 0.3 : 1, ease: "easeInOut" }}
+          transition={{
+            duration: phase === "hold" || phase === "holdOut" ? 0.3 : 1,
+            ease: "easeInOut",
+          }}
         />
         <div className={styles.breathingInner}>
           <AnimatePresence mode="wait">

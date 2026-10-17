@@ -65,9 +65,13 @@ async function fetchDirect(url: string): Promise<string> {
     const title = ($("title").first().text() || $("h1").first().text() || "").trim();
     const description = ($('meta[name="description"]').attr("content") || "").trim();
     const main =
-      $("article").length > 0 ? $("article") :
-      $("main").length > 0 ? $("main") :
-      $('[role="main"]').length > 0 ? $('[role="main"]') : $("body");
+      $("article").length > 0
+        ? $("article")
+        : $("main").length > 0
+          ? $("main")
+          : $('[role="main"]').length > 0
+            ? $('[role="main"]')
+            : $("body");
 
     const content = main.text().replace(/\s+/g, " ").trim().slice(0, 20000);
     if (content.length < 150) throw new Error("BLOCKED");
@@ -126,21 +130,20 @@ export async function parseUrl(rawUrl: string): Promise<ParsedUrl> {
     throw new Error("That URL points to a private network and cannot be fetched.");
   }
 
-  // Try direct first
   try {
     const result = JSON.parse(await fetchDirect(parsed.toString()));
     return { ...result, url: parsed.toString() };
   } catch (err: any) {
-    if (err.message === "That page doesn't exist. Check the link." ||
-        err.message === "The site is rate-limiting us. Try again." ||
-        err.message === "That URL is not a web page." ||
-        err.message === "That page is too large.") {
+    if (
+      err.message === "That page doesn't exist. Check the link." ||
+      err.message === "The site is rate-limiting us. Try again." ||
+      err.message === "That URL is not a web page." ||
+      err.message === "That page is too large."
+    ) {
       throw err;
     }
-    // On BLOCKED or TIMEOUT or any other direct-fetch failure, try Jina
   }
 
-  // Fallback via Jina Reader
   try {
     const result = JSON.parse(await fetchViaJina(parsed.toString()));
     return { ...result, url: parsed.toString() };

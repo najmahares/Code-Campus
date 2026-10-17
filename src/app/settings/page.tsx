@@ -71,7 +71,9 @@ export default function SettingsPage() {
 
   useEffect(() => {
     async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         router.push("/login");
         return;
@@ -84,7 +86,6 @@ export default function SettingsPage() {
       setLoading(false);
     }
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const saveName = async () => {
@@ -154,7 +155,9 @@ export default function SettingsPage() {
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
-              <Link key={item.id} href={item.href}
+              <Link
+                key={item.id}
+                href={item.href}
                 className={`${styles.navItem} ${isActive ? styles.navItemActive : ""}`}
               >
                 <item.Icon size={20} strokeWidth={2} aria-hidden="true" />
@@ -165,8 +168,12 @@ export default function SettingsPage() {
         </nav>
         <div className={styles.sidebarQuote}>
           <span className={styles.sidebarQuoteLine}>You&apos;re doing</span>
-          <span className={`${styles.sidebarQuoteLine} ${styles.sidebarQuoteLineWhite}`}>hard things.</span>
-          <span className={`${styles.sidebarQuoteLine} ${styles.sidebarQuoteLineGold}`}>And it shows.</span>
+          <span className={`${styles.sidebarQuoteLine} ${styles.sidebarQuoteLineWhite}`}>
+            hard things.
+          </span>
+          <span className={`${styles.sidebarQuoteLine} ${styles.sidebarQuoteLineGold}`}>
+            And it shows.
+          </span>
         </div>
       </aside>
 
@@ -193,7 +200,9 @@ export default function SettingsPage() {
             className={styles.section}
           >
             <div className={styles.sectionHeader}>
-              <div className={styles.sectionIcon}><User size={18} /></div>
+              <div className={styles.sectionIcon}>
+                <User size={18} />
+              </div>
               <div>
                 <div className={styles.sectionTitle}>Profile</div>
                 <div className={styles.sectionSub}>How you show up in Code Campus.</div>
@@ -207,16 +216,27 @@ export default function SettingsPage() {
                   type="text"
                   className={styles.input}
                   value={draftName}
-                  onChange={(e) => { setDraftName(e.target.value); setNameSaved(false); }}
+                  onChange={(e) => {
+                    setDraftName(e.target.value);
+                    setNameSaved(false);
+                  }}
                   placeholder="Your name"
                   maxLength={40}
                 />
                 <button
                   className={styles.saveBtn}
                   onClick={saveName}
-                  disabled={nameSaving || !draftName.trim() || draftName.trim() === profile?.display_name}
+                  disabled={
+                    nameSaving || !draftName.trim() || draftName.trim() === profile?.display_name
+                  }
                 >
-                  {nameSaving ? <Loader2 size={14} className="animate-spin" /> : nameSaved ? <Check size={14} /> : "Save"}
+                  {nameSaving ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : nameSaved ? (
+                    <Check size={14} />
+                  ) : (
+                    "Save"
+                  )}
                 </button>
               </div>
             </div>
@@ -235,18 +255,32 @@ export default function SettingsPage() {
             className={styles.section}
           >
             <div className={styles.sectionHeader}>
-              <div className={styles.sectionIcon}><Heart size={18} /></div>
+              <div className={styles.sectionIcon}>
+                <Heart size={18} />
+              </div>
               <div className={styles.sectionHeaderText}>
                 <div className={styles.sectionTitle}>Avatar</div>
                 <div className={styles.sectionSub}>Pick one to represent you.</div>
               </div>
               {pendingAvatar && profile && pendingAvatar !== profile.avatar_seed && (
                 <div className={styles.avatarActions}>
-                  <button className={styles.avatarCancelBtn} onClick={cancelAvatar} disabled={avatarSaving}>
+                  <button
+                    className={styles.avatarCancelBtn}
+                    onClick={cancelAvatar}
+                    disabled={avatarSaving}
+                  >
                     Cancel
                   </button>
-                  <button className={styles.avatarSaveBtn} onClick={saveAvatar} disabled={avatarSaving}>
-                    {avatarSaving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
+                  <button
+                    className={styles.avatarSaveBtn}
+                    onClick={saveAvatar}
+                    disabled={avatarSaving}
+                  >
+                    {avatarSaving ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : (
+                      <Check size={13} />
+                    )}
                     Save
                   </button>
                 </div>
@@ -264,7 +298,9 @@ export default function SettingsPage() {
                   <button
                     key={seed}
                     type="button"
-                    className={styles.avatarChoice + " " + (isActive ? styles.avatarChoiceActive : "")}
+                    className={
+                      styles.avatarChoice + " " + (isActive ? styles.avatarChoiceActive : "")
+                    }
                     onClick={() => selectAvatar(seed)}
                     disabled={avatarSaving}
                     aria-label={"Choose avatar " + seed}
@@ -288,10 +324,14 @@ export default function SettingsPage() {
             className={styles.section}
           >
             <div className={styles.sectionHeader}>
-              <div className={styles.sectionIcon}><Bell size={18} /></div>
+              <div className={styles.sectionIcon}>
+                <Bell size={18} />
+              </div>
               <div>
                 <div className={styles.sectionTitle}>Notifications</div>
-                <div className={styles.sectionSub}>You will see the bell in the top bar light up when there is something new.</div>
+                <div className={styles.sectionSub}>
+                  You will see the bell in the top bar light up when there is something new.
+                </div>
               </div>
             </div>
           </motion.div>
@@ -303,7 +343,9 @@ export default function SettingsPage() {
             className={styles.section}
           >
             <div className={styles.sectionHeader}>
-              <div className={styles.sectionIcon}><Shield size={18} /></div>
+              <div className={styles.sectionIcon}>
+                <Shield size={18} />
+              </div>
               <div>
                 <div className={styles.sectionTitle}>Account</div>
                 <div className={styles.sectionSub}>Sign out or leave Code Campus.</div>

@@ -67,7 +67,9 @@ export default function MeditationPlayer() {
               <div className={styles.nowPlayingDot} style={{ background: active.color }} />
               <div className={styles.nowPlayingInfo}>
                 <div className={styles.nowPlayingName}>{active.name}</div>
-                <div className={styles.nowPlayingSub}>{active.teacher} · {active.duration}</div>
+                <div className={styles.nowPlayingSub}>
+                  {active.teacher} · {active.duration}
+                </div>
               </div>
               <button className={styles.nowPlayingStop} onClick={() => setActive(null)}>
                 <X size={14} /> Close
@@ -77,7 +79,12 @@ export default function MeditationPlayer() {
               <iframe
                 width="100%"
                 height="100%"
-                src={"https://www.youtube.com/embed/" + active.youtubeId + "?rel=0&modestbranding=1&playsinline=1&origin=" + (typeof window !== "undefined" ? window.location.origin : "")}
+                src={
+                  "https://www.youtube.com/embed/" +
+                  active.youtubeId +
+                  "?rel=0&modestbranding=1&playsinline=1&origin=" +
+                  (typeof window !== "undefined" ? window.location.origin : "")
+                }
                 title={active.name}
                 frameBorder="0"
                 referrerPolicy="origin"

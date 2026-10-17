@@ -36,7 +36,9 @@ export default function SummaryTab({ noteBody }: Props) {
   if (!hasBody) {
     return (
       <div className={styles.tabEmptyState}>
-        <p className={styles.tabEmptyText}>This note is empty. Add some content to generate a summary.</p>
+        <p className={styles.tabEmptyText}>
+          This note is empty. Add some content to generate a summary.
+        </p>
       </div>
     );
   }
@@ -44,7 +46,9 @@ export default function SummaryTab({ noteBody }: Props) {
   if (!bullets && !loading && !error) {
     return (
       <div className={styles.tabEmptyState}>
-        <div className={styles.tabEmptyIcon}><Sparkles size={28} /></div>
+        <div className={styles.tabEmptyIcon}>
+          <Sparkles size={28} />
+        </div>
         <h3 className={styles.tabEmptyTitle}>Generate a quick summary</h3>
         <p className={styles.tabEmptyText}>
           Get 4-6 revision-ready bullets from this note. Perfect for exam review.

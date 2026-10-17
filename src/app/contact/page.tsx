@@ -24,14 +24,16 @@ export default function ContactPage() {
     <div className={styles.page}>
       <nav className={styles.nav}>
         <div className={styles.navInner}>
-          <Link href="/" className={styles.backBtn}><ArrowLeft size={16} /> Back to home</Link>
+          <Link href="/" className={styles.backBtn}>
+            <ArrowLeft size={16} /> Back to home
+          </Link>
           <LogoLockup size={28} />
           <div style={{ width: 100 }} />
         </div>
       </nav>
 
       <main className={styles.main}>
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -39,16 +41,19 @@ export default function ContactPage() {
         >
           <h1 className={styles.title}>Say hello.</h1>
           <p className={styles.subtitle}>
-            Got a question, a bug report, or just want to show us what you're building? Drop us a message. We read everything.
+            Got a question, a bug report, or just want to show us what you're building? Drop us a
+            message. We read everything.
           </p>
 
           {status === "done" ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className={styles.successState}
             >
-              <div className={styles.successIcon}><Check size={24} /></div>
+              <div className={styles.successIcon}>
+                <Check size={24} />
+              </div>
               <h3>Message sent</h3>
               <p>We usually reply within a day.</p>
             </motion.div>
@@ -56,9 +61,9 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.field}>
                 <label className={styles.label}>Your name</label>
-                <input 
-                  type="text" 
-                  className={styles.input} 
+                <input
+                  type="text"
+                  className={styles.input}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -66,9 +71,9 @@ export default function ContactPage() {
               </div>
               <div className={styles.field}>
                 <label className={styles.label}>Your email</label>
-                <input 
-                  type="email" 
-                  className={styles.input} 
+                <input
+                  type="email"
+                  className={styles.input}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -76,20 +81,22 @@ export default function ContactPage() {
               </div>
               <div className={styles.field}>
                 <label className={styles.label}>How can we help?</label>
-                <textarea 
-                  className={styles.textarea} 
+                <textarea
+                  className={styles.textarea}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows={5}
                   required
                 />
               </div>
-              <button 
-                type="submit" 
-                className={styles.submitBtn}
-                disabled={status === "sending"}
-              >
-                {status === "sending" ? "Sending..." : <><Send size={16} /> Send message</>}
+              <button type="submit" className={styles.submitBtn} disabled={status === "sending"}>
+                {status === "sending" ? (
+                  "Sending..."
+                ) : (
+                  <>
+                    <Send size={16} /> Send message
+                  </>
+                )}
               </button>
               <p className={styles.footerNote}>We usually reply within a day.</p>
             </form>

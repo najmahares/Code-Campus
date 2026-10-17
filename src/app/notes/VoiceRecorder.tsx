@@ -84,7 +84,9 @@ export default function VoiceRecorder({ onTranscript }: Props) {
 
   const stop = () => {
     if (recognitionRef.current) {
-      try { recognitionRef.current.stop(); } catch {}
+      try {
+        recognitionRef.current.stop();
+      } catch {}
       recognitionRef.current = null;
     }
     if (timerRef.current) {
@@ -99,7 +101,9 @@ export default function VoiceRecorder({ onTranscript }: Props) {
       <div className={styles.voicePlaceholder}>
         <AlertCircle size={32} />
         <p>Voice capture isn't supported in this browser.</p>
-        <p className={styles.voicePlaceholderSub}>Try Chrome, Edge, or Safari for voice transcription.</p>
+        <p className={styles.voicePlaceholderSub}>
+          Try Chrome, Edge, or Safari for voice transcription.
+        </p>
       </div>
     );
   }
@@ -119,7 +123,10 @@ export default function VoiceRecorder({ onTranscript }: Props) {
             <span className={styles.voiceRecording}>
               <span className={styles.voiceDot} /> Recording
             </span>
-            <span className={styles.voiceTimer}>{String(Math.floor(seconds / 60)).padStart(2, "0")}:{String(seconds % 60).padStart(2, "0")}</span>
+            <span className={styles.voiceTimer}>
+              {String(Math.floor(seconds / 60)).padStart(2, "0")}:
+              {String(seconds % 60).padStart(2, "0")}
+            </span>
           </>
         ) : (
           <span className={styles.voiceIdle}>Tap to start recording</span>

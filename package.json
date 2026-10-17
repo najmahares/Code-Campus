@@ -43,7 +43,9 @@
     "dotenv": "^18.0.8",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
+    "eslint-config-prettier": "^10.1.8",
     "none": "^1.0.0",
+    "prettier": "^3.9.10",
     "typescript": "^5"
   }
 }

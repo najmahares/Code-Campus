@@ -38,7 +38,9 @@ export async function createTask(params: {
   linked_project_id?: string | null;
 }): Promise<Task> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
   const { data, error } = await supabase
     .from("tasks")

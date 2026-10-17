@@ -15,7 +15,9 @@ export async function POST(req: Request) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
     );
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { type, signedUrl, fileType } = await req.json();
@@ -30,10 +32,13 @@ export async function POST(req: Request) {
 
     if (type === "pdf" || fileType === "application/pdf") {
       extracted = await parsePdf(buffer);
-    } else if (fileType === "text/plain" || fileType === "text/markdown" || fileType === "text/x-markdown") {
+    } else if (
+      fileType === "text/plain" ||
+      fileType === "text/markdown" ||
+      fileType === "text/x-markdown"
+    ) {
       extracted = buffer.toString("utf-8");
     } else if (fileType?.startsWith("image/")) {
-      // Use Gemini vision to read the image
       const base64 = buffer.toString("base64");
       const { text } = await generateText({
         model: google(MODEL_ID),
@@ -41,7 +46,10 @@ export async function POST(req: Request) {
           {
             role: "user",
             content: [
-              { type: "text", text: "Extract all text and describe any diagrams, tables, or visual information in this image. Be thorough — the output will be used as project spec context for an AI assistant." },
+              {
+                type: "text",
+                text: "Extract all text and describe any diagrams, tables, or visual information in this image. Be thorough — the output will be used as project spec context for an AI assistant.",
+              },
               { type: "image", image: `data:${fileType};base64,${base64}` },
             ],
           },
