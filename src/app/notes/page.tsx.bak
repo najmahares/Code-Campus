@@ -1,0 +1,465 @@
+"use client";
+
+import { useEffect, useState, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Home as HomeIcon, FileText, Calendar, Code2, Lock, Heart,
+  Search, Plus, FileDown, Filter, ArrowLeft, Sparkles, HelpCircle,
+  MoreVertical, Loader2, X, ArrowRight, Trash2,
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { LogoLockup } from "@/components/Logo";
+import RichTextEditor from "@/components/RichTextEditor";
+import { listNotes, createNote, updateNote, deleteNote, refineNote, type Note } from "@/lib/notes/store";
+import { generateTitle } from "@/lib/notes/title";
+import styles from "./notes.module.css";
+
+const navItems = [
+  { id: "home", label: "Home", href: "/home", Icon: HomeIcon },
+  { id: "notes", label: "Notes", href: "/notes", Icon: FileText },
+  { id: "today", label: "Today", href: "/today", Icon: Calendar, badge: 3 },
+  { id: "projects", label: "Projects", href: "/projects", Icon: Code2 },
+  { id: "vault", label: "Vault", href: "/vault", Icon: Lock },
+  { id: "wellbeing", label: "Wellbeing", href: "/you", Icon: Heart },
+];
+
+export default function NotesPage() {
+  const [loading, setLoading] = useState(true);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"raw" | "refined" | "summary" | "quiz">("raw");
+  const [filter, setFilter] = useState("All");
+  const [showCapture, setShowCapture] = useState(false);
+  const [captureText, setCaptureText] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [refining, setRefining] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const supabase = createClient();
+
+  const activeNote = notes.find((n) => n.id === activeNoteId) || null;
+
+  const loadNotes = useCallback(async () => {
+    try {
+      const data = await listNotes();
+      setNotes(data);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    async function init() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.push("/login"); return; }
+      await loadNotes();
+      setLoading(false);
+    }
+    init();
+  }, [supabase, router, loadNotes]);
+
+  const handleSave = async (shouldRefine: boolean = false) => {
+    if (!captureText.trim()) return;
+    setSaving(true);
+    setError(null);
+    try {
+      const note = await createNote({
+        raw_body: captureText,
+        title: generateTitle(captureText),
+        source_type: "typed",
+      });
+      if (shouldRefine) {
+        setRefining(true);
+        try {
+          const result = await refineNote(captureText, note.title);
+          await updateNote(note.id, {
+            title: result.title,
+            refined_body: result.refined_body,
+            tags: result.tags,
+          });
+        } catch (err: any) {
+          console.error("Refine failed:", err);
+        } finally {
+          setRefining(false);
+        }
+      }
+      await loadNotes();
+      setShowCapture(false);
+      setCaptureText("");
+      setActiveNoteId(note.id);
+      setActiveTab(shouldRefine ? "refined" : "raw");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleRefine = async () => {
+    if (!activeNote) return;
+    setRefining(true);
+    setError(null);
+    try {
+      const result = await refineNote(activeNote.raw_body, activeNote.title);
+      await updateNote(activeNote.id, {
+        title: result.title,
+        refined_body: result.refined_body,
+        tags: result.tags,
+      });
+      await loadNotes();
+      setActiveTab("refined");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setRefining(false);
+    }
+  };
+
+  const handleSaveTitle = async () => {
+    if (!activeNote || !titleDraft.trim()) {
+      setEditingTitle(false);
+      return;
+    }
+    try {
+      await updateNote(activeNote.id, { title: titleDraft });
+      await loadNotes();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setEditingTitle(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this note?")) return;
+    try {
+      await deleteNote(id);
+      setActiveNoteId(null);
+      await loadNotes();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  if (loading) return <div className={styles.loading}>Loading notes...</div>;
+
+  const filters = ["All", ...Array.from(new Set(notes.flatMap((n) => n.tags))).slice(0, 6)];
+  const filteredNotes = notes.filter((n) => {
+    if (filter !== "All" && !n.tags.includes(filter)) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return n.title.toLowerCase().includes(q) || n.raw_body.toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  // NO NOTES AT ALL
+  if (notes.length === 0) {
+    return (
+      <div className={styles.page}>
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarLogo}><LogoLockup size={40} /></div>
+          <nav className={styles.sidebarNav}>
+            {navItems.map((item) => (
+              <a key={item.id} href={item.href} className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}>
+                <item.Icon size={20} strokeWidth={2} />
+                <span>{item.label}</span>
+                {item.badge && <span className={styles.navBadge}>{item.badge}</span>}
+              </a>
+            ))}
+          </nav>
+          <div className={styles.sidebarDecor}>
+            <div className={styles.decorQuote}>
+              <span className={styles.decorQuoteLine}>Small steps</span>
+              <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>build</span>
+              <span className={styles.decorQuoteLine}>big dreams</span>
+            </div>
+          </div>
+        </aside>
+
+        <div className={styles.emptyCol}>
+          <svg viewBox="0 0 400 320" className={styles.emptyIllustration} xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="emptyGlow" cx="50%" cy="55%" r="55%">
+                <stop offset="0%" stopColor="#E8A0A8" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#050505" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <circle cx="200" cy="180" r="180" fill="url(#emptyGlow)" />
+            <ellipse cx="200" cy="290" rx="140" ry="14" fill="#000" opacity="0.35" />
+            <rect x="60" y="240" width="280" height="40" rx="6" fill="#4A0E13" />
+            <rect x="60" y="240" width="280" height="6" rx="3" fill="#B33A43" opacity="0.6" />
+            <rect x="75" y="200" width="260" height="40" rx="6" fill="#E8A0A8" />
+            <rect x="75" y="200" width="260" height="6" rx="3" fill="#F5C5CB" opacity="0.7" />
+            <rect x="90" y="160" width="235" height="40" rx="6" fill="#D4AF37" />
+            <rect x="90" y="160" width="235" height="6" rx="3" fill="#F5D57A" opacity="0.7" />
+            <g transform="translate(155, 45)">
+              <path d="M45 115 Q15 68 24 25 Q46 68 45 115" fill="#5a9a6a" />
+              <path d="M45 115 Q75 68 66 25 Q44 68 45 115" fill="#4a8a5a" />
+              <path d="M45 115 Q32 62 45 12 Q58 62 45 115" fill="#6aaa7a" />
+            </g>
+            <rect x="155" y="160" width="80" height="55" rx="8" fill="#E8A0A8" />
+            <rect x="155" y="160" width="80" height="11" rx="5.5" fill="#F5C5CB" />
+            <g transform="translate(245, 195)">
+              <ellipse cx="34" cy="11" rx="34" ry="5" fill="#F5C5CB" />
+              <rect x="0" y="11" width="68" height="68" rx="8" fill="#E8A0A8" />
+              <path d="M68 34 Q95 34 95 49 Q95 64 68 64" stroke="#E8A0A8" strokeWidth="8" fill="none" strokeLinecap="round" />
+              <circle cx="22" cy="40" r="2" fill="#050505" />
+              <circle cx="46" cy="40" r="2" fill="#050505" />
+              <path d="M24 52 Q34 58 44 52" stroke="#050505" strokeWidth="2" fill="none" strokeLinecap="round" />
+            </g>
+            <text x="290" y="105" fontFamily="Caveat, cursive" fontWeight="700" fontSize="26" fill="#E8A0A8" transform="rotate(-6 290 105)">Your ideas</text>
+            <text x="300" y="135" fontFamily="Caveat, cursive" fontWeight="700" fontSize="26" fill="#E8A0A8" transform="rotate(-6 300 135)">belong here</text>
+          </svg>
+          <h2 className={styles.emptyTitle}>No notes yet.</h2>
+          <p className={styles.emptyText}>Capture your thoughts, import your files, or let AI help you organize everything.</p>
+          <div className={styles.emptyActions}>
+            <button className={styles.emptyPrimary} onClick={() => setShowCapture(true)}>
+              <Plus size={18} strokeWidth={3} /> Capture
+            </button>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {showCapture && (
+            <motion.div className={styles.captureBackdrop} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowCapture(false)}>
+              <motion.div className={styles.capturePanel} initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.3 }} onClick={(e) => e.stopPropagation()}>
+                <div className={styles.captureHeader}>
+                  <div>
+                    <div className={styles.captureTitle}>Capture anything</div>
+                    <div className={styles.captureSub}>Notes, code, questions, feelings... it all goes here.</div>
+                  </div>
+                  <button className={styles.captureClose} onClick={() => setShowCapture(false)}><X size={18} /></button>
+                </div>
+                <div className={styles.captureBody}>
+                  <RichTextEditor content={captureText} onChange={setCaptureText} placeholder="Start typing..." minHeight={220} />
+                  {error && <div className={styles.captureError}>{error}</div>}
+                </div>
+                <div className={styles.captureFooter}>
+                  <button className={styles.captureBtnSecondary} onClick={() => setShowCapture(false)}>Cancel</button>
+                  <button className={styles.captureBtnSecondary} onClick={() => handleSave(false)} disabled={saving || !captureText.trim()}>
+                    {saving && !refining ? "Saving..." : "Save"}
+                  </button>
+                  <button className={styles.captureBtnPrimary} onClick={() => handleSave(true)} disabled={saving || !captureText.trim()}>
+                    <Sparkles size={16} /> {refining ? "Refining..." : "Save & Refine"}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
+
+  // DETAIL VIEW (note open)
+  if (activeNote) {
+    return (
+      <div className={styles.page}>
+        <aside className={styles.sidebar}>
+          <div className={styles.sidebarLogo}><LogoLockup size={40} /></div>
+          <nav className={styles.sidebarNav}>
+            {navItems.map((item) => (
+              <a key={item.id} href={item.href} className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}>
+                <item.Icon size={20} strokeWidth={2} />
+                <span>{item.label}</span>
+                {item.badge && <span className={styles.navBadge}>{item.badge}</span>}
+              </a>
+            ))}
+          </nav>
+          <div className={styles.sidebarDecor}>
+            <div className={styles.decorQuote}>
+              <span className={styles.decorQuoteLine}>Small steps</span>
+              <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>build</span>
+              <span className={styles.decorQuoteLine}>big dreams</span>
+            </div>
+          </div>
+        </aside>
+
+        <div className={styles.detailView}>
+          <div className={styles.detailHeader}>
+            <button className={styles.backBtn} onClick={() => { setActiveNoteId(null); setError(null); }}>
+              <ArrowLeft size={16} /> All notes
+            </button>
+            <div className={styles.detailActions}>
+              <button className={`${styles.actionBtn} ${styles.actionBtnPrimary}`} onClick={handleRefine} disabled={refining}>
+                {refining ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                {refining ? "Refining..." : activeNote.refined_body ? "Re-refine" : "Refine"}
+              </button>
+              <button className={styles.actionBtn} onClick={() => setActiveTab("summary")}><FileText size={14} /> Summary</button>
+              <button className={styles.actionBtn} onClick={() => setActiveTab("quiz")}><HelpCircle size={14} /> Quiz</button>
+              <button className={styles.actionBtn} onClick={() => handleDelete(activeNote.id)} aria-label="Delete">
+                <Trash2 size={14} />
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.detailBody}>
+            {editingTitle ? (
+              <input
+                type="text"
+                value={titleDraft}
+                onChange={(e) => setTitleDraft(e.target.value)}
+                onBlur={handleSaveTitle}
+                onKeyDown={(e) => e.key === "Enter" && handleSaveTitle()}
+                className={styles.detailTitleInput}
+                autoFocus
+              />
+            ) : (
+              <h1 className={styles.detailTitle} onClick={() => { setTitleDraft(activeNote.title); setEditingTitle(true); }}>
+                {activeNote.title}
+              </h1>
+            )}
+
+            <div className={styles.detailMeta}>
+              <span className={styles.metaChip}><FileText size={12} className={styles.metaIcon} /> {activeNote.source_type}</span>
+              {activeNote.tags.map((t) => (
+                <span key={t} className={styles.metaChip}><Code2 size={12} className={styles.metaIcon} /> {t}</span>
+              ))}
+            </div>
+
+            <div className={styles.detailTimeline}>
+              <span className={styles.timelineItem}><Calendar size={12} className={styles.metaIcon} /> Created {new Date(activeNote.created_at).toLocaleDateString()}</span>
+              <span className={styles.timelineItem}><Calendar size={12} className={styles.metaIcon} /> Updated {new Date(activeNote.updated_at).toLocaleString()}</span>
+            </div>
+
+            <div className={styles.detailTabs}>
+              <button className={`${styles.tab} ${activeTab === "raw" ? styles.tabActive : ""}`} onClick={() => setActiveTab("raw")}>Raw</button>
+              <button className={`${styles.tab} ${activeTab === "refined" ? styles.tabActive : ""}`} onClick={() => setActiveTab("refined")} disabled={!activeNote.refined_body}>Refined</button>
+              <button className={`${styles.tab} ${activeTab === "summary" ? styles.tabActive : ""}`} onClick={() => setActiveTab("summary")}>Summary</button>
+              <button className={`${styles.tab} ${activeTab === "quiz" ? styles.tabActive : ""}`} onClick={() => setActiveTab("quiz")}>Quiz</button>
+            </div>
+
+            {error && <div className={styles.captureError} style={{ marginBottom: "1.5rem" }}>{error}</div>}
+
+            {activeTab === "raw" && (
+              <div className={styles.renderedNote} dangerouslySetInnerHTML={{ __html: activeNote.raw_body }} />
+            )}
+            {activeTab === "refined" && (
+              activeNote.refined_body ? (
+                <div className={styles.renderedNote} dangerouslySetInnerHTML={{ __html: activeNote.refined_body }} />
+              ) : (
+                <div className={styles.placeholderContent}>Click "Refine" to generate an AI-structured version of this note.</div>
+              )
+            )}
+            {activeTab === "summary" && (
+              <div className={styles.placeholderContent}>Summary generation coming soon.</div>
+            )}
+            {activeTab === "quiz" && (
+              <div className={styles.placeholderContent}>Quiz feature coming soon.</div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // LIST VIEW (default when notes exist)
+  return (
+    <div className={styles.page}>
+      <aside className={styles.sidebar}>
+        <div className={styles.sidebarLogo}><LogoLockup size={40} /></div>
+        <nav className={styles.sidebarNav}>
+          {navItems.map((item) => (
+            <a key={item.id} href={item.href} className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}>
+              <item.Icon size={20} strokeWidth={2} />
+              <span>{item.label}</span>
+              {item.badge && <span className={styles.navBadge}>{item.badge}</span>}
+            </a>
+          ))}
+        </nav>
+        <div className={styles.sidebarDecor}>
+          <div className={styles.decorQuote}>
+            <span className={styles.decorQuoteLine}>Small steps</span>
+            <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>build</span>
+            <span className={styles.decorQuoteLine}>big dreams</span>
+          </div>
+        </div>
+      </aside>
+
+      <div className={styles.main}>
+        <div className={styles.listView}>
+          <div className={styles.listHeader}>
+            <div className={styles.listHeaderLeft}>
+              <h1 className={styles.listTitle}>Notes</h1>
+              <p className={styles.listSub}>Capture. Organize. Learn. <Heart size={16} fill="#E8A0A8" stroke="none" /></p>
+            </div>
+            <div className={styles.listActions}>
+              <button className={styles.importBtn}><FileDown size={16} /> Import</button>
+              <button className={styles.captureBtn} onClick={() => setShowCapture(true)}><Plus size={16} strokeWidth={3} /> Capture</button>
+            </div>
+          </div>
+
+          <div className={styles.filterRow}>
+            {filters.map((f) => (
+              <button key={f} className={`${styles.filterChip} ${filter === f ? styles.filterChipActive : ""}`} onClick={() => setFilter(f)}>
+                {f}
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTitle}>All notes</span>
+            <span className={styles.sectionCount}>{filteredNotes.length} {filteredNotes.length === 1 ? "note" : "notes"}</span>
+          </div>
+
+          <div className={styles.notesGrid}>
+            {filteredNotes.map((n) => (
+              <div key={n.id} className={styles.noteCard} onClick={() => { setActiveNoteId(n.id); setActiveTab(n.refined_body ? "refined" : "raw"); }}>
+                <div className={styles.noteCardTop}>
+                  <div className={styles.noteIcon}><Code2 size={20} strokeWidth={2} /></div>
+                  <span className={styles.noteTime}>{new Date(n.updated_at).toLocaleDateString()}</span>
+                </div>
+                <h3 className={styles.noteTitle}>{n.title}</h3>
+                <p className={styles.noteDesc}>{(n.refined_body || n.raw_body).replace(/<[^>]*>/g, "").slice(0, 140)}</p>
+                {n.tags.length > 0 && (
+                  <div className={styles.noteTags}>
+                    {n.tags.slice(0, 3).map((t) => <span key={t} className={styles.noteTag}>{t}</span>)}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {filteredNotes.length === 0 && (
+            <div className={styles.emptyList}>No notes match that filter.</div>
+          )}
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {showCapture && (
+          <motion.div className={styles.captureBackdrop} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowCapture(false)}>
+            <motion.div className={styles.capturePanel} initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.3 }} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.captureHeader}>
+                <div>
+                  <div className={styles.captureTitle}>Capture anything</div>
+                  <div className={styles.captureSub}>Notes, code, questions, feelings... it all goes here.</div>
+                </div>
+                <button className={styles.captureClose} onClick={() => setShowCapture(false)}><X size={18} /></button>
+              </div>
+              <div className={styles.captureBody}>
+                <RichTextEditor content={captureText} onChange={setCaptureText} placeholder="Start typing..." minHeight={220} />
+                {error && <div className={styles.captureError}>{error}</div>}
+              </div>
+              <div className={styles.captureFooter}>
+                <button className={styles.captureBtnSecondary} onClick={() => setShowCapture(false)}>Cancel</button>
+                <button className={styles.captureBtnSecondary} onClick={() => handleSave(false)} disabled={saving || !captureText.trim()}>
+                  {saving && !refining ? "Saving..." : "Save"}
+                </button>
+                <button className={styles.captureBtnPrimary} onClick={() => handleSave(true)} disabled={saving || !captureText.trim()}>
+                  <Sparkles size={16} /> {refining ? "Refining..." : "Save & Refine"}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

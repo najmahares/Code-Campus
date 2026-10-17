@@ -1,0 +1,10 @@
+.wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 2rem; background: rgba(255,255,255,0.01); border: 1px dashed rgba(255,255,255,0.08); border-radius: 1.5rem; }
+.iconWrap { width: 72px; height: 72px; border-radius: 50%; background: rgba(232,160,168,0.08); border: 1px solid rgba(232,160,168,0.2); color: #E8A0A8; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+.title { font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 1.5rem; color: #FFFFFF; margin-bottom: 0.5rem; }
+.desc { font-size: 0.95rem; color: rgba(255,255,255,0.5); max-width: 24rem; line-height: 1.6; margin-bottom: 2rem; }
+.actions { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.primaryBtn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 1.75rem; border-radius: 999px; background: #E8A0A8; color: #050505; font-family: 'Quicksand', sans-serif; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: all 0.2s ease; border: none; cursor: pointer; }
+.primaryBtn:hover { background: #FFFFFF; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,160,168,0.3); }
+.secondaryBtn { display: inline-flex; align-items: center; gap: 0.4rem; color: rgba(255,255,255,0.5); font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 0.85rem; text-decoration: none; transition: all 0.2s ease; }
+.secondaryBtn:hover { color: #E8A0A8; }
+@media (max-width: 640px) { .wrap { padding: 3rem 1.5rem; } .title { font-size: 1.25rem; } }

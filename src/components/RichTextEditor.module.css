@@ -1,0 +1,164 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+.wrapper:focus-within {
+  border-color: rgba(232, 160, 168, 0.5);
+  background: rgba(232, 160, 168, 0.03);
+  box-shadow: 0 0 0 4px rgba(232, 160, 168, 0.06);
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.toolbarBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.55rem;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.toolbarBtn:hover:not(:disabled) {
+  color: #E8A0A8;
+  background: rgba(232, 160, 168, 0.1);
+}
+.toolbarBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.toolbarBtnActive {
+  background: rgba(232, 160, 168, 0.15);
+  color: #E8A0A8;
+}
+
+.toolbarDivider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 0.25rem;
+}
+
+.prose {
+  padding: 1.15rem 1.35rem;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  outline: none;
+  overflow-y: auto;
+  max-height: 400px;
+}
+.prose p {
+  margin: 0 0 0.75rem 0;
+}
+.prose p:last-child {
+  margin-bottom: 0;
+}
+.prose strong {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+.prose em {
+  color: #E8A0A8;
+  font-style: italic;
+}
+.prose h2 {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  margin: 1.25rem 0 0.6rem 0;
+}
+.prose h3 {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #FFFFFF;
+  margin: 1rem 0 0.5rem 0;
+}
+.prose ul {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 0.75rem 0;
+}
+.prose ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 0.75rem 0;
+}
+.prose li {
+  margin-bottom: 0.3rem;
+}
+.prose li::marker {
+  color: #E8A0A8;
+}
+.prose code {
+  background: rgba(232, 160, 168, 0.12);
+  color: #E8A0A8;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.35rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88em;
+}
+.prose pre {
+  background: #0a0608;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.65rem;
+  padding: 0.95rem 1.1rem;
+  margin: 0.85rem 0;
+  overflow-x: auto;
+}
+.prose pre code {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+.prose a {
+  color: #E8A0A8;
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 160, 168, 0.4);
+  text-underline-offset: 3px;
+}
+.prose a:hover {
+  text-decoration-color: #E8A0A8;
+}
+.prose blockquote {
+  border-left: 3px solid #E8A0A8;
+  padding-left: 1rem;
+  margin: 0.85rem 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 1.25rem 0;
+}
+
+/* Placeholder */
+.prose p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  height: 0;
+}

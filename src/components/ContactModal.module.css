@@ -1,0 +1,213 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 1.5rem;
+  background: linear-gradient(180deg, #1a0e12 0%, #0f0708 100%);
+  border: 1px solid rgba(232, 160, 168, 0.2);
+  box-shadow: 0 40px 100px -20px rgba(232, 160, 168, 0.25);
+  padding: 2.25rem 2rem 2rem;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.closeBtn:hover {
+  color: #FFFFFF;
+  border-color: rgba(232, 160, 168, 0.4);
+  background: rgba(232, 160, 168, 0.06);
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+}
+
+.title {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 1.85rem;
+  color: #FFFFFF;
+  text-align: center;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 300;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  max-width: 22rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.label {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.95rem 1.15rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.85rem;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.25s ease;
+}
+.input::placeholder,
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+.input:focus,
+.textarea:focus {
+  border-color: rgba(232, 160, 168, 0.5);
+  background: rgba(232, 160, 168, 0.04);
+  box-shadow: 0 0 0 4px rgba(232, 160, 168, 0.06);
+}
+.textarea {
+  min-height: 130px;
+  resize: vertical;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 1.05rem 1.5rem;
+  margin-top: 0.5rem;
+  border-radius: 0.85rem;
+  background: #E8A0A8;
+  color: #050505;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 30px rgba(232, 160, 168, 0.3);
+}
+.submitBtn:hover:not(:disabled) {
+  background: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px rgba(232, 160, 168, 0.55);
+}
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.directEmail {
+  margin-top: 1.75rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
+}
+.directEmail a {
+  color: #E8A0A8;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.directEmail a:hover {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+
+.successWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+.successIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(123, 200, 154, 0.12);
+  color: #7BC89A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.successTitle {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #FFFFFF;
+  margin-bottom: 0.5rem;
+}
+.successText {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 300;
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 2rem 1.5rem 1.75rem;
+    border-radius: 1.25rem;
+  }
+  .title {
+    font-size: 1.6rem;
+  }
+}

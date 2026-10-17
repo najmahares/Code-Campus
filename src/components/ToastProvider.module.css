@@ -1,0 +1,13 @@
+.container { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 0.75rem; z-index: 9999; pointer-events: none; width: 100%; max-width: 400px; padding: 0 1rem; }
+.toast { pointer-events: auto; display: flex; align-items: center; gap: 0.75rem; padding: 0.9rem 1.1rem; border-radius: 1rem; background: rgba(20, 15, 18, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+.icon { flex-shrink: 0; }
+.message { flex: 1; font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 0.9rem; color: #FFFFFF; line-height: 1.4; }
+.close { background: transparent; border: none; color: rgba(255, 255, 255, 0.4); cursor: pointer; padding: 0.2rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+.close:hover { color: #FFFFFF; }
+.success { border-color: rgba(123, 200, 154, 0.3); }
+.success .icon { color: #7BC89A; }
+.error { border-color: rgba(232, 100, 100, 0.3); }
+.error .icon { color: #FF9C9C; }
+.info { border-color: rgba(232, 160, 168, 0.3); }
+.info .icon { color: #E8A0A8; }
+@media (max-width: 1024px) { .container { bottom: 100px; } }

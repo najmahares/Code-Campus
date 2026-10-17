@@ -1,0 +1,103 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem 1.75rem 1.5rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(180deg, #1a0e12 0%, #0f0708 100%);
+  border: 1px solid rgba(232, 160, 168, 0.25);
+  box-shadow: 0 40px 100px -20px rgba(232, 160, 168, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.iconWrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(232, 160, 168, 0.1);
+  border: 1px solid rgba(232, 160, 168, 0.25);
+  color: #E8A0A8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.title {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #FFFFFF;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+.message {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.55;
+  margin-bottom: 1.75rem;
+  max-width: 22rem;
+}
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  width: 100%;
+}
+.cancelBtn {
+  flex: 1;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.85rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.cancelBtn:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+}
+.confirmBtn {
+  flex: 1;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.85rem;
+  background: #E8A0A8;
+  color: #050505;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.confirmBtn:hover { background: #FFFFFF; }
+.destructiveBtn {
+  flex: 1;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.85rem;
+  background: rgba(232, 100, 100, 0.9);
+  color: #FFFFFF;
+  border: none;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.destructiveBtn:hover { background: #E86464; }
