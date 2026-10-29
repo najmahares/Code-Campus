@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useParams, usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   Home as HomeIcon,
   FileText,
@@ -31,6 +33,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
+import SidebarLogoutButton from "@/components/SidebarLogoutButton";
 import ConfirmModal from "@/components/ConfirmModal";
 import DeerLoader from "@/components/DeerLoader";
 import {
@@ -332,6 +335,35 @@ export default function ProjectDetailPage() {
     );
   };
 
+  const markdownComponents = {
+    a: ({ node, ...props }: any) => (
+      <a {...props} target="_blank" rel="noreferrer" className={styles.chatMarkdownLink} />
+    ),
+    table: ({ node, ...props }: any) => <table {...props} className={styles.chatMarkdownTable} />,
+    thead: ({ node, ...props }: any) => <thead {...props} className={styles.chatMarkdownThead} />,
+    tbody: ({ node, ...props }: any) => <tbody {...props} className={styles.chatMarkdownTbody} />,
+    th: ({ node, ...props }: any) => <th {...props} className={styles.chatMarkdownCell} />,
+    td: ({ node, ...props }: any) => <td {...props} className={styles.chatMarkdownCell} />,
+    p: ({ node, ...props }: any) => <p {...props} className={styles.chatMarkdownP} />,
+    ul: ({ node, ...props }: any) => <ul {...props} className={styles.chatMarkdownList} />,
+    ol: ({ node, ...props }: any) => <ol {...props} className={styles.chatMarkdownList} />,
+    li: ({ node, ...props }: any) => <li {...props} className={styles.chatMarkdownItem} />,
+    code: ({ node, inline, ...props }: any) =>
+      inline ? (
+        <code {...props} className={styles.chatMarkdownInlineCode} />
+      ) : (
+        <code {...props} className={styles.chatMarkdownCode} />
+      ),
+    pre: ({ node, ...props }: any) => <pre {...props} className={styles.chatMarkdownPre} />,
+    blockquote: ({ node, ...props }: any) => (
+      <blockquote {...props} className={styles.chatMarkdownQuote} />
+    ),
+    strong: ({ node, ...props }: any) => (
+      <strong {...props} className={styles.chatMarkdownStrong} />
+    ),
+    em: ({ node, ...props }: any) => <em {...props} className={styles.chatMarkdownEm} />,
+  } as const;
+
   if (loading) return <div className={styles.loading}>Loading project...</div>;
   if (!project) return null;
 
@@ -360,6 +392,7 @@ export default function ProjectDetailPage() {
             <span className={styles.decorQuoteLine}>want to see.</span>
           </div>
         </div>
+        <SidebarLogoutButton />
       </aside>
 
       <div className={styles.main}>
@@ -447,7 +480,7 @@ export default function ProjectDetailPage() {
                     ref={folderInputRef}
                     type="file"
 
-                    {...{ webkitdirectory: "", directory: "" } as any}
+                    {...({ webkitdirectory: "", directory: "" } as any)}
                     multiple
                     onChange={(e) => handleFiles(e.target.files)}
                     style={{ display: "none" }}
@@ -650,7 +683,16 @@ export default function ProjectDetailPage() {
                   return (
                     <div key={c.id} className={styles.chatMsgAssistant}>
                       <div className={styles.chatMsgAssistantText}>
-                        {c.content}
+                        {c.content ? (
+                          <div className={styles.chatMarkdownWrap}>
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm]}
+                              components={markdownComponents}
+                            >
+                              {c.content}
+                            </ReactMarkdown>
+                          </div>
+                        ) : null}
                         {isStreaming && <span className={styles.streamingCursor}>|</span>}
                       </div>
                       {!sending && c.content && (

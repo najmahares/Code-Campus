@@ -20,10 +20,12 @@ import {
   Bell,
   Shield,
   ArrowLeft,
+  Sun,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
 import ConfirmModal from "@/components/ConfirmModal";
+import SidebarLogoutButton from "@/components/SidebarLogoutButton";
 import {
   getProfile,
   updateProfile,
@@ -42,8 +44,16 @@ const navItems = [
   { id: "vault", label: "Vault", href: "/vault", Icon: Lock },
 ];
 
+const getStoredTheme = (): "dark" | "light" | "system" => {
+  if (typeof window === "undefined") return "system";
+  const value = localStorage.getItem("code-campus-theme");
+  if (value === "dark" || value === "light" || value === "system") return value;
+  return "system";
+};
+
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState<"dark" | "light" | "system">(getStoredTheme);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [draftName, setDraftName] = useState("");
   const [nameSaving, setNameSaving] = useState(false);
@@ -70,6 +80,23 @@ export default function SettingsPage() {
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const media = window.matchMedia("(prefers-color-scheme: light)");
+
+    const applyTheme = () => {
+      const resolvedTheme = theme === "system" ? (media.matches ? "light" : "dark") : theme;
+      root.setAttribute("data-theme", resolvedTheme);
+      localStorage.setItem("code-campus-theme", theme);
+    };
+
+    applyTheme();
+    if (theme === "system") {
+      media.addEventListener("change", applyTheme);
+      return () => media.removeEventListener("change", applyTheme);
+    }
+  }, [theme]);
 
   useEffect(() => {
     async function load() {
@@ -143,10 +170,6 @@ export default function SettingsPage() {
     });
   };
 
-  if (loading) {
-    return <div className={styles.loading}>Loading settings...</div>;
-  }
-
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
@@ -177,6 +200,7 @@ export default function SettingsPage() {
             And it shows.
           </span>
         </div>
+        <SidebarLogoutButton />
       </aside>
 
       <div className={styles.main}>
@@ -254,6 +278,45 @@ export default function SettingsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className={styles.section}
+          >
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <Sun size={18} />
+              </div>
+              <div className={styles.sectionHeaderText}>
+                <div className={styles.sectionTitle}>Appearance</div>
+                <div className={styles.sectionSub}>
+                  Match the app to your workspace and light conditions.
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.themeGrid}>
+              {[
+                { value: "system", label: "System" },
+                { value: "light", label: "Light" },
+                { value: "dark", label: "Dark" },
+              ].map((option) => {
+                const active = theme === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`${styles.themeOption} ${active ? styles.themeOptionActive : ""}`}
+                    onClick={() => setTheme(option.value as "dark" | "light" | "system")}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className={styles.section}
           >
             <div className={styles.sectionHeader}>

@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
+import SidebarLogoutButton from "@/components/SidebarLogoutButton";
 import ConfirmModal from "@/components/ConfirmModal";
 import CrisisPanel from "./CrisisPanel";
 import AudioPlayer from "./AudioPlayer";
@@ -224,8 +225,6 @@ export default function WellbeingPage() {
     }
   };
 
-  if (loading) return <div className={styles.loading}>Loading your space...</div>;
-
   const streak = calculateStreak(moods);
   const weekAvg = averageMood(moods, 7);
   const checkedInToday = !!todaysMood;
@@ -254,7 +253,8 @@ export default function WellbeingPage() {
             <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>a machine.</span>
             <span className={styles.decorQuoteLine}>Rest is part of it.</span>
           </div>
-        </div>
+        </div>{" "}
+        <SidebarLogoutButton />{" "}
       </aside>
 
       <div className={styles.main} role="main">

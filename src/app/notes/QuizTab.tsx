@@ -52,16 +52,18 @@ export default function QuizTab({ noteBody, noteId }: Props) {
   const [viewingAttempt, setViewingAttempt] = useState<QuizAttempt | null>(null);
   const hasBody = noteBody && noteBody.replace(/<[^>]*>/g, "").trim().length > 10;
 
-  useEffect(() => {
-    loadHistory();
-  }, [noteId]);
-
   const loadHistory = async () => {
     try {
       const data = await listQuizAttempts(noteId);
       setHistory(data);
-    } catch {}
+    } catch {
+      setHistory([]);
+    }
   };
+
+  useEffect(() => {
+    loadHistory();
+  }, [noteId]);
 
   const generate = async (overrideDifficulty?: "easy" | "medium" | "hard") => {
     setStage("generating");
@@ -81,8 +83,8 @@ export default function QuizTab({ noteBody, noteId }: Props) {
       setCurrentIndex(0);
       setCurrentInput("");
       setStage("taking");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to generate quiz");
       setStage("setup");
     }
   };
@@ -200,7 +202,9 @@ export default function QuizTab({ noteBody, noteId }: Props) {
               <button
                 key={t.id}
                 className={`${styles.quizPill} ${type === t.id ? styles.quizPillActive : ""}`}
-                onClick={() => setType(t.id as any)}
+                onClick={() =>
+                  setType(t.id as "mixed" | "multiple_choice" | "true_false" | "short_answer")
+                }
               >
                 {t.label}
               </button>
@@ -219,7 +223,7 @@ export default function QuizTab({ noteBody, noteId }: Props) {
               <button
                 key={d.id}
                 className={`${styles.quizPill} ${difficulty === d.id ? styles.quizPillActive : ""}`}
-                onClick={() => setDifficulty(d.id as any)}
+                onClick={() => setDifficulty(d.id as "easy" | "medium" | "hard")}
               >
                 {d.label}
               </button>

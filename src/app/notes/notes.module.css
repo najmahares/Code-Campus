@@ -1,5 +1,5 @@
 .page {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   background-color: #050505;
   color: #ffffff;
   font-family: "Inter", sans-serif;
@@ -10,12 +10,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  color: rgba(255, 255, 255, 0.4);
+  min-height: 140px;
+  color: rgba(255, 255, 255, 0.55);
   font-family: "Quicksand", sans-serif;
-  font-size: 1.15rem;
-  background-color: #050505;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
   grid-column: 1 / -1;
+}
+
+.inlineLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "Quicksand", sans-serif;
+  font-size: 0.92rem;
 }
 
 .sidebar {
@@ -51,13 +67,16 @@
 }
 .navItem:hover {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
 }
 .navItemActive {
-  color: #050505 !important;
-  background: linear-gradient(135deg, #e8a0a8 0%, #f5c5cb 100%);
+  background: #e8a0a8;
   color: #050505;
-  box-shadow: 0 6px 24px rgba(232, 160, 168, 0.28);
+  box-shadow: 0 4px 15px rgba(232, 160, 168, 0.3);
+}
+.navItemActive:hover {
+  background: rgba(232, 160, 168, 0.18);
+  color: #ffffff;
 }
 .navBadge {
   margin-left: auto;
@@ -328,9 +347,9 @@
   align-items: center;
   justify-content: center;
   padding: 3rem 4rem;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   background: #050505;
-  grid-column: span 2;
+  grid-column: 2;
 }
 .emptyIllustration {
   width: 100%;

@@ -26,8 +26,8 @@ export default function SummaryTab({ noteBody }: Props) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to summarize");
       setBullets(data.bullets);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to summarize");
     } finally {
       setLoading(false);
     }

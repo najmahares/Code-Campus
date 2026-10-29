@@ -35,8 +35,17 @@ export async function POST(req: Request) {
     }
 
     const [projectRes, specsRes] = await Promise.all([
-      supabase.from("projects").select("*").eq("id", projectId).maybeSingle(),
-      supabase.from("project_specs").select("name, extracted_text").eq("project_id", projectId),
+      supabase
+        .from("projects")
+        .select("*")
+        .eq("id", projectId)
+        .eq("user_id", user.id)
+        .maybeSingle(),
+      supabase
+        .from("project_specs")
+        .select("name, extracted_text")
+        .eq("project_id", projectId)
+        .eq("user_id", user.id),
     ]);
 
     const project = projectRes.data;

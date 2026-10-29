@@ -8,17 +8,41 @@ type Props = {
   onTranscript: (text: string) => void;
 };
 
+type SpeechRecognitionEventLike = {
+  resultIndex: number;
+  results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }>;
+};
+
+type SpeechRecognitionErrorEventLike = {
+  error: string;
+};
+
+type SpeechRecognitionConstructor = new () => {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
 export default function VoiceRecorder({ onTranscript }: Props) {
   const [recording, setRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [interim, setInterim] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [supported, setSupported] = useState(true);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<{ stop: () => void } | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SR =
+      (window as typeof window & { SpeechRecognition?: SpeechRecognitionConstructor })
+        .SpeechRecognition ||
+      (window as typeof window & { webkitSpeechRecognition?: SpeechRecognitionConstructor })
+        .webkitSpeechRecognition;
     if (!SR) {
       setSupported(false);
     }
@@ -30,7 +54,11 @@ export default function VoiceRecorder({ onTranscript }: Props) {
 
   const start = () => {
     setError(null);
-    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SR =
+      (window as typeof window & { SpeechRecognition?: SpeechRecognitionConstructor })
+        .SpeechRecognition ||
+      (window as typeof window & { webkitSpeechRecognition?: SpeechRecognitionConstructor })
+        .webkitSpeechRecognition;
     if (!SR) {
       setError("Voice recognition isn't supported in this browser. Try Chrome or Edge.");
       return;
@@ -43,11 +71,12 @@ export default function VoiceRecorder({ onTranscript }: Props) {
 
     let finalText = "";
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEventLike) => {
       let interimText = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
+        const result = event.results[i];
+        const transcript = result[0]?.transcript ?? "";
+        if (result.isFinal) {
           finalText += transcript + " ";
         } else {
           interimText += transcript;
@@ -56,7 +85,7 @@ export default function VoiceRecorder({ onTranscript }: Props) {
       setInterim(finalText + interimText);
     };
 
-    recognition.onerror = (e: any) => {
+    recognition.onerror = (e: SpeechRecognitionErrorEventLike) => {
       if (e.error === "no-speech") return;
       if (e.error === "not-allowed") {
         setError("Microphone access denied. Please allow it in your browser settings.");

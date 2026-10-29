@@ -23,6 +23,7 @@ import { createClient } from "@/lib/supabase/client";
 import NotificationsPanel from "@/components/NotificationsPanel";
 import GlobalSearch from "@/components/GlobalSearch";
 import Onboarding from "@/components/Onboarding";
+import SidebarLogoutButton from "@/components/SidebarLogoutButton";
 import { getProfile, avatarUrl } from "@/lib/profile/store";
 import { LogoLockup } from "@/components/Logo";
 import {
@@ -269,10 +270,6 @@ export default function HomePage() {
     setPriorityIndex((i) => (i + 1) % priorityPool.length);
   };
 
-  if (loading) {
-    return <div className={styles.loading}>Preparing your space...</div>;
-  }
-
   const moodIndex = todaysMood ? todaysMood.mood_score - 1 : -1;
   const moodNoteText = todaysMood ? MOOD_LABELS[todaysMood.mood_score] + " ♡" : "You got this ♡";
 
@@ -308,6 +305,7 @@ export default function HomePage() {
             And it shows.
           </span>
         </div>
+        <SidebarLogoutButton />
       </aside>
 
       <div className={styles.mainArea} role="main">

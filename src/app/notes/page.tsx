@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
+import SidebarLogoutButton from "@/components/SidebarLogoutButton";
 import RichTextEditor from "@/components/RichTextEditor";
 import ImportModal from "./ImportModal";
 import VoiceRecorder from "./VoiceRecorder";
@@ -58,7 +59,13 @@ import {
 } from "@/lib/notes/store";
 import styles from "./notes.module.css";
 
-const navItems = [
+const navItems: Array<{
+  id: string;
+  label: string;
+  href: string;
+  Icon: typeof HomeIcon;
+  badge?: number | null;
+}> = [
   { id: "home", label: "Home", href: "/home", Icon: HomeIcon },
   { id: "today", label: "Today", href: "/today", Icon: Calendar },
   { id: "notes", label: "Notes", href: "/notes", Icon: FileText },
@@ -77,8 +84,48 @@ const SOURCE_GROUPS: Record<string, string[]> = {
 
 const NOTES_PER_PAGE = 12;
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return typeof error === "string" ? error : "Something went wrong.";
+}
+
+function NotesSidebar({ pathname }: { pathname: string }) {
+  return (
+    <aside className={styles.sidebar}>
+      <div className={styles.sidebarLogo}>
+        <LogoLockup size={40} />
+      </div>
+      <nav className={styles.sidebarNav}>
+        {navItems.map((item) => (
+          <Link
+            key={item.id}
+            href={item.href}
+            className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}
+          >
+            <item.Icon size={20} strokeWidth={2} aria-hidden="true" />
+            <span>{item.label}</span>
+            {item.badge !== undefined && item.badge !== null && (
+              <span className={styles.navBadge}>{item.badge}</span>
+            )}
+          </Link>
+        ))}
+      </nav>
+      <div className={styles.sidebarDecor}>
+        <div className={styles.decorQuote}>
+          <span className={styles.decorQuoteLine}>Small steps</span>
+          <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>build</span>
+          <span className={styles.decorQuoteLine}>big dreams</span>
+        </div>
+      </div>
+      <SidebarLogoutButton />
+    </aside>
+  );
+}
+
 export default function NotesPage() {
   const [loading, setLoading] = useState(true);
+  const [authReady, setAuthReady] = useState(false);
+  const [userAuthenticated, setUserAuthenticated] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [counts, setCounts] = useState({ active: 0, archived: 0, total: 0 });
   const [activeNoteId, setActiveNoteId] = useState<string | null>(null);
@@ -126,13 +173,22 @@ export default function NotesPage() {
   const debouncedSearch = useDebounce(searchInput, 250);
 
   const activeNote = activeNoteId ? (notes.find((n) => n.id === activeNoteId) ?? null) : null;
+  const shouldShowDetail = Boolean(activeNoteId && activeNote);
 
   const loadNotes = async () => {
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setUserAuthenticated(false);
+        setNotes([]);
+        setCounts({ active: 0, archived: 0, total: 0 });
+        setLoading(false);
+        return;
+      }
+
+      setUserAuthenticated(true);
       const { data, error: err } = await supabase
         .from("notes")
         .select("*")
@@ -149,36 +205,47 @@ export default function NotesPage() {
         archived: archivedCount,
         total: all.length,
       });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
+    } finally {
+      setLoading(false);
+      setAuthReady(true);
     }
   };
 
   useEffect(() => {
+    let active = true;
+
     async function init() {
+      setLoading(true);
+      setAuthReady(false);
+      setUserAuthenticated(false);
+      setNotes([]);
+      setCounts({ active: 0, archived: 0, total: 0 });
+      setActiveNoteId(null);
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
+
+      if (!active) return;
+
       if (!user) {
-        router.push("/login");
+        setUserAuthenticated(false);
+        setAuthReady(true);
+        setLoading(false);
         return;
       }
-      setLoading(true);
+
+      setUserAuthenticated(true);
       await loadNotes();
-      setLoading(false);
     }
+
     init();
-  }, []);
-
-  useEffect(() => {
-    if (activeNoteId && !notes.find((n) => n.id === activeNoteId)) {
-      setActiveNoteId(null);
-    }
-  }, [notes, activeNoteId]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeFilter, sourceFilter, debouncedSearch, showArchived]);
+    return () => {
+      active = false;
+    };
+  }, [supabase]);
 
   const askConfirm = (opts: Omit<typeof confirmState, "isOpen">) =>
     setConfirmState({ ...opts, isOpen: true });
@@ -192,10 +259,6 @@ export default function NotesPage() {
     setSaving(true);
     setError(null);
     try {
-      const plain = captureText
-        .replace(/<[^>]*>/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
       const note = await createNote({
         raw_body: captureText,
         title: generateTitle(captureText),
@@ -211,8 +274,8 @@ export default function NotesPage() {
             refined_body: result.refined_body,
             tags: result.tags,
           });
-        } catch (e: any) {
-          console.error("Refine failed:", e);
+        } catch (error) {
+          console.error("Refine failed:", error);
         } finally {
           setRefining(false);
         }
@@ -223,8 +286,8 @@ export default function NotesPage() {
       setScreenshotPreview(null);
       setActiveNoteId(note.id);
       setActiveTab(shouldRefine ? "refined" : "raw");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     } finally {
       setSaving(false);
     }
@@ -246,8 +309,8 @@ export default function NotesPage() {
       });
       await loadNotes();
       setActiveTab("refined");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     } finally {
       setRefining(false);
     }
@@ -261,8 +324,8 @@ export default function NotesPage() {
     try {
       await updateNote(activeNote.id, { title: titleDraft });
       await loadNotes();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     } finally {
       setEditingTitle(false);
     }
@@ -286,8 +349,8 @@ export default function NotesPage() {
       if (activeTab === "refined") await updateNote(activeNote.id, { refined_body: bodyDraft });
       else await updateNote(activeNote.id, { raw_body: bodyDraft });
       await loadNotes();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     } finally {
       setEditingBody(false);
     }
@@ -304,8 +367,8 @@ export default function NotesPage() {
       await updateNote(activeNote.id, { tags: [...activeNote.tags, cleaned] });
       await loadNotes();
       setNewTag("");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -314,8 +377,8 @@ export default function NotesPage() {
     try {
       await updateNote(activeNote.id, { tags: activeNote.tags.filter((t) => t !== tag) });
       await loadNotes();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -385,7 +448,11 @@ export default function NotesPage() {
     await loadNotes();
   };
 
-  const handleImported = async (body: string, sourceType: string, aiResult?: any) => {
+  const handleImported = async (
+    body: string,
+    sourceType: string,
+    aiResult?: { title?: string; tags?: string[]; refined_body?: string | null }
+  ) => {
     try {
       const note = await createNote({
         raw_body: body,
@@ -402,8 +469,8 @@ export default function NotesPage() {
       await loadNotes();
       setActiveNoteId(note.id);
       setActiveTab(aiResult?.refined_body ? "refined" : "raw");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -438,14 +505,27 @@ export default function NotesPage() {
       setCaptureText(
         `<p><img src="${signed.signedUrl}" alt="${safeName}" style="max-width:100%; border-radius:0.75rem; margin:1rem 0;" /></p>`
       );
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
-  if (loading) return <div className={styles.loading}>Loading notes...</div>;
+  if (!authReady) {
+    return (
+      <div className={styles.page}>
+        <NotesSidebar pathname={pathname} />
+        <div className={styles.main}>
+          <div className={styles.listView}>
+            <div className={styles.inlineLoading}>Preparing your notes…</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const tagFilters = Array.from(new Set(notes.flatMap((n) => n.tags))).sort();
+
+  const showListLoading = loading && notes.length === 0;
 
   const filteredNotes = notes.filter((n) => {
     if (showArchived) {
@@ -468,38 +548,10 @@ export default function NotesPage() {
     currentPage * NOTES_PER_PAGE
   );
 
-  const Sidebar = () => (
-    <aside className={styles.sidebar}>
-      <div className={styles.sidebarLogo}>
-        <LogoLockup size={40} />
-      </div>
-      <nav className={styles.sidebarNav}>
-        {navItems.map((item) => (
-          <Link
-            key={item.id}
-            href={item.href}
-            className={`${styles.navItem} ${pathname === item.href ? styles.navItemActive : ""}`}
-          >
-            <item.Icon size={20} strokeWidth={2} aria-hidden="true" />
-            <span>{item.label}</span>
-            {(item as any).badge && <span className={styles.navBadge}>{(item as any).badge}</span>}
-          </Link>
-        ))}
-      </nav>
-      <div className={styles.sidebarDecor}>
-        <div className={styles.decorQuote}>
-          <span className={styles.decorQuoteLine}>Small steps</span>
-          <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>build</span>
-          <span className={styles.decorQuoteLine}>big dreams</span>
-        </div>
-      </div>
-    </aside>
-  );
-
-  if (activeNote) {
+  if (shouldShowDetail && activeNote) {
     return (
       <div className={styles.page}>
-        <Sidebar />
+        <NotesSidebar pathname={pathname} />
         <div className={styles.detailView}>
           <div className={styles.detailHeader}>
             <button
@@ -750,10 +802,12 @@ export default function NotesPage() {
     );
   }
 
-  if (counts.total === 0) {
-    return (
-      <div className={styles.page}>
-        <Sidebar />
+  const isEmptyState = !loading && counts.total === 0;
+
+  return (
+    <div className={styles.page}>
+      <NotesSidebar pathname={pathname} />
+      {isEmptyState ? (
         <div className={styles.emptyCol}>
           <EmptyState
             icon={<FileText size={32} />}
@@ -765,190 +819,194 @@ export default function NotesPage() {
             onSecondaryAction={() => setShowImport(true)}
           />
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={styles.page}>
-      <Sidebar />
-      <div className={styles.main} role="main">
-        <div className={styles.listView}>
-          <div className={styles.listHeader}>
-            <div className={styles.listHeaderLeft}>
-              <h1 className={styles.listTitle}>Notes</h1>
-              <p className={styles.listSub}>
-                Capture. Organize. Learn. <Heart size={16} fill="#E8A0A8" stroke="none" />
-              </p>
+      ) : (
+        <div className={styles.main} role="main">
+          <div className={styles.listView}>
+            <div className={styles.listHeader}>
+              <div className={styles.listHeaderLeft}>
+                <h1 className={styles.listTitle}>Notes</h1>
+                <p className={styles.listSub}>
+                  Capture. Organize. Learn. <Heart size={16} fill="#E8A0A8" stroke="none" />
+                </p>
+              </div>
+              <div className={styles.listActions}>
+                <button className={styles.importBtn} onClick={() => setShowImport(true)}>
+                  <FileDown size={16} /> Import
+                </button>
+                <button className={styles.captureBtn} onClick={() => setShowCapture(true)}>
+                  <Plus size={16} strokeWidth={3} /> Capture
+                </button>
+              </div>
             </div>
-            <div className={styles.listActions}>
-              <button className={styles.importBtn} onClick={() => setShowImport(true)}>
-                <FileDown size={16} /> Import
-              </button>
-              <button className={styles.captureBtn} onClick={() => setShowCapture(true)}>
-                <Plus size={16} strokeWidth={3} /> Capture
-              </button>
-            </div>
-          </div>
 
-          <div className={styles.filterRowConsolidated}>
-            {["All", ...Object.keys(SOURCE_GROUPS)].map((s) => (
+            {showListLoading && <div className={styles.inlineLoading}>Preparing your notes…</div>}
+
+            <div className={styles.filterRowConsolidated}>
+              {["All", ...Object.keys(SOURCE_GROUPS)].map((s) => (
+                <button
+                  key={s}
+                  className={`${styles.filterTab} ${!showArchived && sourceFilter === s ? styles.filterTabActive : ""}`}
+                  onClick={() => {
+                    setCurrentPage(1);
+                    setSourceFilter(s);
+                    setShowArchived(false);
+                    setActiveFilter("All");
+                  }}
+                >
+                  {s}
+                </button>
+              ))}
               <button
-                key={s}
-                className={`${styles.filterTab} ${!showArchived && sourceFilter === s ? styles.filterTabActive : ""}`}
+                className={`${styles.filterTab} ${showArchived ? styles.filterTabActive : ""}`}
                 onClick={() => {
-                  setSourceFilter(s);
-                  setShowArchived(false);
+                  setCurrentPage(1);
+                  setShowArchived(true);
+                  setSourceFilter("All");
                   setActiveFilter("All");
                 }}
               >
-                {s}
+                <Archive size={12} /> Archived
+                {counts.archived > 0 && (
+                  <span className={styles.filterCount}>{counts.archived}</span>
+                )}
               </button>
-            ))}
-            <button
-              className={`${styles.filterTab} ${showArchived ? styles.filterTabActive : ""}`}
-              onClick={() => {
-                setShowArchived(true);
-                setSourceFilter("All");
-                setActiveFilter("All");
-              }}
-            >
-              <Archive size={12} /> Archived
-              {counts.archived > 0 && <span className={styles.filterCount}>{counts.archived}</span>}
-            </button>
-            {tagFilters.length > 0 && !showArchived && (
-              <div className={styles.tagFilterWrap}>
-                <select
-                  className={styles.tagSelect}
-                  value={activeFilter}
-                  onChange={(e) => setActiveFilter(e.target.value)}
+              {tagFilters.length > 0 && !showArchived && (
+                <div className={styles.tagFilterWrap}>
+                  <select
+                    className={styles.tagSelect}
+                    value={activeFilter}
+                    onChange={(e) => {
+                      setCurrentPage(1);
+                      setActiveFilter(e.target.value);
+                    }}
+                  >
+                    <option value="All">Filter by tag</option>
+                    {tagFilters.map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionTitle}>
+                {showArchived
+                  ? "Archived notes"
+                  : sourceFilter === "All"
+                    ? "All notes"
+                    : sourceFilter}
+              </span>
+              <span className={styles.sectionCount}>
+                {filteredNotes.length === 0
+                  ? "0 notes"
+                  : `${(currentPage - 1) * NOTES_PER_PAGE + 1}–${Math.min(currentPage * NOTES_PER_PAGE, filteredNotes.length)} of ${filteredNotes.length}`}
+              </span>
+            </div>
+
+            <div className={styles.notesGrid}>
+              {paginatedNotes.map((n) => (
+                <div
+                  key={n.id}
+                  className={`${styles.noteCardWrap} ${selectedIds.includes(n.id) ? styles.noteCardWrapSelected : ""}`}
                 >
-                  <option value="All">Filter by tag</option>
-                  {tagFilters.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
+                  <button
+                    type="button"
+                    className={`${styles.selectCheckbox} ${selectedIds.includes(n.id) ? styles.selectCheckboxActive : ""}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleSelect(n.id);
+                    }}
+                    aria-label={selectedIds.includes(n.id) ? "Deselect" : "Select"}
+                  >
+                    {selectedIds.includes(n.id) && <Check size={12} />}
+                  </button>
+                  <div
+                    className={`${styles.noteCard} ${n.pinned ? styles.noteCardPinned : ""}`}
+                    onClick={() => {
+                      setActiveNoteId(n.id);
+                      setActiveTab(n.refined_body ? "refined" : "raw");
+                    }}
+                  >
+                    <div className={styles.noteCardTop}>
+                      <div className={styles.noteIcon}>
+                        <Code2 size={20} strokeWidth={2} />
+                      </div>
+                      {n.pinned && <Pin size={12} className={styles.pinIcon} fill="#E8A0A8" />}
+                      <span className={styles.noteTime}>
+                        {new Date(n.updated_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <h3 className={styles.noteTitle}>
+                      {n.title}
+                      {n.archived && !showArchived && (
+                        <span className={styles.archivedBadge}>Archived</span>
+                      )}
+                    </h3>
+                    <p className={styles.noteDesc}>
+                      {(n.refined_body || n.raw_body).replace(/<[^>]*>/g, "").slice(0, 140)}
+                    </p>
+                    {n.tags.length > 0 && (
+                      <div className={styles.noteTags}>
+                        {n.tags.slice(0, 3).map((t) => (
+                          <span key={t} className={styles.noteTag}>
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      className={styles.noteMenuBtn}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MoreVertical size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {filteredNotes.length === 0 && (
+              <div style={{ padding: "2rem 0" }}>
+                <EmptyState
+                  icon={<FileText size={28} />}
+                  title="No notes here"
+                  description={
+                    activeFilter === "archived"
+                      ? "No notes in this view. Check your Archived tab."
+                      : "No notes match that filter."
+                  }
+                />
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <div className={styles.pagination}>
+                <button
+                  className={styles.paginationBtn}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ArrowLeft size={16} /> Previous
+                </button>
+                <span className={styles.paginationInfo}>
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  className={styles.paginationBtn}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next <ArrowRight size={16} />
+                </button>
               </div>
             )}
           </div>
-
-          <div className={styles.sectionHeader}>
-            <span className={styles.sectionTitle}>
-              {showArchived
-                ? "Archived notes"
-                : sourceFilter === "All"
-                  ? "All notes"
-                  : sourceFilter}
-            </span>
-            <span className={styles.sectionCount}>
-              {filteredNotes.length === 0
-                ? "0 notes"
-                : `${(currentPage - 1) * NOTES_PER_PAGE + 1}–${Math.min(currentPage * NOTES_PER_PAGE, filteredNotes.length)} of ${filteredNotes.length}`}
-            </span>
-          </div>
-
-          <div className={styles.notesGrid}>
-            {paginatedNotes.map((n) => (
-              <div
-                key={n.id}
-                className={`${styles.noteCardWrap} ${selectedIds.includes(n.id) ? styles.noteCardWrapSelected : ""}`}
-              >
-                <button
-                  type="button"
-                  className={`${styles.selectCheckbox} ${selectedIds.includes(n.id) ? styles.selectCheckboxActive : ""}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleSelect(n.id);
-                  }}
-                  aria-label={selectedIds.includes(n.id) ? "Deselect" : "Select"}
-                >
-                  {selectedIds.includes(n.id) && <Check size={12} />}
-                </button>
-                <div
-                  className={`${styles.noteCard} ${n.pinned ? styles.noteCardPinned : ""}`}
-                  onClick={() => {
-                    setActiveNoteId(n.id);
-                    setActiveTab(n.refined_body ? "refined" : "raw");
-                  }}
-                >
-                  <div className={styles.noteCardTop}>
-                    <div className={styles.noteIcon}>
-                      <Code2 size={20} strokeWidth={2} />
-                    </div>
-                    {n.pinned && <Pin size={12} className={styles.pinIcon} fill="#E8A0A8" />}
-                    <span className={styles.noteTime}>
-                      {new Date(n.updated_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <h3 className={styles.noteTitle}>
-                    {n.title}
-                    {n.archived && !showArchived && (
-                      <span className={styles.archivedBadge}>Archived</span>
-                    )}
-                  </h3>
-                  <p className={styles.noteDesc}>
-                    {(n.refined_body || n.raw_body).replace(/<[^>]*>/g, "").slice(0, 140)}
-                  </p>
-                  {n.tags.length > 0 && (
-                    <div className={styles.noteTags}>
-                      {n.tags.slice(0, 3).map((t) => (
-                        <span key={t} className={styles.noteTag}>
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    className={styles.noteMenuBtn}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <MoreVertical size={14} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredNotes.length === 0 && (
-            <div style={{ padding: "2rem 0" }}>
-              <EmptyState
-                icon={<FileText size={28} />}
-                title="No notes here"
-                description={
-                  activeFilter === "archived"
-                    ? "No notes in this view. Check your Archived tab."
-                    : "No notes match that filter."
-                }
-              />
-            </div>
-          )}
-
-          {totalPages > 1 && (
-            <div className={styles.pagination}>
-              <button
-                className={styles.paginationBtn}
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-              >
-                <ArrowLeft size={16} /> Previous
-              </button>
-              <span className={styles.paginationInfo}>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className={styles.paginationBtn}
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-              >
-                Next <ArrowRight size={16} />
-              </button>
-            </div>
-          )}
         </div>
-      </div>
+      )}
 
       {selectedIds.length > 0 && (
         <div className={styles.bulkBar}>

@@ -164,7 +164,7 @@ export default function ImportModal({ isOpen, onClose, onImported }: Props) {
     setError(null);
     try {
       let body = "";
-      let sourceType = source;
+      const sourceType = source;
       let aiResult: any = null;
 
       if (source === "paste") {

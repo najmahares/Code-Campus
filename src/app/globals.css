@@ -7,6 +7,90 @@
   --blush: #e8a0a8;
   --gold: #d4af37;
   --white: #ffffff;
+
+  --bg: #050505;
+  --bg-strong: #0c0c10;
+  --sidebar: #050505;
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-strong: rgba(255, 255, 255, 0.08);
+  --surface-soft: rgba(255, 255, 255, 0.02);
+  --card: rgba(255, 255, 255, 0.02);
+  --card-strong: rgba(255, 255, 255, 0.05);
+  --panel: rgba(255, 255, 255, 0.04);
+  --text: #f5f7fb;
+  --text-strong: #ffffff;
+  --muted: rgba(255, 255, 255, 0.68);
+  --muted-strong: rgba(255, 255, 255, 0.5);
+  --subtle: rgba(255, 255, 255, 0.35);
+  --line: rgba(255, 255, 255, 0.08);
+  --accent: #e8a0a8;
+  --accent-strong: #f7d3d7;
+  --accent-soft: rgba(232, 160, 168, 0.12);
+  --accent-muted: rgba(232, 160, 168, 0.72);
+  --gold: #d4af37;
+  --gold-soft: rgba(212, 175, 55, 0.12);
+  --success: #7bc89a;
+  --danger: #e86464;
+  --nav-hover: rgba(255, 255, 255, 0.05);
+  --shadow: rgba(15, 12, 18, 0.35);
+}
+
+:root[data-theme="light"] {
+  --bg: #f6efe9;
+  --bg-strong: #fffaf6;
+  --sidebar: #f0e3d8;
+  --surface: rgba(101, 64, 52, 0.05);
+  --surface-strong: rgba(101, 64, 52, 0.1);
+  --surface-soft: rgba(101, 64, 52, 0.03);
+  --card: rgba(255, 255, 255, 0.68);
+  --card-strong: rgba(255, 255, 255, 0.8);
+  --panel: rgba(255, 255, 255, 0.72);
+  --text: #3d2f2a;
+  --text-strong: #201916;
+  --muted: rgba(61, 47, 42, 0.7);
+  --muted-strong: rgba(61, 47, 42, 0.54);
+  --subtle: rgba(61, 47, 42, 0.38);
+  --line: rgba(71, 48, 44, 0.12);
+  --accent: #c76d77;
+  --accent-strong: #a4535a;
+  --accent-soft: rgba(199, 109, 119, 0.14);
+  --accent-muted: rgba(146, 70, 80, 0.8);
+  --gold: #c2953b;
+  --gold-soft: rgba(194, 149, 59, 0.12);
+  --success: #4a8d62;
+  --danger: #b85a5a;
+  --nav-hover: rgba(89, 58, 52, 0.06);
+  --shadow: rgba(56, 40, 33, 0.12);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f6efe9;
+    --bg-strong: #fffaf6;
+    --sidebar: #f0e3d8;
+    --surface: rgba(101, 64, 52, 0.05);
+    --surface-strong: rgba(101, 64, 52, 0.1);
+    --surface-soft: rgba(101, 64, 52, 0.03);
+    --card: rgba(255, 255, 255, 0.68);
+    --card-strong: rgba(255, 255, 255, 0.8);
+    --panel: rgba(255, 255, 255, 0.72);
+    --text: #3d2f2a;
+    --text-strong: #201916;
+    --muted: rgba(61, 47, 42, 0.7);
+    --muted-strong: rgba(61, 47, 42, 0.54);
+    --subtle: rgba(61, 47, 42, 0.38);
+    --line: rgba(71, 48, 44, 0.12);
+    --accent: #c76d77;
+    --accent-strong: #a4535a;
+    --accent-soft: rgba(199, 109, 119, 0.14);
+    --accent-muted: rgba(146, 70, 80, 0.8);
+    --gold: #c2953b;
+    --gold-soft: rgba(194, 149, 59, 0.12);
+    --success: #4a8d62;
+    --danger: #b85a5a;
+    --nav-hover: rgba(89, 58, 52, 0.06);
+    --shadow: rgba(56, 40, 33, 0.12);
+  }
 }
 
 * {
@@ -15,11 +99,15 @@
   padding: 0;
 }
 
+html,
 body {
-  background-color: var(--dark-bg);
-  color: var(--white);
-  font-family: "Inter", sans-serif;
   overflow-x: hidden;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Inter", sans-serif;
 }
 
 h1,
@@ -33,11 +121,6 @@ a {
   color: inherit;
 }
 
-html,
-body {
-  overflow-x: hidden;
-}
-
 button,
 a,
 input,
@@ -46,7 +129,7 @@ textarea {
 }
 
 :focus-visible {
-  outline: 2px solid #e8a0a8 !important;
+  outline: 2px solid var(--accent) !important;
   outline-offset: 3px !important;
   border-radius: 0.25rem;
 }
@@ -75,4 +158,159 @@ textarea {
   h2 {
     font-size: 1.35rem !important;
   }
+}
+
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(circle at top, rgba(199, 109, 119, 0.12) 0%, rgba(199, 109, 119, 0) 28%),
+    linear-gradient(180deg, var(--bg) 0%, #f4eae1 100%);
+}
+
+:root[data-theme="light"] .page,
+:root[data-theme="light"] .main,
+:root[data-theme="light"] .mainArea,
+:root[data-theme="light"] .content,
+:root[data-theme="light"] .contentGrid,
+:root[data-theme="light"] .section,
+:root[data-theme="light"] .sidebar,
+:root[data-theme="light"] .topBar,
+:root[data-theme="light"] .panel,
+:root[data-theme="light"] .dropdown,
+:root[data-theme="light"] .searchBox,
+:root[data-theme="light"] .captureInputWrap,
+:root[data-theme="light"] .recentList,
+:root[data-theme="light"] .moodCard,
+:root[data-theme="light"] .captureCard,
+:root[data-theme="light"] .toolsCard,
+:root[data-theme="light"] .recentQuote,
+:root[data-theme="light"] .modal {
+  background-color: var(--bg-strong);
+  border-color: var(--line);
+  color: var(--text);
+}
+
+:root[data-theme="light"] .sidebar,
+:root[data-theme="light"] .navItem,
+:root[data-theme="light"] .topBar,
+:root[data-theme="light"] .searchBox,
+:root[data-theme="light"] .bellButton,
+:root[data-theme="light"] .panel,
+:root[data-theme="light"] .dropdown,
+:root[data-theme="light"] .searchHint,
+:root[data-theme="light"] .resultItem,
+:root[data-theme="light"] .captureInputWrap,
+:root[data-theme="light"] .moodFace,
+:root[data-theme="light"] .toolItem,
+:root[data-theme="light"] .recentList,
+:root[data-theme="light"] .section {
+  box-shadow: none;
+}
+
+:root[data-theme="light"] .navItem,
+:root[data-theme="light"] .resultItem,
+:root[data-theme="light"] .toolItem,
+:root[data-theme="light"] .viewAll,
+:root[data-theme="light"] .itemTitle,
+:root[data-theme="light"] .captureTitle,
+:root[data-theme="light"] .moodTitle,
+:root[data-theme="light"] .recentTitle,
+:root[data-theme="light"] .title,
+:root[data-theme="light"] .sectionTitle,
+:root[data-theme="light"] .greetingTitle,
+:root[data-theme="light"] .priorityHeadline,
+:root[data-theme="light"] .captureInput,
+:root[data-theme="light"] .label,
+:root[data-theme="light"] .input,
+:root[data-theme="light"] .fieldLabel,
+:root[data-theme="light"] .panelTitle,
+:root[data-theme="light"] .itemTitle,
+:root[data-theme="light"] .modalTitle {
+  color: var(--text-strong);
+}
+
+:root[data-theme="light"] .navItem {
+  color: var(--muted);
+}
+
+:root[data-theme="light"] .navItem:hover {
+  background: var(--nav-hover);
+  color: var(--text-strong);
+}
+
+:root[data-theme="light"] .navItemActive {
+  background: var(--accent);
+  color: var(--bg-strong);
+}
+
+:root[data-theme="light"] .muted,
+:root[data-theme="light"] .subtitle,
+:root[data-theme="light"] .sectionSub,
+:root[data-theme="light"] .captureSub,
+:root[data-theme="light"] .toolSub,
+:root[data-theme="light"] .resultSub,
+:root[data-theme="light"] .itemSub,
+:root[data-theme="light"] .panelSub,
+:root[data-theme="light"] .emptySub,
+:root[data-theme="light"] .recentItemSub,
+:root[data-theme="light"] .prioritySub,
+:root[data-theme="light"] .searchIcon,
+:root[data-theme="light"] .searchInput::placeholder,
+:root[data-theme="light"] .captureInput::placeholder,
+:root[data-theme="light"] .input::placeholder {
+  color: var(--muted);
+}
+
+:root[data-theme="light"] .searchBox,
+:root[data-theme="light"] .captureInputWrap,
+:root[data-theme="light"] .panel,
+:root[data-theme="light"] .dropdown,
+:root[data-theme="light"] .recentList,
+:root[data-theme="light"] .section,
+:root[data-theme="light"] .moodCard,
+:root[data-theme="light"] .captureCard,
+:root[data-theme="light"] .toolsCard {
+  border: 1px solid var(--line);
+}
+
+:root[data-theme="light"] .itemIcon,
+:root[data-theme="light"] .toolIcon,
+:root[data-theme="light"] .recentIcon,
+:root[data-theme="light"] .captureIcon,
+:root[data-theme="light"] .sectionIcon {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+:root[data-theme="light"] .bellButton,
+:root[data-theme="light"] .markReadBtn,
+:root[data-theme="light"] .closeBtn,
+:root[data-theme="light"] .searchHint,
+:root[data-theme="light"] .priorityRefresh,
+:root[data-theme="light"] .prioritySecondary,
+:root[data-theme="light"] .userAvatar {
+  border-color: var(--line);
+}
+
+:root[data-theme="light"] .bellButton {
+  background: var(--surface);
+  color: var(--muted);
+}
+
+:root[data-theme="light"] .bellButton:hover {
+  background: var(--surface-strong);
+  color: var(--text-strong);
+}
+
+:root[data-theme="light"] .panel {
+  background: linear-gradient(180deg, var(--card-strong) 0%, var(--bg-strong) 100%);
+}
+
+:root[data-theme="light"] .resultItem:hover,
+:root[data-theme="light"] .recentItem:hover,
+:root[data-theme="light"] .toolItem:hover {
+  background: var(--surface);
+}
+
+:root[data-theme="light"] .priorityPrimary {
+  box-shadow: 0 12px 28px rgba(216, 122, 132, 0.22);
 }

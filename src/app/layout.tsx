@@ -21,9 +21,27 @@ export const metadata: Metadata = {
   description: "Your AI-powered sanctuary for software engineering.",
 };
 
+const themeScript = `
+  (function() {
+    try {
+      const storedTheme = localStorage.getItem('code-campus-theme');
+      const hasStoredTheme = storedTheme === 'dark' || storedTheme === 'light' || storedTheme === 'system';
+      const preferredTheme = hasStoredTheme ? storedTheme : 'system';
+      const media = window.matchMedia('(prefers-color-scheme: light)');
+      const resolvedTheme = preferredTheme === 'system' ? (media.matches ? 'light' : 'dark') : preferredTheme;
+      document.documentElement.setAttribute('data-theme', resolvedTheme);
+    } catch (error) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+`;
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className={`${inter.variable} ${playfair.variable} ${quicksand.variable}`}>
         <ToastProvider>
           {children}

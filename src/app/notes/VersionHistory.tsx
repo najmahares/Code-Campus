@@ -12,22 +12,39 @@ type Props = {
   onRestore: (body: string) => Promise<void>;
 };
 
+type VersionRecord = {
+  id: string;
+  body: string;
+  version_type: string;
+  created_at: string;
+};
+
 export default function VersionHistory({ noteId, isOpen, onClose, onRestore }: Props) {
-  const [versions, setVersions] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [versions, setVersions] = useState<VersionRecord[] | null>(null);
   const [restoring, setRestoring] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      setLoading(true);
-      listVersions(noteId)
-        .then(setVersions)
-        .catch(() => setVersions([]))
-        .finally(() => setLoading(false));
-    }
+    if (!isOpen) return;
+
+    let active = true;
+    listVersions(noteId)
+      .then((data) => {
+        if (!active) return;
+        setVersions(data as VersionRecord[]);
+      })
+      .catch(() => {
+        if (!active) return;
+        setVersions([]);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [isOpen, noteId]);
 
   if (!isOpen) return null;
+
+  const versionCount = versions?.length ?? 0;
 
   const handleRestore = async (body: string, id: string) => {
     setRestoring(id);
@@ -48,7 +65,7 @@ export default function VersionHistory({ noteId, isOpen, onClose, onRestore }: P
               <History size={18} /> Version history
             </div>
             <div className={styles.versionSub}>
-              {versions.length} saved version{versions.length !== 1 ? "s" : ""}
+              {versionCount} saved version{versionCount !== 1 ? "s" : ""}
             </div>
           </div>
           <button className={styles.captureClose} onClick={onClose}>
@@ -57,7 +74,7 @@ export default function VersionHistory({ noteId, isOpen, onClose, onRestore }: P
         </div>
 
         <div className={styles.versionBody}>
-          {loading ? (
+          {versions === null ? (
             <div className={styles.tabLoadingState}>
               <Loader2 size={24} className="animate-spin" />
             </div>

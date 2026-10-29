@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
+import SidebarLogoutButton from "@/components/SidebarLogoutButton";
 import ConfirmModal from "@/components/ConfirmModal";
 import EmptyState from "@/components/EmptyState";
 import TaskModal from "./TaskModal";
@@ -59,6 +60,11 @@ type Briefing = {
   message: string;
 };
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return typeof error === "string" ? error : "Something went wrong.";
+}
+
 export default function TodayPage() {
   const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -95,8 +101,8 @@ export default function TodayPage() {
     try {
       const data = await listTasks();
       setTasks(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -116,32 +122,49 @@ export default function TodayPage() {
   }, []);
 
   useEffect(() => {
-    if (loading) return;
-    const todayTasks = tasks.filter((t) => !t.completed && (isDueToday(t) || isOverdue(t)));
-    if (todayTasks.length === 0) {
-      setBriefing(null);
-      return;
-    }
-    setBriefingLoading(true);
-    fetch("/api/tasks/briefing", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tasks: todayTasks.map((t) => ({
-          id: t.id,
-          title: t.title,
-          priority: t.priority,
-          due_date: t.due_date,
-          description: t.description,
-        })),
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
+    let isSubscribed = true;
+
+    async function loadBriefing() {
+      if (loading) return;
+
+      const todayTasks = tasks.filter((t) => !t.completed && (isDueToday(t) || isOverdue(t)));
+      if (todayTasks.length === 0) {
+        if (isSubscribed) setBriefing(null);
+        return;
+      }
+
+      if (isSubscribed) setBriefingLoading(true);
+
+      try {
+        const response = await fetch("/api/tasks/briefing", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tasks: todayTasks.map((t) => ({
+              id: t.id,
+              title: t.title,
+              priority: t.priority,
+              due_date: t.due_date,
+              description: t.description,
+            })),
+          }),
+        });
+
+        const data = await response.json();
+        if (!isSubscribed) return;
         if (data.success) setBriefing(data);
-      })
-      .catch(() => {})
-      .finally(() => setBriefingLoading(false));
+        else setBriefing(null);
+      } catch {
+        if (isSubscribed) setBriefing(null);
+      } finally {
+        if (isSubscribed) setBriefingLoading(false);
+      }
+    }
+
+    void loadBriefing();
+    return () => {
+      isSubscribed = false;
+    };
   }, [tasks, loading]);
 
   const handleCreate = async (params: {
@@ -154,8 +177,8 @@ export default function TodayPage() {
       await createTask(params);
       await loadTasks();
       setShowTaskModal(false);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -164,8 +187,8 @@ export default function TodayPage() {
       await updateTask(id, updates);
       await loadTasks();
       setEditingTask(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -173,8 +196,8 @@ export default function TodayPage() {
     try {
       await toggleTaskComplete(id, completed);
       await loadTasks();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -183,8 +206,8 @@ export default function TodayPage() {
     try {
       await snoozeTask(id, until);
       await loadTasks();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(getErrorMessage(error));
     }
   };
 
@@ -236,8 +259,6 @@ export default function TodayPage() {
         })
       : filtered;
 
-  if (loading) return <div className={styles.loading}>Loading today...</div>;
-
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
@@ -262,7 +283,8 @@ export default function TodayPage() {
             <span className={`${styles.decorQuoteLine} ${styles.decorQuoteWhite}`}>at a</span>
             <span className={styles.decorQuoteLine}>time.</span>
           </div>
-        </div>
+        </div>{" "}
+        <SidebarLogoutButton />{" "}
       </aside>
 
       <div className={styles.main} role="main">

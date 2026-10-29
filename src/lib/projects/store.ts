@@ -37,9 +37,15 @@ export type ProjectChat = {
 
 export async function listProjects(): Promise<Project[]> {
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
   const { data, error } = await supabase
     .from("projects")
     .select("*")
+    .eq("user_id", user.id)
     .order("updated_at", { ascending: false });
   if (error) throw error;
   return (data || []) as Project[];
@@ -47,7 +53,17 @@ export async function listProjects(): Promise<Project[]> {
 
 export async function getProject(id: string): Promise<Project | null> {
   const supabase = createClient();
-  const { data, error } = await supabase.from("projects").select("*").eq("id", id).maybeSingle();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .maybeSingle();
   if (error) throw error;
   return data as Project | null;
 }
@@ -90,16 +106,27 @@ export async function updateProject(id: string, updates: Partial<Project>): Prom
 
 export async function deleteProject(id: string): Promise<void> {
   const supabase = createClient();
-  const { error } = await supabase.from("projects").delete().eq("id", id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const { error } = await supabase.from("projects").delete().eq("id", id).eq("user_id", user.id);
   if (error) throw error;
 }
 
 export async function listProjectSpecs(projectId: string): Promise<ProjectSpec[]> {
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
   const { data, error } = await supabase
     .from("project_specs")
     .select("*")
     .eq("project_id", projectId)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
   if (error) throw error;
   return (data || []) as ProjectSpec[];
@@ -107,18 +134,32 @@ export async function listProjectSpecs(projectId: string): Promise<ProjectSpec[]
 
 export async function deleteProjectSpec(id: string): Promise<void> {
   const supabase = createClient();
-  const { error } = await supabase.from("project_specs").delete().eq("id", id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const { error } = await supabase
+    .from("project_specs")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
   if (error) throw error;
 }
 
 export async function listProjectChats(projectId: string): Promise<ProjectChat[]> {
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
 
   const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const { data, error } = await supabase
     .from("project_chats")
     .select("*")
     .eq("project_id", projectId)
+    .eq("user_id", user.id)
     .gte("created_at", cutoff)
     .order("created_at", { ascending: true });
   if (error) throw error;

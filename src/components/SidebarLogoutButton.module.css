@@ -1,0 +1,30 @@
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: auto;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.logoutButton:hover {
+  background: rgba(232, 160, 168, 0.08);
+  border-color: rgba(232, 160, 168, 0.35);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.logoutButton:focus-visible {
+  outline: 2px solid rgba(232, 160, 168, 0.6);
+  outline-offset: 2px;
+}

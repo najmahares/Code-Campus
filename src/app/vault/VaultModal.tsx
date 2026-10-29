@@ -14,6 +14,8 @@ import {
 } from "@/lib/vault/store";
 import styles from "./vault.module.css";
 
+import type { LucideIcon } from "lucide-react";
+
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -21,7 +23,7 @@ type Props = {
   editing: VaultItem | null;
 };
 
-const TYPE_ICONS: Record<VaultType, any> = {
+const TYPE_ICONS: Record<VaultType, LucideIcon> = {
   secret: KeyRound,
   snippet: FileCode,
   command: Terminal,
@@ -29,36 +31,15 @@ const TYPE_ICONS: Record<VaultType, any> = {
 };
 
 export default function VaultModal({ isOpen, onClose, onSaved, editing }: Props) {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(editing?.title ?? "");
   const { toast } = useToast();
-  const [type, setType] = useState<VaultType>("secret");
-  const [value, setValue] = useState("");
-  const [description, setDescription] = useState("");
-  const [language, setLanguage] = useState("");
-  const [tagsInput, setTagsInput] = useState("");
+  const [type, setType] = useState<VaultType>(editing?.type ?? "secret");
+  const [value, setValue] = useState(editing?.value ?? "");
+  const [description, setDescription] = useState(editing?.description ?? "");
+  const [language, setLanguage] = useState(editing?.language ?? "");
+  const [tagsInput, setTagsInput] = useState(editing?.tags.join(", ") ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      if (editing) {
-        setTitle(editing.title);
-        setType(editing.type);
-        setValue(editing.value);
-        setDescription(editing.description || "");
-        setLanguage(editing.language || "");
-        setTagsInput(editing.tags.join(", "));
-      } else {
-        setTitle("");
-        setType("secret");
-        setValue("");
-        setDescription("");
-        setLanguage("");
-        setTagsInput("");
-      }
-      setError(null);
-    }
-  }, [isOpen, editing]);
 
   if (!isOpen) return null;
 
@@ -96,8 +77,8 @@ export default function VaultModal({ isOpen, onClose, onSaved, editing }: Props)
       }
       await onSaved();
       onClose();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Something went wrong.");
     } finally {
       setSaving(false);
     }

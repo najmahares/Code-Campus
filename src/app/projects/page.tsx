@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
+import SidebarLogoutButton from "@/components/SidebarLogoutButton";
 import { listProjects, createProject, type Project } from "@/lib/projects/store";
 import styles from "./projects.module.css";
 
@@ -81,8 +82,6 @@ export default function ProjectsPage() {
     }
   };
 
-  if (loading) return <div className={styles.loading}>Loading projects...</div>;
-
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
@@ -108,6 +107,7 @@ export default function ProjectsPage() {
             <span className={styles.decorQuoteLine}>want to see.</span>
           </div>
         </div>
+        <SidebarLogoutButton />
       </aside>
 
       <div className={styles.main} role="main">
@@ -115,11 +115,32 @@ export default function ProjectsPage() {
           <div className={styles.header}>
             <div>
               <h1 className={styles.title}>Projects</h1>
-              <p className={styles.subtitle}>Capstones, side quests, and everything in between.</p>
+              <p className={styles.subtitle}>
+                Upload project specs, then use Scout to turn them into clarity, decisions, and next
+                steps.
+              </p>
             </div>
             <button className={styles.addBtn} onClick={() => setShowNew(true)}>
               <Plus size={18} strokeWidth={3} /> New project
             </button>
+          </div>
+
+          <div className={styles.valuePanel}>
+            <div className={styles.valueBadge}>Scout reads your project brief</div>
+            <h2 className={styles.valueTitle}>
+              Upload specs and let Scout make sense of the whole build.
+            </h2>
+            <p className={styles.valueText}>
+              Drop in PDFs, screenshots, notes, and design files. Scout reads what matters, connects
+              the details, and helps you understand what to build, what to fix, and what to
+              prioritise next.
+            </p>
+            <ul className={styles.valueList}>
+              <li>Ask what to build first</li>
+              <li>Check whether a decision matches the brief</li>
+              <li>Break the project into architecture, tasks, and risks</li>
+              <li>Review specs, gaps, and missing requirements</li>
+            </ul>
           </div>
 
           {projects.length === 0 ? (
@@ -129,7 +150,8 @@ export default function ProjectsPage() {
               </div>
               <h2 className={styles.emptyTitle}>No projects yet.</h2>
               <p className={styles.emptyText}>
-                Start one to organize your specs, tasks, and AI copilot in one place.
+                Create a project, upload your specs, and ask Scout to analyse them for direction,
+                decisions, risks, and next steps.
               </p>
               <button className={styles.emptyBtn} onClick={() => setShowNew(true)}>
                 <Plus size={16} strokeWidth={3} /> Create your first project

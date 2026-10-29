@@ -12,9 +12,13 @@ const schema = z.object({
   email: z.string().email("Please enter a valid email"),
 });
 
-function getFirstError(error: any): string {
-  if (!error) return "Validation failed";
-  const issue = (error.issues && error.issues[0]) || (error.errors && error.errors[0]);
+function getFirstError(error: unknown): string {
+  if (!error || typeof error !== "object") return "Please check your input";
+  const candidate = error as {
+    issues?: Array<{ message?: string }>;
+    errors?: Array<{ message?: string }>;
+  };
+  const issue = candidate.issues?.[0] || candidate.errors?.[0];
   return issue?.message || "Please check your input";
 }
 
@@ -40,8 +44,10 @@ export default function ForgotPasswordPage() {
       });
       if (authError) throw new Error(authError.message);
       setSuccess(true);
-    } catch (err: any) {
-      setError(err.message || "We could not send the reset link. Please try again.");
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : "We could not send the reset link. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }

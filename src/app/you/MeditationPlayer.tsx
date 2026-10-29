@@ -79,15 +79,10 @@ export default function MeditationPlayer() {
               <iframe
                 width="100%"
                 height="100%"
-                src={
-                  "https://www.youtube.com/embed/" +
-                  active.youtubeId +
-                  "?rel=0&modestbranding=1&playsinline=1&origin=" +
-                  (typeof window !== "undefined" ? window.location.origin : "")
-                }
+                src={`https://www.youtube-nocookie.com/embed/${active.youtubeId}?rel=0&modestbranding=1&playsinline=1`}
                 title={active.name}
                 frameBorder="0"
-                referrerPolicy="origin"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 loading="lazy"

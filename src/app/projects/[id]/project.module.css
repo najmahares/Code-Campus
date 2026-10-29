@@ -54,10 +54,13 @@
   background: rgba(255, 255, 255, 0.03);
 }
 .navItemActive {
-  color: #050505 !important;
-  background: linear-gradient(135deg, #e8a0a8 0%, #f5c5cb 100%);
+  background: #e8a0a8;
   color: #050505;
-  box-shadow: 0 6px 24px rgba(232, 160, 168, 0.28);
+  box-shadow: 0 4px 15px rgba(232, 160, 168, 0.3);
+}
+.navItemActive:hover {
+  background: #ffffff;
+  color: #050505;
 }
 .sidebarDecor {
   margin-top: auto;
@@ -707,9 +710,116 @@
   font-family: "Inter", sans-serif;
   font-size: 0.98rem;
   line-height: 1.8;
-  white-space: pre-wrap;
   word-break: break-word;
   letter-spacing: 0.005em;
+}
+
+.chatMarkdownWrap {
+  display: block;
+}
+
+.chatMarkdownWrap > *:first-child {
+  margin-top: 0;
+}
+
+.chatMarkdownWrap > *:last-child {
+  margin-bottom: 0;
+}
+
+.chatMarkdownWrap p,
+.chatMarkdownWrap ul,
+.chatMarkdownWrap ol,
+.chatMarkdownWrap blockquote,
+.chatMarkdownWrap pre,
+.chatMarkdownWrap table {
+  margin: 0 0 1rem;
+}
+
+.chatMarkdownP,
+.chatMarkdownList,
+.chatMarkdownQuote,
+.chatMarkdownTable {
+  color: inherit;
+}
+
+.chatMarkdownQuote {
+  border-left: 2px solid rgba(232, 160, 168, 0.55);
+  padding-left: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chatMarkdownList {
+  padding-left: 1.4rem;
+  margin: 0 0 1rem;
+}
+
+.chatMarkdownItem {
+  margin: 0.35rem 0;
+}
+
+.chatMarkdownLink {
+  color: #f6c5c8;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.chatMarkdownTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.chatMarkdownThead {
+  background: rgba(232, 160, 168, 0.12);
+}
+
+.chatMarkdownCell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.7rem 0.8rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.chatMarkdownInlineCode,
+.chatMarkdownCode {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8d2d5;
+  border-radius: 0.4rem;
+}
+
+.chatMarkdownInlineCode {
+  padding: 0.18rem 0.4rem;
+  font-size: 0.85em;
+}
+
+.chatMarkdownCode {
+  display: block;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.chatMarkdownPre {
+  margin: 0 0 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+.chatMarkdownStrong {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.chatMarkdownEm {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .streamingCursor {

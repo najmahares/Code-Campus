@@ -6,18 +6,18 @@
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--surface);
+  border: 1px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--muted);
   transition: all 0.25s ease;
 }
 .bellButton:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-strong);
+  background: var(--surface-strong);
 }
 .bellDot {
   position: absolute;
@@ -36,9 +36,9 @@
   right: 0;
   width: 360px;
   border-radius: 1.25rem;
-  background: linear-gradient(180deg, #1a0e12 0%, #0f0708 100%);
-  border: 1px solid rgba(232, 160, 168, 0.2);
-  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(180deg, var(--card-strong) 0%, var(--bg-strong) 100%);
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 80px -20px var(--shadow);
   z-index: 300;
   overflow: hidden;
 }
@@ -47,18 +47,18 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 1.25rem 1.25rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--line);
 }
 .panelTitle {
   font-family: "Quicksand", sans-serif;
   font-weight: 700;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--text-strong);
   margin-bottom: 0.15rem;
 }
 .panelSub {
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--muted);
 }
 .panelHeaderActions {
   display: flex;
@@ -70,8 +70,8 @@
   height: 30px;
   border-radius: 0.55rem;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--line);
+  color: var(--muted-strong);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,12 +79,12 @@
   transition: all 0.2s ease;
 }
 .markReadBtn:hover {
-  color: #7bc89a;
+  color: var(--success);
   border-color: rgba(123, 200, 154, 0.4);
 }
 .closeBtn:hover {
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-strong);
+  border-color: var(--line);
 }
 
 .list {
@@ -104,17 +104,17 @@
   gap: 0.5rem;
   padding: 3rem 1.5rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--muted-strong);
   font-family: "Quicksand", sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
 }
 .empty svg {
-  color: #e8a0a8;
+  color: var(--accent);
 }
 .emptySub {
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--muted-strong);
   font-weight: 400;
 }
 
@@ -123,35 +123,35 @@
   align-items: center;
   gap: 0.85rem;
   padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--line);
   transition: background 0.15s ease;
 }
 .item:last-child {
   border-bottom: none;
 }
 .item:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface-soft);
 }
 .itemUnread {
-  background: rgba(232, 160, 168, 0.04);
+  background: var(--accent-soft);
 }
 .itemUnread:hover {
-  background: rgba(232, 160, 168, 0.07);
+  background: var(--accent-soft);
 }
 .itemIcon {
   width: 36px;
   height: 36px;
   border-radius: 0.6rem;
-  background: rgba(232, 160, 168, 0.08);
-  color: #e8a0a8;
+  background: var(--accent-soft);
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 .itemIconGold {
-  background: rgba(212, 175, 55, 0.08);
-  color: #d4af37;
+  background: var(--gold-soft);
+  color: var(--gold);
 }
 .itemBody {
   flex: 1;
@@ -161,19 +161,19 @@
   font-family: "Quicksand", sans-serif;
   font-weight: 600;
   font-size: 0.88rem;
-  color: #ffffff;
+  color: var(--text-strong);
   margin-bottom: 0.15rem;
 }
 .itemSub {
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .itemTime {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--muted-strong);
   flex-shrink: 0;
 }
 

@@ -23,7 +23,7 @@ export function insertAtLineStart(textarea: HTMLTextAreaElement, prefix: string)
   const start = textarea.selectionStart;
   const value = textarea.value;
 
-  let lineStart = value.lastIndexOf("\n", start - 1) + 1;
+  const lineStart = value.lastIndexOf("\n", start - 1) + 1;
   const newValue = value.substring(0, lineStart) + prefix + value.substring(lineStart);
 
   return {

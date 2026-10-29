@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { LogoLockup } from "@/components/Logo";
+import SidebarLogoutButton from "@/components/SidebarLogoutButton";
 import ConfirmModal from "@/components/ConfirmModal";
 import EmptyState from "@/components/EmptyState";
 import VaultModal from "./VaultModal";
@@ -54,7 +55,7 @@ const navItems = [
   { id: "vault", label: "Vault", href: "/vault", Icon: Lock },
 ];
 
-const TYPE_ICONS: Record<VaultType, any> = {
+const TYPE_ICONS: Record<VaultType, typeof KeyRound> = {
   secret: KeyRound,
   snippet: FileCode,
   command: Terminal,
@@ -105,8 +106,8 @@ export default function VaultPage() {
     try {
       const data = await listVaultItems();
       setItems(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Something went wrong.");
     }
   };
 
@@ -176,8 +177,6 @@ export default function VaultPage() {
     return true;
   });
 
-  if (loading) return <div className={styles.loading}>Loading vault...</div>;
-
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
@@ -205,6 +204,7 @@ export default function VaultPage() {
             <span className={styles.decorQuoteLine}>you tomorrow.</span>
           </div>
         </div>
+        <SidebarLogoutButton />
       </aside>
 
       <div className={styles.main} role="main">
